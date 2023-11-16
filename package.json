@@ -1,0 +1,21 @@
+{
+  "name": "galactic-commander",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Galactic Commanders: Explore & Conquer game monorepo",
+  "main": "index.js",
+  "author": "Daniel Somoza <dasomoza@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "start": "yarn workspaces run start",
+    "test": "yarn workspaces run test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "typescript": "^5.2.2"
+  }
+}

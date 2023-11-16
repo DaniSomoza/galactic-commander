@@ -1,0 +1,19 @@
+**/node_modules
+**/dist
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local dotenv environment variable files
+.env
+
+
+
+

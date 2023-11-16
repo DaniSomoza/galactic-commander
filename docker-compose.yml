@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  auth-microservice:
+    build:
+      context: ./
+      dockerfile: packages/auth-microservice/Dockerfile
+    ports:
+      - "${AUTH_SERVICE_PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  game-api-microservice:
+    build:
+      context: ./
+      dockerfile: packages/game-api-microservice/Dockerfile
+    ports:
+      - "${GAME_API_SERVICE_PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  game-engine:
+    build:
+      context: ./
+      dockerfile: packages/game-engine/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: packages/frontend/Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:3000"
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "${MONGO_PORT}:27017"
+    command: ["--quiet"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+
+volumes:
+  mongo_data:
+    driver: local
