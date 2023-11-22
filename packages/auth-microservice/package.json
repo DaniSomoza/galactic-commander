@@ -4,13 +4,22 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "prebuild": "npm rebuild bcrypt --build-from-source",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "yarn test"
   },
   "dependencies": {
-    "@types/mongoose": "^5.11.97",
+    "@sendgrid/mail": "^7.7.0",
+    "bcrypt": "^5.1.1",
     "fastify": "^4.24.3",
-    "mongoose": "^8.0.0"
+    "http-status-codes": "^2.3.0",
+    "joi": "^17.11.0",
+    "mongoose": "^8.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/uuid": "^9.0.7"
   }
 }

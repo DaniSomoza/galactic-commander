@@ -1,31 +1,33 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export interface IUser extends Document {
+export interface IUser {
   username: string;
   email: string;
   password: string;
-  creationDate: Date;
+  activationCode: string;
   isActivated: boolean;
   isAdmin: boolean;
-  activationCode: string;
-  lastLoginDate: Date;
   isBanned: boolean;
-  bannedAt: Date;
+  createdAt?: Date;
+  activatedAt?: Date;
+  bannedAt?: Date;
+  lastLoginDate?: Date; // TODO: delete this prop?
 }
 
 const UserSchema: Schema = new Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  creationDate: { type: Date, default: Date.now },
+  activationCode: { type: String, required: true },
   isActivated: { type: Boolean, required: true, default: false },
   isAdmin: { type: Boolean, default: false },
-  activationCode: { type: String, required: true },
-  lastLoginDate: { type: Date },
   isBanned: { type: Boolean, required: true, default: false },
+  createdAt: { type: Date, default: Date.now },
   bannedAt: { type: Date },
+  activatedAt: { type: Date },
+  lastLoginDate: { type: Date },
 });
 
-const User = mongoose.model<IUser>("User", UserSchema);
+const UserModel = mongoose.model<IUser>("User", UserSchema);
 
-export default User;
+export default UserModel;

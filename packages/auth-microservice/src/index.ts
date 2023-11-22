@@ -1,23 +1,25 @@
 import Server from "./configuration/Server";
-import routes from "./routes/routes";
-import initializeDatabase from "./configuration/Database";
+import authRoutes from "./routes/authRoutes";
+import connectToDatabase from "./configuration/Database";
 
 const { FRONTEND_ORIGIN } = process.env;
 
+// TODO: create integration & unit tests
+
 async function main() {
-  await initializeDatabase();
+  await connectToDatabase();
 
   const serverOptions = { logger: true };
-  const server = new Server(serverOptions);
   const origins = [String(FRONTEND_ORIGIN)];
+  const authServer = new Server(serverOptions);
 
-  server.configureCors(origins);
-  server.addRoutes(routes);
+  authServer.configureCors(origins);
+  authServer.addRoutes(authRoutes);
 
   const port = 3_000;
   const host = "0.0.0.0";
 
-  server.start(host, port);
+  authServer.start(host, port);
 }
 
 main();

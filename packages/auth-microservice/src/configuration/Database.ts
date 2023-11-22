@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_PORT, MONGO_AUTH_DB } =
   process.env;
 
-const initializeDatabase = async () => {
+const connectToDatabase = async () => {
   try {
     const connectionString = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}/${MONGO_AUTH_DB}?authSource=admin`;
 
@@ -15,4 +15,4 @@ const initializeDatabase = async () => {
   }
 };
 
-export default initializeDatabase;
+export default connectToDatabase;
