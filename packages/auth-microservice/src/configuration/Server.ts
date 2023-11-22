@@ -1,6 +1,9 @@
 import Fastify, { RouteOptions } from 'fastify'
 import cors from '@fastify/cors'
 
+// this line is to test the linter action
+const testLint = 'this var is to test the linter action'
+
 class Server {
   server
 
