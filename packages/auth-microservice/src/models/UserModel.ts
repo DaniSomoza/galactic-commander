@@ -1,17 +1,17 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose'
 
 export interface IUser {
-  username: string;
-  email: string;
-  password: string;
-  activationCode: string;
-  isActivated: boolean;
-  isAdmin: boolean;
-  isBanned: boolean;
-  createdAt?: Date;
-  activatedAt?: Date;
-  bannedAt?: Date;
-  lastLoginDate?: Date; // TODO: delete this prop?
+  username: string
+  email: string
+  password: string
+  activationCode: string
+  isActivated: boolean
+  isAdmin: boolean
+  isBanned: boolean
+  createdAt?: Date
+  activatedAt?: Date
+  bannedAt?: Date
+  lastLoginDate?: Date // TODO: delete this prop?
 }
 
 const UserSchema: Schema = new Schema({
@@ -25,9 +25,9 @@ const UserSchema: Schema = new Schema({
   createdAt: { type: Date, default: Date.now },
   bannedAt: { type: Date },
   activatedAt: { type: Date },
-  lastLoginDate: { type: Date },
-});
+  lastLoginDate: { type: Date }
+})
 
-const UserModel = mongoose.model<IUser>("User", UserSchema);
+const UserModel = mongoose.model<IUser>('User', UserSchema)
 
-export default UserModel;
+export default UserModel

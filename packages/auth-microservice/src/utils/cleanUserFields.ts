@@ -1,17 +1,17 @@
-import { IUser } from "../models/UserModel";
+import { IUser } from 'auth-microservice/src/models/UserModel'
 
 export type CleanUserData = Pick<
   IUser,
-  | "username"
-  | "email"
-  | "isActivated"
-  | "isAdmin"
-  | "isBanned"
-  | "createdAt"
-  | "activatedAt"
-  | "bannedAt"
-  | "lastLoginDate"
->;
+  | 'username'
+  | 'email'
+  | 'isActivated'
+  | 'isAdmin'
+  | 'isBanned'
+  | 'createdAt'
+  | 'activatedAt'
+  | 'bannedAt'
+  | 'lastLoginDate'
+>
 
 // TODO: add Jsdoc
 
@@ -25,8 +25,8 @@ function cleanUserFields(user: IUser): CleanUserData {
     createdAt,
     activatedAt,
     bannedAt,
-    lastLoginDate,
-  } = user;
+    lastLoginDate
+  } = user
 
   return {
     username,
@@ -37,8 +37,8 @@ function cleanUserFields(user: IUser): CleanUserData {
     createdAt,
     activatedAt,
     bannedAt,
-    lastLoginDate,
-  };
+    lastLoginDate
+  }
 }
 
-export default cleanUserFields;
+export default cleanUserFields

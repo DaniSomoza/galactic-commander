@@ -1,17 +1,17 @@
-import { MongoServerError } from "mongodb";
-import StatusCodes from "http-status-codes";
-import Joi from "joi";
+import { MongoServerError } from 'mongodb'
+import StatusCodes from 'http-status-codes'
+import Joi from 'joi'
 
-import { bodyErrorResponse } from "./AuthError";
+import { bodyErrorResponse } from 'auth-microservice/src/errors/AuthError'
 
-const { BAD_REQUEST, CONFLICT, INTERNAL_SERVER_ERROR } = StatusCodes;
+const { BAD_REQUEST, CONFLICT, INTERNAL_SERVER_ERROR } = StatusCodes
 
 type ErrorResponse = {
-  code: number;
-  body: bodyErrorResponse;
-};
+  code: number
+  body: bodyErrorResponse
+}
 
-function handleErrorResponse(error: any): ErrorResponse {
+function handleErrorResponse(error: unknown): ErrorResponse {
   // TODO: improve Error handler!
 
   // idea: crear una clase AuthError que actua Mappeador de estos errores a algo unificado
@@ -21,9 +21,9 @@ function handleErrorResponse(error: any): ErrorResponse {
       code: BAD_REQUEST,
       body: {
         error: error.message,
-        details: error.details,
-      },
-    };
+        details: error.details
+      }
+    }
   }
 
   if (error instanceof MongoServerError) {
@@ -35,13 +35,13 @@ function handleErrorResponse(error: any): ErrorResponse {
         details: {
           // TODO: improve this
           keyPattern: error.keyPattern,
-          keyValue: error.keyValue,
-        },
+          keyValue: error.keyValue
+        }
         // code: error.code,
         // keyPattern: error.keyPattern,
         // keyValue: error.keyValue,
-      },
-    };
+      }
+    }
   }
 
   // en caso de que no se sepa qué error es
@@ -49,12 +49,12 @@ function handleErrorResponse(error: any): ErrorResponse {
     code: INTERNAL_SERVER_ERROR,
     body: {
       // TODO: create unknown response
-      error: "Internal Server error",
+      error: 'Internal Server error',
       details: {
-        error: "Internal Server error",
-      },
-    },
-  };
+        error: 'Internal Server error'
+      }
+    }
+  }
 }
 
-export default handleErrorResponse;
+export default handleErrorResponse
