@@ -2,9 +2,9 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import StatusCodes from 'http-status-codes'
 import Joi from 'joi'
 
-import validateInputData from 'auth-microservice/src/utils/validateInputData'
-import userService from 'auth-microservice/src/services/userService'
-import handleErrorResponse from 'auth-microservice/src/errors/handleErrorResponse'
+import validateInputData from '../utils/validateInputData'
+import userService from '../services/userService'
+import handleErrorResponse from '../errors/handleErrorResponse'
 
 type CreateUserData = {
   email: string

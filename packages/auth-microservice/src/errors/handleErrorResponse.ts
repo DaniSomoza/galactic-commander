@@ -2,7 +2,7 @@ import { MongoServerError } from 'mongodb'
 import StatusCodes from 'http-status-codes'
 import Joi from 'joi'
 
-import { bodyErrorResponse } from 'auth-microservice/src/errors/AuthError'
+import { bodyErrorResponse } from '../errors/AuthError'
 
 const { BAD_REQUEST, CONFLICT, INTERNAL_SERVER_ERROR } = StatusCodes
 

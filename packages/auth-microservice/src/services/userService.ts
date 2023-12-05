@@ -1,9 +1,9 @@
-import { ACTIVATE_USER_PATH } from 'auth-microservice/src/routes/userRoutes'
-import { generateHash } from 'auth-microservice/src/lib/encrypt'
-import userRepository from 'auth-microservice/src/repositories/userRepository'
-import { sendEmail } from 'auth-microservice/src/lib/email'
-import { generateActivationCode } from 'auth-microservice/src/lib/uuid'
-import cleanUserFields, { CleanUserData } from 'auth-microservice/src/utils/cleanUserFields'
+import { generateHash } from '../lib/encrypt'
+import { sendEmail } from '../lib/email'
+import { generateActivationCode } from '../lib/uuid'
+import { ACTIVATE_USER_PATH } from '../routes/userRoutes'
+import userRepository from '../repositories/userRepository'
+import cleanUserFields, { CleanUserData } from '../utils/cleanUserFields'
 
 const { FRONTEND_ORIGIN } = process.env
 
@@ -35,7 +35,7 @@ async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
   })
 
   // TODO: delete user en caso de que el envio del email falle? try y si catch hacemos delete
-  await sendEmail(email, username, activationLink)
+  sendEmail(email, username, activationLink)
 
   return cleanUserFields(userCreated)
 }

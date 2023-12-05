@@ -1,4 +1,4 @@
-import UserModel, { IUser } from 'auth-microservice/src/models/UserModel'
+import UserModel, { IUser } from '../models/UserModel'
 
 // TODO: Add JSdoc for each function
 

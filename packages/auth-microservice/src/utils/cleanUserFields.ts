@@ -1,4 +1,4 @@
-import { IUser } from 'auth-microservice/src/models/UserModel'
+import { IUser } from '../models/UserModel'
 
 export type CleanUserData = Pick<
   IUser,

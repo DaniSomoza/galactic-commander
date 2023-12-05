@@ -1,5 +1,5 @@
 # Stage 1: Install deps
-FROM node:16 as builder
+FROM node:20 as builder
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Final Image
-FROM node:16-slim
+FROM node:20-slim
 
 WORKDIR /app
 

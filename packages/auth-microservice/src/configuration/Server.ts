@@ -1,8 +1,8 @@
-import Fastify, { RouteOptions } from 'fastify'
+import Fastify, { FastifyInstance, RouteOptions } from 'fastify'
 import cors from '@fastify/cors'
 
 class Server {
-  server
+  server: FastifyInstance
 
   constructor(serverOptions: ServerOptions) {
     this.server = Fastify(serverOptions)

@@ -1,8 +1,13 @@
-import Server from 'auth-microservice/src/configuration/Server'
-import authRoutes from 'auth-microservice/src/routes/authRoutes'
-import connectToDatabase from 'auth-microservice/src/configuration/Database'
+import Server from './configuration/Server'
+import authRoutes from './routes/authRoutes'
+import connectToDatabase from './configuration/Database'
+
+// TODO: remove this
+import { test } from 'game-engine/src'
 
 const { FRONTEND_ORIGIN } = process.env
+
+console.log('@@@ TEST: ', test)
 
 async function main() {
   await connectToDatabase()

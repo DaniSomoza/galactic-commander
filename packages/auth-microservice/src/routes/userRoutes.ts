@@ -1,5 +1,5 @@
-import { Route } from 'auth-microservice/src/configuration/Server'
-import userController from 'auth-microservice/src/controllers/userController'
+import { Route } from '../configuration/Server'
+import userController from '../controllers/userController'
 
 export const USER_PATH = '/user'
 export const ACTIVATE_USER_PATH = '/activate-user'

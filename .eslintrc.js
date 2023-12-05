@@ -19,5 +19,5 @@ module.exports = {
     ecmaVersion: 2020, // Allows parsing modern ECMAScript features
     sourceType: 'module' // Allows the use of imports
   },
-  ignorePatterns: ['/node_modules/', '/dist/']
+  ignorePatterns: ['**/dist/', '**/node_modules/']
 }

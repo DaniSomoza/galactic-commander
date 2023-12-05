@@ -1,4 +1,4 @@
-import userRoutes from 'auth-microservice/src/routes/userRoutes'
+import userRoutes from '../routes/userRoutes'
 
 const authRoutes = [...userRoutes]
 
