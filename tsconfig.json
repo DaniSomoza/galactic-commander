@@ -108,7 +108,7 @@
       "auth-microservice/*": ["./packages/auth-microservice/src/*"],
       "frontend/*": ["./packages/frontend/src/*"],
       "game-api-microservice/*": ["./packages/game-api-microservice/src/*"],
-      "game-engine/*": ["./packages/game-engine/src/*"]
+      "game-engine/*": ["./packages/game-engine/dist/*"]
     }
   },
   "files": [],

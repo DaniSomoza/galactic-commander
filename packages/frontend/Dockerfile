@@ -1,26 +1,26 @@
-# Stage 1: Install deps
+# Stage 1: Build
 FROM node:20 as builder
 
-WORKDIR /usr/src/app
-
-COPY package.json yarn.lock ./
-COPY packages/frontend/package.json ./packages/frontend/
-
-RUN yarn install --frozen-lockfile
+WORKDIR /usr/app
 
 COPY . .
 
+RUN yarn install --frozen-lockfile
+
 RUN yarn build
 
-# Stage 2: Final Image
+# Stage 2: Auth Image
 FROM node:20-slim
 
 WORKDIR /app
 
-COPY --from=builder /usr/src/app/packages/frontend/dist ./dist
-COPY --from=builder /usr/src/app/packages/frontend/node_modules ./node_modules
-COPY --from=builder /usr/src/app/packages/frontend/package.json .
+# dependencies
+COPY --from=builder /usr/app/package.json ./
+COPY --from=builder /usr/app/node_modules ./node_modules
+
+# code
+COPY --from=builder /usr/app/packages ./packages
 
 EXPOSE 3000
 
-CMD ["node", "dist/index"]
+CMD ["node", "packages/frontend/dist/index"]

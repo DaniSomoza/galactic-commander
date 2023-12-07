@@ -17,8 +17,7 @@
     "http-status-codes": "^2.3.0",
     "joi": "^17.11.0",
     "mongoose": "^8.0.1",
-    "uuid": "^9.0.1",
-    "game-engine": "0.0.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
