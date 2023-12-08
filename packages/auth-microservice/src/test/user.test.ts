@@ -99,8 +99,8 @@ describe('users', () => {
     })
   })
 
-  describe('user validation', () => {
-    it('validates a new user', async () => {
+  describe('user activation', () => {
+    it('activates a new user', async () => {
       const unconfirmedUser = await UserModel.findOne({
         username: UNCONFIRMED_USER.username
       })
@@ -123,6 +123,39 @@ describe('users', () => {
       })
 
       expect(activatedUser?.isActivated).toBe(true)
+    })
+
+    it('returns a conflict error if the user is already validated', async () => {
+      const user = await UserModel.findOne({
+        username: ACTIVE_USER.username
+      })
+
+      // already activated
+      expect(user?.isActivated).toBe(true)
+
+      // activate user
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/activate',
+        body: {
+          activationCode: ACTIVE_USER.activationCode
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.CONFLICT)
+    })
+
+    it('returns a not found error if the activationCode is invalid', async () => {
+      // activate user
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/activate',
+        body: {
+          activationCode: 'invalid-activation-code'
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
     })
   })
 })
