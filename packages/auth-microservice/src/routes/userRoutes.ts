@@ -3,6 +3,7 @@ import userController from '../controllers/userController'
 
 export const USER_PATH = '/user'
 export const ACTIVATE_USER_PATH = `${USER_PATH}/activate`
+export const LOGIN_USER_PATH = `${USER_PATH}/session`
 
 const createUserRoute: Route = {
   url: USER_PATH,
@@ -16,6 +17,12 @@ const activateUserRoute: Route = {
   handler: userController.activateUser
 }
 
-const userRoutes = [createUserRoute, activateUserRoute]
+const loginRoute: Route = {
+  url: LOGIN_USER_PATH,
+  method: 'POST',
+  handler: userController.login
+}
+
+const userRoutes = [createUserRoute, activateUserRoute, loginRoute]
 
 export default userRoutes

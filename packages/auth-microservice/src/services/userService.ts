@@ -1,4 +1,4 @@
-import { generateHash } from '../lib/encrypt'
+import { generateHash, validateHash } from '../lib/encrypt'
 import { sendEmail } from '../lib/email'
 import { generateActivationCode } from '../lib/uuid'
 import { ACTIVATE_USER_PATH } from '../routes/userRoutes'
@@ -6,6 +6,9 @@ import userRepository from '../repositories/userRepository'
 import cleanUserFields, { CleanUserData } from '../utils/cleanUserFields'
 import NotFoundError from '../errors/NotFoundError'
 import ConflictError from '../errors/ConflictError'
+import ForbiddenError from '../errors/Forbidden'
+import UnauthorizedError from '../errors/Unauthorized'
+import { createJWT } from '../lib/jwt'
 
 const { FRONTEND_ORIGIN } = process.env
 
@@ -56,9 +59,43 @@ async function activateUser(activationCode: string) {
   return cleanUserFields(userActivated!)
 }
 
+async function login(email: string, password: string) {
+  const user = await userRepository.findUserByEmail(email)
+
+  if (!user) {
+    throw new NotFoundError('user not found', { email })
+  }
+
+  const isPasswordValid = await validateHash(password, user.password)
+
+  if (!isPasswordValid) {
+    throw new UnauthorizedError('wrong credentials', { email })
+  }
+
+  const isUserActivated = user.isActivated
+  const isUserBanned = user.isBanned
+  const userData = cleanUserFields(user)
+
+  if (!isUserActivated) {
+    throw new ForbiddenError('user not activated', userData)
+  }
+
+  if (isUserBanned) {
+    throw new ForbiddenError('user banned', userData)
+  }
+
+  const sessionToken = createJWT(userData)
+
+  return {
+    user: userData,
+    sessionToken
+  }
+}
+
 const userService = {
   createUser,
-  activateUser
+  activateUser,
+  login
 }
 
 export default userService

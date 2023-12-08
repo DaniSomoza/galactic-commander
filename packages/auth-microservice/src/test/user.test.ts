@@ -3,7 +3,7 @@ import StatusCodes from 'http-status-codes'
 import UserModel from '../models/UserModel'
 import * as emailLib from '../lib/email'
 import { testServer } from './testSetup'
-import { ACTIVE_USER, UNCONFIRMED_USER } from './mocks/userMocks'
+import { ACTIVE_USER, BANNED_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
 
 describe('users', () => {
@@ -156,6 +156,72 @@ describe('users', () => {
       })
 
       expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+    })
+  })
+
+  describe('user login', () => {
+    it('creates a user session with valid credentials', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: ACTIVE_USER.email,
+          password: 'secret' // valid user password
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(sessionToken).toBeDefined()
+    })
+
+    it('returns unauthorized error with invalid credentials', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: ACTIVE_USER.email,
+          password: 'invalid secret' // invalid user password
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.UNAUTHORIZED)
+      expect(sessionToken).not.toBeDefined()
+    })
+
+    it('returns forbidden error if user is not activated', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: UNCONFIRMED_USER.email,
+          password: 'secret' // valid user password
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN)
+      expect(sessionToken).not.toBeDefined()
+    })
+
+    it('returns forbidden error if user is banned', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: BANNED_USER.email,
+          password: 'secret' // valid user password
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN)
+      expect(sessionToken).not.toBeDefined()
     })
   })
 })

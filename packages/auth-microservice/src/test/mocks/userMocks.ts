@@ -2,7 +2,7 @@ import { IUser } from '../../models/UserModel'
 
 export const UNCONFIRMED_USER: IUser = {
   email: 'unconfirmedUser@example.com',
-  password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
+  password: '$2b$10$cxNGyMi0zmypkmpaT9hnhexRdr2B/.0sw92ws4D5vD74HPxYgILb.',
   username: 'unconfirmedUser',
   isActivated: false,
   isBanned: false,
@@ -12,7 +12,7 @@ export const UNCONFIRMED_USER: IUser = {
 
 export const ACTIVE_USER: IUser = {
   email: 'activeUser@example.com',
-  password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
+  password: '$2b$10$cxNGyMi0zmypkmpaT9hnhexRdr2B/.0sw92ws4D5vD74HPxYgILb.',
   username: 'activeUser',
   isActivated: true,
   isBanned: false,
@@ -23,7 +23,7 @@ export const ACTIVE_USER: IUser = {
 
 export const BANNED_USER: IUser = {
   email: 'bannedUser@example.com',
-  password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
+  password: '$2b$10$cxNGyMi0zmypkmpaT9hnhexRdr2B/.0sw92ws4D5vD74HPxYgILb.',
   username: 'bannedUser',
   isActivated: true,
   isBanned: true,
