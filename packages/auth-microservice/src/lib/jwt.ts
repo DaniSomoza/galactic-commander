@@ -12,6 +12,6 @@ export function createJWT(payload: CleanUserData) {
   })
 }
 
-export function verifyJWT(token: string) {
-  return jsonwebtoken.verify(token, JWT_SECRET || DEFAULT_SECRET)
+export function verifyJWT(token: string): CleanUserData {
+  return jsonwebtoken.verify(token, JWT_SECRET || DEFAULT_SECRET) as CleanUserData
 }
