@@ -23,6 +23,12 @@ const loginRoute: Route = {
   handler: userController.login
 }
 
-const userRoutes = [createUserRoute, activateUserRoute, loginRoute]
+const getUserRoute: Route = {
+  url: USER_PATH,
+  method: 'GET',
+  handler: userController.getUser
+}
+
+const userRoutes = [createUserRoute, activateUserRoute, loginRoute, getUserRoute]
 
 export default userRoutes

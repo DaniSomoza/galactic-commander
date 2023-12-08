@@ -88,10 +88,27 @@ async function login(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
+async function getUser(request: FastifyRequest, response: FastifyReply) {
+  try {
+    const authorizationHeader = request.headers.authorization
+
+    const jwtToken = authorizationHeader?.replace('Bearer ', '') || ''
+
+    const user = await userService.getUser(jwtToken)
+
+    response.code(StatusCodes.OK).send(user)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
 const userController = {
   createUser,
   activateUser,
-  login
+  login,
+  getUser
 }
 
 export default userController

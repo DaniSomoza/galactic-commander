@@ -41,6 +41,7 @@ testServer.addRoutes(authRoutes)
 const port = 3_000
 const host = '0.0.0.0'
 testServer.start(host, port)
+testServer.configureCors(['http://localhost:3000'])
 
 beforeAll(async () => {
   await connectToTestDatabase()

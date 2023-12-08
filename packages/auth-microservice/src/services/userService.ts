@@ -8,7 +8,7 @@ import NotFoundError from '../errors/NotFoundError'
 import ConflictError from '../errors/ConflictError'
 import ForbiddenError from '../errors/Forbidden'
 import UnauthorizedError from '../errors/Unauthorized'
-import { createJWT } from '../lib/jwt'
+import { createJWT, verifyJWT } from '../lib/jwt'
 
 const { FRONTEND_ORIGIN } = process.env
 
@@ -92,10 +92,42 @@ async function login(email: string, password: string) {
   }
 }
 
+function checkSessionToken(jwtToken: string) {
+  try {
+    return verifyJWT(jwtToken)
+  } catch (error) {
+    throw new UnauthorizedError('invalid session token', { jwtToken })
+  }
+}
+
+async function getUser(jwtToken: string) {
+  const userData = checkSessionToken(jwtToken)
+
+  const user = await userRepository.findUserByEmail(userData.email)
+
+  if (!user) {
+    throw new NotFoundError('user not found', userData)
+  }
+
+  const isUserActivated = user.isActivated
+  const isUserBanned = user.isBanned
+
+  if (!isUserActivated) {
+    throw new ForbiddenError('user not activated', userData)
+  }
+
+  if (isUserBanned) {
+    throw new ForbiddenError('user banned', userData)
+  }
+
+  return cleanUserFields(user)
+}
+
 const userService = {
   createUser,
   activateUser,
-  login
+  login,
+  getUser
 }
 
 export default userService

@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
-import AppError, { bodyErrorResponse, errorDetails } from './AppError'
+import AppError, { errorDetails } from './AppError'
 
 class ConflictError extends AppError {
   message: string
@@ -10,13 +10,6 @@ class ConflictError extends AppError {
     super(message, details, code)
     this.message = message
     this.details = details
-  }
-
-  toBodyResponse(): bodyErrorResponse {
-    return {
-      error: this.message,
-      details: this.details
-    }
   }
 }
 

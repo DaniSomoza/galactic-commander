@@ -5,6 +5,8 @@ import * as emailLib from '../lib/email'
 import { testServer } from './testSetup'
 import { ACTIVE_USER, BANNED_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
+import { createJWT } from '../lib/jwt'
+import { CleanUserData } from '../utils/cleanUserFields'
 
 describe('users', () => {
   beforeEach(() => {
@@ -42,6 +44,66 @@ describe('users', () => {
 
       // correct hashed password is stored in the database
       expect(await validateHash(newUserData.password, newUser?.password as string)).toBe(true)
+    })
+
+    it('returns a validation error if the email is not present', async () => {
+      const invalidUserData = {
+        // email is not present
+        password: 'secret',
+        username: 'newUser'
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+    })
+
+    it('returns a validation error if the password is not present', async () => {
+      const invalidUserData = {
+        email: 'new-user@example.com',
+        // password is not present
+        username: 'newUser'
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+    })
+
+    it('returns a validation error if the username is not present', async () => {
+      const invalidUserData = {
+        email: 'new-user@example.com',
+        password: 'secret'
+        // username is not present
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     })
 
     it('returns an error if the username already exists', async () => {
@@ -192,6 +254,22 @@ describe('users', () => {
       expect(sessionToken).not.toBeDefined()
     })
 
+    it('returns a not found error if the email not exists', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: 'no-existing-user@example.com', // non existing user
+          password: 'secret'
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+      expect(sessionToken).not.toBeDefined()
+    })
+
     it('returns forbidden error if user is not activated', async () => {
       const response = await testServer.server.inject({
         method: 'POST',
@@ -222,6 +300,106 @@ describe('users', () => {
 
       expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN)
       expect(sessionToken).not.toBeDefined()
+    })
+  })
+
+  describe('get user', () => {
+    it('returns user data with a valid session', async () => {
+      const jwtToken = createJWT(ACTIVE_USER)
+
+      const response = await testServer.server.inject({
+        method: 'GET',
+        url: '/user',
+        headers: {
+          authorization: `Bearer ${jwtToken}`
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+
+      const { username, email } = JSON.parse(response.body)
+
+      expect(username).toEqual(ACTIVE_USER.username)
+      expect(email).toEqual(ACTIVE_USER.email)
+    })
+
+    it('returns unauthorized error if the token is not valid', async () => {
+      const invalidJwtToken = 'this is an invalid token'
+
+      const response = await testServer.server.inject({
+        method: 'GET',
+        url: '/user',
+        headers: {
+          authorization: invalidJwtToken
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.UNAUTHORIZED)
+
+      const { username, email } = JSON.parse(response.body)
+
+      expect(username).not.toBeDefined()
+      expect(email).not.toBeDefined()
+    })
+
+    it('returns a not found error if the user not exist', async () => {
+      const jwtToken = createJWT({
+        username: 'invalid user',
+        email: 'invalid_email@example.com'
+      } as CleanUserData)
+
+      const response = await testServer.server.inject({
+        method: 'GET',
+        url: '/user',
+        headers: {
+          authorization: `Bearer ${jwtToken}`
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+
+      const { username, email } = JSON.parse(response.body)
+
+      expect(username).not.toBeDefined()
+      expect(email).not.toBeDefined()
+    })
+
+    it('returns a forbidden error if the user not activated', async () => {
+      const jwtToken = createJWT(UNCONFIRMED_USER)
+
+      const response = await testServer.server.inject({
+        method: 'GET',
+        url: '/user',
+        headers: {
+          authorization: `Bearer ${jwtToken}`
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN)
+
+      const { username, email } = JSON.parse(response.body)
+
+      expect(username).not.toBeDefined()
+      expect(email).not.toBeDefined()
+    })
+
+    it('returns a forbidden error if the user is banned', async () => {
+      const jwtToken = createJWT(BANNED_USER)
+
+      const response = await testServer.server.inject({
+        method: 'GET',
+        url: '/user',
+        headers: {
+          authorization: `Bearer ${jwtToken}`
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN)
+
+      const { username, email } = JSON.parse(response.body)
+
+      expect(username).not.toBeDefined()
+      expect(email).not.toBeDefined()
     })
   })
 })
