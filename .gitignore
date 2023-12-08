@@ -2,7 +2,7 @@
 **/dist
 **/coverage
 .nyc_output
-temp
+coverage-temp
 
 # TypeScript cache
 *.tsbuildinfo

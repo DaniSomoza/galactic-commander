@@ -13,9 +13,8 @@
     "build": "yarn workspaces run build",
     "start": "yarn workspaces run start",
     "test": "yarn workspaces run test",
-    "test:coverage": "yarn workspaces run test:coverage",
-    "prereport": "yarn test:coverage && nyc merge packages/auth-microservice/coverage temp/coverage-auth.json && nyc merge packages/game-engine/coverage temp/coverage-game-engine.json",
-    "report": "nyc report --temp-directory temp",
+    "precoverage": "yarn workspaces run test:coverage && nyc merge packages/auth-microservice/coverage coverage-temp/auth-microservice.json && nyc merge packages/game-engine/coverage coverage-temp/game-engine.json",
+    "coverage": "nyc report --temp-directory coverage-temp",
     "lint:check": "eslint ./packages/**/*.ts && prettier --check packages/**/*.ts"
   },
   "devDependencies": {
