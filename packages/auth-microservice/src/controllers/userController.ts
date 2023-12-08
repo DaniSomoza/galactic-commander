@@ -15,7 +15,7 @@ type CreateUserData = {
 const userValidationSchema = Joi.object<CreateUserData>({
   email: Joi.string().email().required(),
   username: Joi.string().alphanum().min(5).max(30).required(),
-  password: Joi.string().min(5).max(15).required()
+  password: Joi.string().min(5).max(35).required()
 })
 
 async function createUser(request: FastifyRequest, response: FastifyReply) {
@@ -62,9 +62,36 @@ async function activateUser(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
+type loginData = {
+  email: string
+  password: string
+}
+
+const loginSchema = Joi.object<loginData>({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(5).max(35).required()
+})
+
+async function login(request: FastifyRequest, response: FastifyReply) {
+  try {
+    await validateInputData(request.body, loginSchema)
+
+    const { email, password } = request.body as loginData
+
+    const sessionToken = await userService.login(email, password)
+
+    response.code(StatusCodes.OK).send({ sessionToken })
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
 const userController = {
   createUser,
-  activateUser
+  activateUser,
+  login
 }
 
 export default userController

@@ -34,7 +34,8 @@ docker-compose up
 
 ## Roadmap
 
-- [ ] **Auth microservice**: create users, validate email, get user info, create user sessions (JWT), change password, forgot password, delete account?
+- [x] **Auth microservice**: create users, validate email, get user info and create user sessions (JWT)
+- [ ] **Other Auth microservice endpoints**: change password, forgot password, reset password and delete account
 - [x] **Auth microservice**: add unit tests with jest
 - [ ] **Auth microservice**: add Github actions (test, sonar, coverage reports with coveralls)
 - [ ] **First version of the frontend**: register (create + validate email), login, forgot password, change password
