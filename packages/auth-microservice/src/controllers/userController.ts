@@ -18,16 +18,11 @@ const userValidationSchema = Joi.object<CreateUserData>({
   password: Joi.string().min(5).max(15).required()
 })
 
-// TODO: configure prettier!!! remove ;
-
 async function createUser(request: FastifyRequest, response: FastifyReply) {
   try {
     await validateInputData(request.body, userValidationSchema)
 
-    // TODO: improve this!
     const { email, username, password } = request.body as CreateUserData
-
-    // TODO: to lowercase ???
 
     const userCreated = await userService.createUser({
       email,
