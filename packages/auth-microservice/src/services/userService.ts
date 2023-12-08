@@ -4,6 +4,8 @@ import { generateActivationCode } from '../lib/uuid'
 import { ACTIVATE_USER_PATH } from '../routes/userRoutes'
 import userRepository from '../repositories/userRepository'
 import cleanUserFields, { CleanUserData } from '../utils/cleanUserFields'
+import NotFoundError from '../errors/NotFoundError'
+import ConflictError from '../errors/ConflictError'
 
 const { FRONTEND_ORIGIN } = process.env
 
@@ -36,8 +38,27 @@ async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
   return cleanUserFields(userCreated)
 }
 
+async function activateUser(activationCode: string) {
+  const user = await userRepository.findUserByActivationCode(activationCode)
+
+  if (!user) {
+    throw new NotFoundError('invalid activation code', { activationCode })
+  }
+
+  const isAlreadyActivated = user.isActivated
+
+  if (isAlreadyActivated) {
+    throw new ConflictError('user already activated', { user: cleanUserFields(user) })
+  }
+
+  const userActivated = await userRepository.updateUser(user._id.toString(), { isActivated: true })
+
+  return cleanUserFields(userActivated!)
+}
+
 const userService = {
-  createUser
+  createUser,
+  activateUser
 }
 
 export default userService

@@ -38,8 +38,33 @@ async function createUser(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
+type activateUserData = {
+  activationCode: string
+}
+
+const activationCodeSchema = Joi.object<activateUserData>({
+  activationCode: Joi.string()
+})
+
+async function activateUser(request: FastifyRequest, response: FastifyReply) {
+  try {
+    await validateInputData(request.body, activationCodeSchema)
+
+    const { activationCode } = request.body as activateUserData
+
+    const userActivated = await userService.activateUser(activationCode)
+
+    response.code(StatusCodes.OK).send(userActivated)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
 const userController = {
-  createUser
+  createUser,
+  activateUser
 }
 
 export default userController

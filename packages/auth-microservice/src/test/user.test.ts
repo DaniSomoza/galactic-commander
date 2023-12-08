@@ -3,7 +3,7 @@ import StatusCodes from 'http-status-codes'
 import UserModel from '../models/UserModel'
 import * as emailLib from '../lib/email'
 import { testServer } from './testSetup'
-import { ACTIVE_USER } from './mocks/userMocks'
+import { ACTIVE_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
 
 describe('users', () => {
@@ -96,6 +96,66 @@ describe('users', () => {
       })
 
       expect(newDuplicatedUser).toBeNull()
+    })
+  })
+
+  describe('user activation', () => {
+    it('activates a new user', async () => {
+      const unconfirmedUser = await UserModel.findOne({
+        username: UNCONFIRMED_USER.username
+      })
+
+      expect(unconfirmedUser?.isActivated).toBe(false)
+
+      // activate user
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/activate',
+        body: {
+          activationCode: UNCONFIRMED_USER.activationCode
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+
+      const activatedUser = await UserModel.findOne({
+        username: UNCONFIRMED_USER.username
+      })
+
+      expect(activatedUser?.isActivated).toBe(true)
+    })
+
+    it('returns a conflict error if the user is already validated', async () => {
+      const user = await UserModel.findOne({
+        username: ACTIVE_USER.username
+      })
+
+      // already activated
+      expect(user?.isActivated).toBe(true)
+
+      // activate user
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/activate',
+        body: {
+          activationCode: ACTIVE_USER.activationCode
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.CONFLICT)
+    })
+
+    it('returns a not found error if the activationCode is invalid', async () => {
+      // activate user
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/activate',
+        body: {
+          activationCode: 'invalid-activation-code'
+        }
+      })
+
+      expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
     })
   })
 })

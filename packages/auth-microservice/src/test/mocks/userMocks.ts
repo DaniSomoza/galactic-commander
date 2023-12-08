@@ -1,28 +1,33 @@
-export const UNCONFIRMED_USER = {
+import { IUser } from '../../models/UserModel'
+
+export const UNCONFIRMED_USER: IUser = {
   email: 'unconfirmedUser@example.com',
   password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
   username: 'unconfirmedUser',
-  active: false,
-  banned: false,
+  isActivated: false,
+  isBanned: false,
+  isAdmin: false,
   activationCode: 'unconfirmed-user-activation-code'
 }
 
-export const ACTIVE_USER = {
+export const ACTIVE_USER: IUser = {
   email: 'activeUser@example.com',
   password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
   username: 'activeUser',
-  active: true,
-  banned: false,
+  isActivated: true,
+  isBanned: false,
+  isAdmin: false,
   activationCode: 'active-user-activation-code',
   activatedAt: new Date()
 }
 
-export const BANNED_USER = {
+export const BANNED_USER: IUser = {
   email: 'bannedUser@example.com',
   password: '$2b$10$HOY85vdVwPm4X8bUTtKky.1K.nhyq5tYxub5bhy9zvCw6EEmMY36G',
   username: 'bannedUser',
-  active: true,
-  banned: true,
+  isActivated: true,
+  isBanned: true,
+  isAdmin: false,
   activationCode: 'banned-user-activation-code',
   activatedAt: new Date()
 }
