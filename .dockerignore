@@ -1,5 +1,4 @@
 **/node_modules
-**/dist
 **/coverage
 .nyc_output
 coverage-temp
@@ -13,10 +12,3 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Local dotenv environment variable files
-.env
-
-
-
-

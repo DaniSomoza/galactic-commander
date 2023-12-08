@@ -1,5 +1,5 @@
-const message: string = "starting...";
+const message: string = 'starting...'
 
-console.log("starting tasks-microservice: ", message);
+console.log('starting tasks-microservice: ', message)
 
-console.log("Mongo URI: ", process.env.MONGO_URI);
+console.log('Mongo URI: ', process.env.MONGO_URI)

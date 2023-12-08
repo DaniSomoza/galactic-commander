@@ -1,27 +1,25 @@
 # Stage 1: Build
-FROM node:16 as builder
+FROM node:20 as builder
 
-WORKDIR /usr/src/app
-
-COPY package.json yarn.lock ./
-COPY packages/auth-microservice/package.json ./packages/auth-microservice/
-
-RUN yarn install --frozen-lockfile
+WORKDIR /usr/app
 
 COPY . .
+
+RUN yarn install --frozen-lockfile
 
 RUN yarn build
 
 # Stage 2: Auth Image
-FROM node:16-slim
+FROM node:20-slim
 
 WORKDIR /app
 
-COPY --from=builder /usr/src/app/package.json ./
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+# dependencies
+COPY --from=builder /usr/app/package.json ./
+COPY --from=builder /usr/app/node_modules ./node_modules
 
-COPY --from=builder /usr/src/app/packages/auth-microservice/dist ./packages/auth-microservice/dist
-COPY --from=builder /usr/src/app/packages/auth-microservice/package.json ./packages/auth-microservice/package.json
+# code
+COPY --from=builder /usr/app/packages ./packages
 
 EXPOSE 3000
 

@@ -1,31 +1,35 @@
-import Fastify, { RouteOptions } from "fastify";
+import Fastify, { FastifyInstance, RouteOptions } from 'fastify'
+import cors from '@fastify/cors'
 
 class Server {
-  server;
+  server: FastifyInstance
 
   constructor(serverOptions: ServerOptions) {
-    this.server = Fastify(serverOptions);
+    this.server = Fastify(serverOptions)
   }
 
   start(host: string, port: number) {
-    this.server.listen({ host, port });
+    this.server.listen({ host, port })
   }
 
   configureCors(origins: string[]) {
-    // TODO: implement CORS
+    this.server.register(cors, {
+      origin: origins,
+      methods: ['GET', 'PUT', 'POST', 'DELETE']
+    })
   }
 
   addRoutes(routes: RouteOptions[]) {
     routes.map((route) => {
-      this.server.route(route);
-    });
+      this.server.route(route)
+    })
   }
 }
 
 type ServerOptions = {
-  logger: boolean;
-};
+  logger: boolean
+}
 
-export type Route = RouteOptions;
+export type Route = RouteOptions
 
-export default Server;
+export default Server

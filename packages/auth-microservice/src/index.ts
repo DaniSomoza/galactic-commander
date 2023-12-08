@@ -1,23 +1,23 @@
-import Server from "./configuration/Server";
-import routes from "./routes/routes";
-import initializeDatabase from "./configuration/Database";
+import Server from './configuration/Server'
+import authRoutes from './routes/authRoutes'
+import connectToDatabase from './configuration/Database'
 
-const { FRONTEND_ORIGIN } = process.env;
+const { FRONTEND_ORIGIN } = process.env
 
 async function main() {
-  await initializeDatabase();
+  await connectToDatabase()
 
-  const serverOptions = { logger: true };
-  const server = new Server(serverOptions);
-  const origins = [String(FRONTEND_ORIGIN)];
+  const serverOptions = { logger: true }
+  const origins = [String(FRONTEND_ORIGIN)]
+  const authServer = new Server(serverOptions)
 
-  server.configureCors(origins);
-  server.addRoutes(routes);
+  authServer.configureCors(origins)
+  authServer.addRoutes(authRoutes)
 
-  const port = 3_000;
-  const host = "0.0.0.0";
+  const port = 3_000
+  const host = '0.0.0.0'
 
-  server.start(host, port);
+  authServer.start(host, port)
 }
 
-main();
+main()
