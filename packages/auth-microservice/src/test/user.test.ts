@@ -264,9 +264,6 @@ describe('users', () => {
         }
       })
 
-      // TODO: testing the CI
-      expect(true).toBe(false)
-
       const { sessionToken } = JSON.parse(response.body)
 
       expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
