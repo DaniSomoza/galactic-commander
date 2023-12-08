@@ -35,7 +35,7 @@ docker-compose up
 ## Roadmap
 
 - [ ] **Auth microservice**: create users, validate email, get user info, create user sessions (JWT), change password, forgot password, delete account?
-- [ ] **Auth microservice**: add unit tests with jest
+- [x] **Auth microservice**: add unit tests with jest
 - [ ] **Auth microservice**: add Github actions (test, sonar, coverage reports with coveralls)
 - [ ] **First version of the frontend**: register (create + validate email), login, forgot password, change password
 - [ ] **game-api**: add migration support
@@ -45,3 +45,4 @@ docker-compose up
 - [ ] **game-api microservice**: Players can create tasks
 - [ ] **first release**: Release system & dev & Prod environment (Github actions)
 - [ ] **preview PR branches**: (Github actions)
+- [ ] **Badges**: (badges in te README.md)
