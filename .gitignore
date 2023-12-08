@@ -1,5 +1,8 @@
 **/node_modules
 **/dist
+**/coverage
+.nyc_output
+temp
 
 # TypeScript cache
 *.tsbuildinfo

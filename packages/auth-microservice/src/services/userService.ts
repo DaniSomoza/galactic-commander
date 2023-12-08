@@ -13,7 +13,6 @@ type CreateUserData = {
   password: string
 }
 
-// TODO: create User podria recibir un segundo parametro que fuese activationLink ¿O pertenece esto a la parte de la logica de negocio?
 async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
   const { username, email, password } = newUserData
 
@@ -22,19 +21,16 @@ async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
 
   const hashedPassword = await generateHash(password)
 
-  // TODO: check if the user already exists ¿?
-
   const userCreated = await userRepository.createUser({
     username,
     email,
-    password: hashedPassword, // we only store hashed passwords in our DB
+    password: hashedPassword, // we only store hashed passwords in our database
     activationCode,
     isActivated: false,
     isBanned: false,
     isAdmin: false
   })
 
-  // TODO: delete user en caso de que el envio del email falle? try y si catch hacemos delete
   sendEmail(email, username, activationLink)
 
   return cleanUserFields(userCreated)
