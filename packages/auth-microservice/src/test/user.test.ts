@@ -46,6 +46,66 @@ describe('users', () => {
       expect(await validateHash(newUserData.password, newUser?.password as string)).toBe(true)
     })
 
+    it('returns a validation error if the email is not present', async () => {
+      const invalidUserData = {
+        // email is not present
+        password: 'secret',
+        username: 'newUser'
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+    })
+
+    it('returns a validation error if the password is not present', async () => {
+      const invalidUserData = {
+        email: 'new-user@example.com',
+        // password is not present
+        username: 'newUser'
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+    })
+
+    it('returns a validation error if the username is not present', async () => {
+      const invalidUserData = {
+        email: 'new-user@example.com',
+        password: 'secret'
+        // username is not present
+      }
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user',
+        body: invalidUserData
+      })
+
+      expect(emailLib.sendEmail).not.toHaveBeenCalled()
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+    })
+
     it('returns an error if the username already exists', async () => {
       const duplicatedUserData = {
         email: 'duplicated-user@example.com',
@@ -191,6 +251,22 @@ describe('users', () => {
       const { sessionToken } = JSON.parse(response.body)
 
       expect(response.statusCode).toEqual(StatusCodes.UNAUTHORIZED)
+      expect(sessionToken).not.toBeDefined()
+    })
+
+    it('returns a not found error if the email not exists', async () => {
+      const response = await testServer.server.inject({
+        method: 'POST',
+        url: '/user/session',
+        body: {
+          email: 'no-existing-user@example.com', // non existing user
+          password: 'secret'
+        }
+      })
+
+      const { sessionToken } = JSON.parse(response.body)
+
+      expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
       expect(sessionToken).not.toBeDefined()
     })
 

@@ -2,10 +2,6 @@ import UserModel, { IUser } from '../models/UserModel'
 
 // TODO: Add JSdoc for each function
 
-async function findUserByUsername(username: string) {
-  return UserModel.findOne({ username }).lean().exec()
-}
-
 async function findUserByEmail(email: string) {
   return UserModel.findOne({ email }).lean().exec()
 }
@@ -24,7 +20,6 @@ async function updateUser(userId: string, updateData: Partial<IUser>) {
 }
 
 const userRepository = {
-  findUserByUsername,
   findUserByEmail,
   createUser,
   findUserByActivationCode,
