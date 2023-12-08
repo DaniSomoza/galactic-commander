@@ -1,5 +1,7 @@
 # Galactic Commander Game
 
+[![Coverage Status](https://coveralls.io/repos/github/DaniSomoza/galactic-commander/badge.svg)](https://coveralls.io/github/DaniSomoza/galactic-commander)
+
 This is the repository of the Galactic Commander Game monorepo.
 
 ## Run the project locally
