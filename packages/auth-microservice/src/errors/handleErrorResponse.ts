@@ -2,7 +2,7 @@ import { MongoServerError } from 'mongodb'
 import StatusCodes from 'http-status-codes'
 import Joi from 'joi'
 
-import { bodyErrorResponse } from '../errors/AuthError'
+import AppError, { bodyErrorResponse } from './AppError'
 
 const { BAD_REQUEST, CONFLICT, INTERNAL_SERVER_ERROR } = StatusCodes
 
@@ -41,6 +41,13 @@ function handleErrorResponse(error: unknown): ErrorResponse {
         // keyPattern: error.keyPattern,
         // keyValue: error.keyValue,
       }
+    }
+  }
+
+  if (error instanceof AppError) {
+    return {
+      code: error.code,
+      body: error.toBodyResponse()
     }
   }
 
