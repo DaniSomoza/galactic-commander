@@ -1,5 +1,23 @@
-const message: string = 'starting...'
+import Server from './configuration/Server'
+import gameApiRoutes from './routes/gameApiRoutes'
+import connectToDatabase from './configuration/Database'
 
-console.log('starting tasks-microservice: ', message)
+const { FRONTEND_ORIGIN } = process.env
 
-console.log('Mongo URI: ', process.env.MONGO_URI)
+async function main() {
+  await connectToDatabase()
+
+  const serverOptions = { logger: true }
+  const origins = [String(FRONTEND_ORIGIN)]
+  const gameApiServer = new Server(serverOptions)
+
+  gameApiServer.configureCors(origins)
+  gameApiServer.addRoutes(gameApiRoutes)
+
+  const port = 3_000
+  const host = '0.0.0.0'
+
+  gameApiServer.start(host, port)
+}
+
+main()

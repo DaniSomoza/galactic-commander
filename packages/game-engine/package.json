@@ -4,7 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "migrate:up": "node --require dotenv/config ../../node_modules/migrate-mongo/bin/migrate-mongo.js up",
+    "migrate:status": "node --require dotenv/config ../../node_modules/migrate-mongo/bin/migrate-mongo.js status",
+    "migrate": "yarn migrate:up && yarn migrate:status",
     "build": "tsc",
+    "prestart": "yarn migrate",
     "start": "node dist/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage"

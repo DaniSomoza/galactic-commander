@@ -24,4 +24,6 @@ COPY --from=builder /usr/app/packages ./packages
 
 EXPOSE 3000
 
-CMD ["node", "packages/game-engine/dist/index"]
+# run migrations before start
+CMD yarn workspace game-engine migrate && node packages/game-engine/dist/index
+

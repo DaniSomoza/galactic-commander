@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile
 
 RUN yarn build
 
-# Stage 2: Auth Image
+# Stage 2: Game Api Image
 FROM node:20-slim
 
 WORKDIR /app
