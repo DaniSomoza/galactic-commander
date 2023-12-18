@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose'
 
 export interface IUniverse {
   name: string
@@ -16,6 +16,8 @@ const UniverseSchema: Schema = new Schema(
     timestamps: true
   }
 )
+
+export type IUniverseDocument = IUniverse & Document
 
 const UniverseModel = mongoose.model<IUniverse>('Universe', UniverseSchema)
 

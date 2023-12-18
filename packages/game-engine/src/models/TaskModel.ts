@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose'
 
 export const PENDING_TASK_STATUS = 'PENDING'
 export const PROCESSED_TASK_STATUS = 'PROCESSED'
@@ -49,6 +49,7 @@ export interface ITask<Type extends TaskType> {
   type: Type
   data: TaskData<Type>
   status: TaskStatus
+  universe: mongoose.Types.ObjectId
   isCancellable: boolean
 
   executeTaskAt: number | null
@@ -63,6 +64,11 @@ export interface ITask<Type extends TaskType> {
 const TaskSchema: Schema = new Schema(
   {
     type: { type: String, required: true },
+    universe: {
+      type: Schema.Types.ObjectId,
+      ref: 'Universe',
+      required: true
+    },
     status: { type: String, required: true },
     data: { type: Schema.Types.Mixed, required: true },
     isCancellable: { type: Schema.Types.Mixed, required: true },
@@ -79,6 +85,8 @@ const TaskSchema: Schema = new Schema(
     timestamps: true
   }
 )
+
+export type ITaskDocument = ITask<TaskType> & Document
 
 export default function getTaskModel<Type extends TaskType>() {
   return mongoose.model<ITask<Type>>('Task', TaskSchema)

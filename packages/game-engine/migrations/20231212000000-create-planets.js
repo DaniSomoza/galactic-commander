@@ -1,8 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const generatePlanets = require('../dist/helpers/generatePlanets.js').default
 
-// TODO: implement universe info
-
 async function up(db) {
   const planets = generatePlanets()
 

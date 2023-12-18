@@ -1,7 +1,10 @@
-const message: string = 'starting...'
+import connectToDatabase from './configuration/Database'
+import gameEngine from './engine/game-engine'
 
-console.log('starting Game engine: ', message)
+async function main() {
+  await connectToDatabase()
 
-console.log('Mongo URI: ', process.env.MONGO_URI)
+  gameEngine()
+}
 
-export const test = 'this is a test'
+main()

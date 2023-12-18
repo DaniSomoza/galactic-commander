@@ -2,26 +2,30 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import StatusCodes from 'http-status-codes'
 import Joi from 'joi'
 
-import validateInputData from '../utils/validateInputData'
+import validateInputData from 'auth-microservice/dist/utils/validateInputData'
+import handleErrorResponse from 'auth-microservice/dist/errors/handleErrorResponse'
+import UnauthorizedError from 'auth-microservice/dist/errors/Unauthorized'
+import { verifyJWT } from 'auth-microservice/dist/lib/jwt'
+
 import playerService from '../services/playerService'
-import handleErrorResponse from '../errors/handleErrorResponse'
-import { verifyJWT } from '../lib/jwt'
-import UnauthorizedError from '../errors/Unauthorized'
 
 type CreatePlayerData = {
-  race: string
+  raceName: string
+  universeName: string
 }
 
 const playerValidationSchema = Joi.object<CreatePlayerData>({
-  race: Joi.string().required()
+  raceName: Joi.string().required(),
+  universeName: Joi.string().required()
 })
 
 async function createPlayer(request: FastifyRequest, response: FastifyReply) {
   try {
     await validateInputData(request.body, playerValidationSchema)
 
-    const { race } = request.body as CreatePlayerData
+    const { raceName, universeName } = request.body as CreatePlayerData
 
+    // TODO: create a helper for this in the auth-service
     const authorizationHeader = request.headers.authorization
     const jwtToken = authorizationHeader?.replace('Bearer ', '') || ''
 
@@ -30,7 +34,8 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
     const userCreated = await playerService.createPlayer({
       email,
       username,
-      race
+      raceName,
+      universeName
     })
 
     response.code(StatusCodes.CREATED).send(userCreated)
