@@ -45,6 +45,8 @@ type HistoryItem = {
   updatedAt: number
 }
 
+// TODO: add outData
+
 export interface ITask<Type extends TaskType> {
   type: Type
   data: TaskData<Type>
@@ -87,6 +89,7 @@ const TaskSchema: Schema = new Schema(
 )
 
 export type ITaskDocument = ITask<TaskType> & Document
+export type ITaskTypeDocument<Type extends TaskType> = ITask<Type> & Document
 
 export default function getTaskModel<Type extends TaskType>() {
   return mongoose.model<ITask<Type>>('Task', TaskSchema)

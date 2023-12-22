@@ -1,16 +1,17 @@
+import mongoose from 'mongoose'
 import RaceModel from '../models/RaceModel'
 
-async function findRaceById(raceId: string) {
-  return RaceModel.findById(raceId).lean().exec()
+async function findRaceById(raceId: mongoose.Types.ObjectId) {
+  return RaceModel.findById(raceId).exec()
 }
 
 async function findRaceByName(name: string) {
   return RaceModel.findOne({ name }).lean().exec()
 }
 
-const playerRepository = {
+const raceRepository = {
   findRaceById,
   findRaceByName
 }
 
-export default playerRepository
+export default raceRepository

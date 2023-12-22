@@ -9,22 +9,23 @@ async function processUniverse(universe: IUniverseDocument) {
   const universeId = universe._id
 
   if (!universe.isProcessingInProgress) {
+    console.log(`---[${currentSecond}]---`)
     const tasks = await taskRepository.getPendingTasksByUniverse(universeId, currentSecond)
     const hasTasksToProcess = tasks.length > 0
 
+    console.log('tasks: ', tasks.length)
+    universe.isProcessingInProgress = true
+    await universe.save()
+
     if (hasTasksToProcess) {
-      console.log(`---[${currentSecond}]---`)
-
-      universe.isProcessingInProgress = true
-      await universe.save()
-
-      await processTasks(tasks, currentSecond, universe)
-
-      universe.isProcessingInProgress = false
-      universe.lastProcessedTime = currentSecond
-      await universe.save()
-      console.log(`---[END]---`)
+      await processTasks(tasks, universe)
     }
+
+    universe.isProcessingInProgress = false
+    universe.lastProcessedTime = currentSecond
+    await universe.save()
+
+    console.log(`---[END]---`)
   }
 }
 

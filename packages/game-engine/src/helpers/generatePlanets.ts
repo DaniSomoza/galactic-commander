@@ -9,6 +9,8 @@ import {
 } from '../models/PlanetModel'
 import getRandomNumber from './getRandomNumber'
 
+// TODO: add more galaxies based on number of players, time, etc... (and send an email notification for it)
+
 function generatePlanets(): IPlanet[] {
   const planets: IPlanet[] = []
 

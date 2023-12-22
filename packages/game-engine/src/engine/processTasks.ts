@@ -1,27 +1,61 @@
 import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
-import { ITaskDocument } from '../models/TaskModel'
-import { IUniverse } from '../models/UniverseModel'
+import {
+  ITaskDocument,
+  ITaskTypeDocument,
+  NEW_PLAYER_TASK_TYPE,
+  NewPlayerTaskType,
+  TaskType
+} from '../models/TaskModel'
+import { IUniverseDocument } from '../models/UniverseModel'
+import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
 
-async function processTasks(tasks: ITaskDocument[], currentSecond: number, universe: IUniverse) {
-  console.log('universe: ', universe)
-  console.log('currentSecond: ', currentSecond)
-  console.log('tasks to process: ', tasks.length)
-
+async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
 
-  console.log('tasksGroupedBySeconds: ', tasksGroupedBySeconds)
-
-  const orderedSecondsToProcess = Object.keys(tasksGroupedBySeconds).sort(
-    (a, b) => Number(a) - Number(b)
-  )
-
-  console.log('orderedSecondsToProcess: ', orderedSecondsToProcess)
-
-  orderedSecondsToProcess.map((secondToProcess) => {
-    console.log('secondToProcess: ', secondToProcess)
+  for (const { tasks, second } of tasksGroupedBySeconds) {
+    // 0.- Calculate player resources
     // TODO: for each second Calculate resource Production for each player
-    // TODO: for each second process Tasks by priority type
-  })
+
+    // 1.- New player Tasks
+    const newPlayerTasks = tasks.filter((task) => task.type === NEW_PLAYER_TASK_TYPE)
+
+    const newPlayerTaskHandler = TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler
+
+    await processTasksSequentially(
+      newPlayerTasks as ITaskTypeDocument<NewPlayerTaskType>[],
+      newPlayerTaskHandler,
+      second
+    )
+
+    // 2.- Research Tasks
+    // TODO: implement this
+
+    universe.lastProcessedTime = second
+    await universe.save()
+  }
 }
 
 export default processTasks
+
+async function processTasksSequentially<Type extends TaskType>(
+  tasks: ITaskTypeDocument<Type>[],
+  handler: TaskHandler<Type>,
+  second: number
+) {
+  for (const task of tasks) {
+    const startTime = new Date().getTime()
+    await handler(task, second)
+    const endTime = new Date().getTime()
+    task.processingDuration = endTime - startTime
+    task.save()
+  }
+}
+
+// async function processTasksInParallel<Type extends TaskType>(
+//   tasks: ITaskTypeDocument<Type>[],
+//   handler: TaskHandler<Type>,
+//   second: number
+// ) {
+// TODO: processingDuration
+//   return Promise.all(tasks.map((task) => handler(task, second)))
+// }

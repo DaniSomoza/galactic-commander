@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose'
 
 export const DEFAULT_PLANET_RESOURCES = 1000
 
@@ -57,7 +57,7 @@ const PlanetSchema: Schema = new Schema(
 
     resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },
     resourceQuality: { type: Number, required: true },
-    lastResourceProduction: { type: Number, required: true },
+    lastResourceProductionTime: { type: Number, required: true },
 
     coordinates: {
       galaxy: { type: Number, required: true },
@@ -88,6 +88,8 @@ const PlanetSchema: Schema = new Schema(
     timestamps: true
   }
 )
+
+export type IPlanetDocument = IPlanet & Document
 
 const PlanetModel = mongoose.model<IPlanet>('Planet', PlanetSchema)
 

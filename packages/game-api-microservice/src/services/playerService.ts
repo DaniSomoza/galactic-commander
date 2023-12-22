@@ -59,7 +59,12 @@ async function createPlayer({
     processedAt: null,
     processingDuration: null,
 
-    history: [],
+    history: [
+      {
+        taskStatus: PENDING_TASK_STATUS,
+        updatedAt: new Date().getTime()
+      }
+    ],
 
     errorDetails: null
   }
