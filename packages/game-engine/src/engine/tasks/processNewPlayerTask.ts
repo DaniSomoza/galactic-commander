@@ -42,7 +42,7 @@ async function processNewPlayerTask(
 
     fleetEnergy: race.baseFleetEnergy,
     troopsPopulation: race.baseTroopsPopulation,
-    // TODO: check this
+    // TODO: check this (and in the tests)
     resourceProduction: 1 // default production: 1 resource per second
   }
 
@@ -61,7 +61,7 @@ async function processNewPlayerTask(
   principalPlanet.resourceQuality = 100 // max value
   principalPlanet.lastResourceProductionTime = second
 
-  // TODO: create a function for this
+  // TODO: abstract task management from processNewPlayerTask ????
   task.status = PROCESSED_TASK_STATUS
   task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: second })
   task.isCancellable = false

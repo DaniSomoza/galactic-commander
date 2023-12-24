@@ -29,9 +29,7 @@ async function findNewPlayerTaskByUsername(username: string) {
   return NewPlayerTaskModel.findOne({
     type: NEW_PLAYER_TASK_TYPE,
     'data.username': username
-  })
-    .lean()
-    .exec()
+  }).exec()
 }
 
 const taskRepository = {

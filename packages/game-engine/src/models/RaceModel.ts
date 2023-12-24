@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose'
 
 export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
@@ -216,6 +216,8 @@ const RaceSchema: Schema = new Schema(
     timestamps: true
   }
 )
+
+export type IRaceDocument = IRace & Document
 
 const RaceModel = mongoose.model<IRace>('Race', RaceSchema)
 

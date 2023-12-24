@@ -6,7 +6,7 @@ async function findRaceById(raceId: mongoose.Types.ObjectId) {
 }
 
 async function findRaceByName(name: string) {
-  return RaceModel.findOne({ name }).lean().exec()
+  return RaceModel.findOne({ name }).exec()
 }
 
 const raceRepository = {

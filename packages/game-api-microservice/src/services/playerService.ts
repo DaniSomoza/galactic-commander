@@ -37,13 +37,13 @@ async function createPlayer({
   }
 
   const player = await playerRepository.findPlayerByUsername(username)
-  const newPlayerTask = await taskRepository.findNewPlayerTaskByUsername(username)
+  const duplicatedPlayerTask = await taskRepository.findNewPlayerTaskByUsername(username)
 
-  if (player || newPlayerTask) {
+  if (player || duplicatedPlayerTask) {
     throw new ConflictError('player already created', { username })
   }
 
-  const NewPlayerTask: ITask<NewPlayerTaskType> = {
+  const newPlayerTask: ITask<NewPlayerTaskType> = {
     type: NEW_PLAYER_TASK_TYPE,
     universe: universeData._id,
     data: {
@@ -69,7 +69,7 @@ async function createPlayer({
     errorDetails: null
   }
 
-  const newTask = await taskRepository.createPlayerTask(NewPlayerTask)
+  const newTask = await taskRepository.createPlayerTask(newPlayerTask)
 
   return newTask
 }

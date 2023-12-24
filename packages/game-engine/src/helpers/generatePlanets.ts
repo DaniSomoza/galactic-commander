@@ -31,8 +31,7 @@ function generatePlanets(): IPlanet[] {
               galaxy,
               sector,
               system,
-              planet,
-              label: generateDefaultPlanetLabel(galaxy, sector, system, planet)
+              planet
             },
 
             isSpecial: false,
@@ -58,13 +57,4 @@ export default generatePlanets
 
 function generateDefaultPlanetName() {
   return crypto.randomBytes(12).toString('hex')
-}
-
-function generateDefaultPlanetLabel(
-  galaxy: number,
-  sector: number,
-  system: number,
-  planet: number
-): string {
-  return `${galaxy}:${sector}:${system}:${planet}`
 }

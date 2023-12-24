@@ -6,7 +6,7 @@ async function findUniverses() {
 }
 
 async function findUniverseByName(name: string) {
-  return UniverseModel.findOne({ name }).lean().exec()
+  return UniverseModel.findOne({ name }).exec()
 }
 
 async function findUniverseById(universeId: mongoose.Types.ObjectId) {

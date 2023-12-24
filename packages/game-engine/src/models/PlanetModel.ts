@@ -7,6 +7,15 @@ export const SECTORS_PER_GALAXIES = 6
 export const SYSTEM_PER_SECTORS = 15
 export const PLANETS_PER_SYSTEM = 12
 
+// TODO: implement moons
+
+export type PlanetCoordinates = {
+  galaxy: number
+  sector: number
+  system: number
+  planet: number
+}
+
 export interface IPlanet {
   name: string
   owner: mongoose.Types.ObjectId | null
@@ -16,14 +25,7 @@ export interface IPlanet {
   resourceQuality: number
   lastResourceProductionTime: number
 
-  coordinates: {
-    galaxy: number
-    sector: number
-    system: number
-    planet: number
-    // TODO: implement moons position=0 planet, position=[1,N] moons
-    label: string // galaxy:sector:system:planet:position
-  }
+  coordinates: PlanetCoordinates
 
   isSpecial: boolean
   isPrincipal: boolean
@@ -63,8 +65,7 @@ const PlanetSchema: Schema = new Schema(
       galaxy: { type: Number, required: true },
       sector: { type: Number, required: true },
       system: { type: Number, required: true },
-      planet: { type: Number, required: true },
-      label: { type: String, required: true }
+      planet: { type: Number, required: true }
     },
 
     isSpecial: { type: Boolean, required: true, default: false },

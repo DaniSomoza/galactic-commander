@@ -1,4 +1,4 @@
-import PlanetModel from '../models/PlanetModel'
+import PlanetModel, { PlanetCoordinates } from '../models/PlanetModel'
 
 async function findPlanetById(planetId: string) {
   return PlanetModel.findById(planetId).exec()
@@ -11,12 +11,19 @@ async function findAvailablePrincipalPlanets() {
     isExplored: false,
     isUnderConquer: false,
     owner: null
-    // TODO: discard planets quality [90, 100]
+    // TODO: discard planets quality [90, 100] ??
+  }).exec()
+}
+
+async function findPlanetByCoordinates(coordinates: PlanetCoordinates) {
+  return PlanetModel.findOne({
+    coordinates: coordinates
   }).exec()
 }
 
 const planetRepository = {
   findPlanetById,
+  findPlanetByCoordinates,
   findAvailablePrincipalPlanets
 }
 
