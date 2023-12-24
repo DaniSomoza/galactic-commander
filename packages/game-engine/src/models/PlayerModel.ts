@@ -44,8 +44,9 @@ export interface IPlayer {
 
 const PlayerSchema: Schema = new Schema(
   {
-    username: { type: String, required: true },
-    email: { type: String, required: true },
+    // TODO: add universeId ???? here
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
 
     race: {
       type: Schema.Types.ObjectId,

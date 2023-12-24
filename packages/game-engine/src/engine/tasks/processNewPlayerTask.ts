@@ -3,7 +3,8 @@ import getRandomPlanet from '../../helpers/getRandomPlanet'
 import PlayerModel, { IPlayer } from '../../models/PlayerModel'
 import planetRepository from '../../repositories/planetRepository'
 import raceRepository from '../../repositories/raceRepository'
-import { ITaskTypeDocument, NewPlayerTaskType, PROCESSED_TASK_STATUS } from '../../models/TaskModel'
+import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
+import GameEngineError from '../errors/GameEngineError'
 
 async function processNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
@@ -16,13 +17,11 @@ async function processNewPlayerTask(
   ])
 
   if (availablePrincipalPlanets.length === 0) {
-    // TODO: TASK ERROR!
-    throw new Error('planets error')
+    throw new GameEngineError('no principal planet available')
   }
 
   if (!race) {
-    // TODO: TASK ERROR!
-    throw new Error('race error')
+    throw new GameEngineError('invalid race')
   }
 
   const principalPlanet = getRandomPlanet(availablePrincipalPlanets)
@@ -48,11 +47,6 @@ async function processNewPlayerTask(
 
   const newPlayer = new PlayerModel(newPlayerData)
 
-  if (!newPlayer) {
-    // TODO: TASK ERROR!
-    throw new Error('newPlayer error')
-  }
-
   principalPlanet.owner = newPlayer._id
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
@@ -61,13 +55,10 @@ async function processNewPlayerTask(
   principalPlanet.resourceQuality = 100 // max value
   principalPlanet.lastResourceProductionTime = second
 
-  // TODO: abstract task management from processNewPlayerTask ????
-  task.status = PROCESSED_TASK_STATUS
-  task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: second })
-  task.isCancellable = false
-  task.processedAt = second
+  // we create the player after update the planet
+  await newPlayer.save()
 
-  return Promise.all([task.save(), principalPlanet.save(), newPlayer.save()])
+  return Promise.all([principalPlanet.save()])
 }
 
 export default processNewPlayerTask
