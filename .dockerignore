@@ -1,12 +1,13 @@
 **/node_modules
-**/coverage
-.nyc_output
-coverage-temp
 
-# TypeScript cache
+**/build
 *.tsbuildinfo
 
-# Logs
+
+.nyc_output
+**/coverage-temp
+**/coverage
+
 logs
 *.log
 npm-debug.log*

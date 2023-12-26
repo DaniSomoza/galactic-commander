@@ -8,7 +8,7 @@ import NotFoundError from '../errors/NotFoundError'
 import ConflictError from '../errors/ConflictError'
 import ForbiddenError from '../errors/Forbidden'
 import UnauthorizedError from '../errors/Unauthorized'
-import { createJWT, verifyJWT } from '../lib/jwt'
+import { createJWT, checkSessionToken } from '../lib/jwt'
 
 const { FRONTEND_ORIGIN } = process.env
 
@@ -89,14 +89,6 @@ async function login(email: string, password: string) {
   return {
     user: userData,
     sessionToken
-  }
-}
-
-function checkSessionToken(jwtToken: string) {
-  try {
-    return verifyJWT(jwtToken)
-  } catch (error) {
-    throw new UnauthorizedError('invalid session token', { jwtToken })
   }
 }
 

@@ -1,4 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken'
+
+import UnauthorizedError from '../errors/Unauthorized'
 import { CleanUserData } from '../utils/cleanUserFields'
 
 const { JWT_SECRET, JWT_EXPIRATION_TIME } = process.env
@@ -14,4 +16,16 @@ export function createJWT(payload: CleanUserData) {
 
 export function verifyJWT(token: string): CleanUserData {
   return jsonwebtoken.verify(token, JWT_SECRET || DEFAULT_SECRET) as CleanUserData
+}
+
+export function checkSessionToken(jwtToken: string) {
+  try {
+    return verifyJWT(jwtToken)
+  } catch (error) {
+    throw new UnauthorizedError('invalid session token', { jwtToken })
+  }
+}
+
+export function getJWTFromAuthHeader(authorizationHeader?: string): string {
+  return authorizationHeader?.replace('Bearer ', '') || ''
 }

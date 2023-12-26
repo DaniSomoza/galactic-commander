@@ -5,6 +5,7 @@ import Joi from 'joi'
 import validateInputData from '../utils/validateInputData'
 import userService from '../services/userService'
 import handleErrorResponse from '../errors/handleErrorResponse'
+import { getJWTFromAuthHeader } from '../lib/jwt'
 
 type CreateUserData = {
   email: string
@@ -90,9 +91,7 @@ async function login(request: FastifyRequest, response: FastifyReply) {
 
 async function getUser(request: FastifyRequest, response: FastifyReply) {
   try {
-    const authorizationHeader = request.headers.authorization
-
-    const jwtToken = authorizationHeader?.replace('Bearer ', '') || ''
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
 
     const user = await userService.getUser(jwtToken)
 

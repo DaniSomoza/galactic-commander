@@ -10,10 +10,10 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn workspaces run build",
+    "build": "yarn workspace game-engine build && yarn workspace auth-microservice build && yarn workspace game-api-microservice build && yarn workspace frontend build",
     "start": "yarn workspaces run start",
     "test": "yarn workspaces run test",
-    "precoverage": "yarn workspaces run test:coverage && nyc merge packages/auth-microservice/coverage coverage-temp/auth-microservice.json && nyc merge packages/game-engine/coverage coverage-temp/game-engine.json",
+    "precoverage": "yarn workspaces run test:coverage && nyc merge packages/auth-microservice/coverage coverage-temp/auth-microservice.json && nyc merge packages/game-engine/coverage coverage-temp/game-engine.json && nyc merge packages/game-api-microservice/coverage coverage-temp/game-api-microservice.json",
     "coverage": "nyc report --temp-directory coverage-temp",
     "lint:check": "eslint ./packages/**/*.ts && prettier --check packages/**/*.ts"
   },
@@ -47,6 +47,8 @@
     ]
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1",
+    "migrate-mongo": "^11.0.0"
   }
 }

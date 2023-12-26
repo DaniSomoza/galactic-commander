@@ -32,12 +32,27 @@ docker-compose build
 docker-compose up
 ```
 
+### Tests
+
+#### run tests
+
+```bash
+yarn test
+```
+
+#### generate coverage report
+
+```bash
+yarn coverage
+```
+
 ## Roadmap
 
 - [x] **Auth microservice**: create users, validate email, get user info and create user sessions (JWT)
-- [ ] **Other Auth microservice endpoints**: change password, forgot password, reset password and delete account
+- [ ] **Pending Auth microservice endpoints**: change password, forgot password, reset password, update user data and delete account
 - [x] **Auth microservice**: add unit tests with jest
-- [ ] **Auth microservice**: add Github actions (test, sonar, coverage reports with coveralls)
+- [x] **Github actions**: add Github actions (test, coverage reports with coveralls)
+- [ ] **Pending Github actions**: add Sonar action
 - [ ] **First version of the frontend**: register (create + validate email), login, forgot password, change password
 - [ ] **game-api**: add migration support
 - [ ] **game-engine**: Create Universe (define races, planets)

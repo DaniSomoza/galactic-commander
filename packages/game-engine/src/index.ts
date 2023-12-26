@@ -1,7 +1,12 @@
-const message: string = 'starting...'
+import connectToDatabase from './configuration/Database'
+import gameEngine from './engine/game-engine'
 
-console.log('starting Game engine: ', message)
+const ONE_SECOND_INTERVAL = 1_000
 
-console.log('Mongo URI: ', process.env.MONGO_URI)
+async function main() {
+  await connectToDatabase()
 
-export const test = 'this is a test'
+  setInterval(gameEngine, ONE_SECOND_INTERVAL)
+}
+
+main()
