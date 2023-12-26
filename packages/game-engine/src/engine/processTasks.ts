@@ -52,7 +52,7 @@ async function processTasksSequentially<Type extends TaskType>(
     try {
       await handler(task, second)
       task.status = PROCESSED_TASK_STATUS
-      task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: second })
+      task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
     } catch (error) {
       if (error instanceof MongoServerError) {
         task.errorDetails = error.message
@@ -62,7 +62,7 @@ async function processTasksSequentially<Type extends TaskType>(
       }
 
       task.status = ERROR_TASK_STATUS
-      task.history.push({ taskStatus: ERROR_TASK_STATUS, updatedAt: second })
+      task.history.push({ taskStatus: ERROR_TASK_STATUS, updatedAt: new Date().getTime() })
     }
 
     task.isCancellable = false

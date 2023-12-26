@@ -55,7 +55,7 @@ async function processNewPlayerTask(
   principalPlanet.resourceQuality = 100 // max value
   principalPlanet.lastResourceProductionTime = second
 
-  // we create the player after update the planet
+  // we create the player before update the planet
   await newPlayer.save()
 
   return Promise.all([principalPlanet.save()])

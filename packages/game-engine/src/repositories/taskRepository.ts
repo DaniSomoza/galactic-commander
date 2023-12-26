@@ -32,7 +32,13 @@ async function findNewPlayerTaskByUsername(username: string) {
   }).exec()
 }
 
+async function findTaskById(taskId: mongoose.Types.ObjectId) {
+  const NewPlayerTaskModel = getTaskModel<NewPlayerTaskType>()
+  return NewPlayerTaskModel.findById(taskId).exec()
+}
+
 const taskRepository = {
+  findTaskById,
   createPlayerTask,
   getPendingTasksByUniverse,
   findNewPlayerTaskByUsername

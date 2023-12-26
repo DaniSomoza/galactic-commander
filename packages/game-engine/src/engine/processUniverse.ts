@@ -14,10 +14,11 @@ async function processUniverse(universe: IUniverseDocument) {
     const hasTasksToProcess = tasks.length > 0
 
     console.log('tasks: ', tasks.length)
-    universe.isProcessingInProgress = true
-    await universe.save()
 
     if (hasTasksToProcess) {
+      universe.isProcessingInProgress = true
+      await universe.save()
+
       await processTasks(tasks, universe)
     }
 

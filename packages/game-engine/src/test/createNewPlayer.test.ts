@@ -21,10 +21,6 @@ import processTasks from '../engine/processTasks'
 import PlayerModel, { IPlayer } from '../models/PlayerModel'
 
 describe('process new player Task', () => {
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
   it('process a new valid player (pirates race)', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
 
