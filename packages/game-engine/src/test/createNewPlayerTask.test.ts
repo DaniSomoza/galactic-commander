@@ -20,7 +20,7 @@ import pirates from '../assets/races/pirates'
 import processTasks from '../engine/processTasks'
 import PlayerModel, { IPlayer } from '../models/PlayerModel'
 
-describe('process new player Task', () => {
+describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
 

@@ -1,18 +1,20 @@
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import mongoose from 'mongoose'
 
-import { PLAYER_TEST_1_PIRATE } from './mocks/playerMocks'
-import PlayerModel from '../models/PlayerModel'
-import races from '../assets/races/races'
-import RaceModel, { IRace } from '../models/RaceModel'
-import raceRepository from '../repositories/raceRepository'
-import pirates from '../assets/races/pirates'
-import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from './mocks/planetMocks'
-import PlanetModel, { IPlanetDocument } from '../models/PlanetModel'
-import planetRepository from '../repositories/planetRepository'
-import getTaskModel, { TaskType } from '../models/TaskModel'
-import UniverseModel from '../models/UniverseModel'
-import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import Server from '../configuration/Server'
+import playerRoutes from '../routes/playerRoutes'
+import PlayerModel from 'game-engine/dist/models/PlayerModel'
+import UniverseModel from 'game-engine/dist/models/UniverseModel'
+import UNIVERSE_TEST_MOCK from 'game-engine/dist/test/mocks/universeMocks'
+import races from 'game-engine/dist/assets/races/races'
+import pirates from 'game-engine/dist/assets/races/pirates'
+import RaceModel, { IRace } from 'game-engine/dist/models/RaceModel'
+import raceRepository from 'game-engine/dist/repositories/raceRepository'
+import planetRepository from 'game-engine/dist/repositories/planetRepository'
+import PlanetModel, { IPlanetDocument } from 'game-engine/dist/models/PlanetModel'
+import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
+import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from 'game-engine/dist/test/mocks/planetMocks'
+import getTaskModel, { TaskType } from 'game-engine/dist/models/TaskModel'
 
 // initialize database
 let mongoTestDB = new MongoMemoryServer()
@@ -62,6 +64,18 @@ export async function restoreTestDatabase() {
   await Promise.all([taskModel.deleteMany({})])
 }
 
+// initialize server
+const serverOptions = {
+  logger: false
+}
+
+export const testServer = new Server(serverOptions)
+testServer.addRoutes(playerRoutes)
+const port = 3_000
+const host = '0.0.0.0'
+testServer.start(host, port)
+testServer.configureCors(['http://localhost:3000'])
+
 beforeAll(async () => {
   await connectToTestDatabase()
 })
@@ -72,4 +86,5 @@ afterEach(restoreTestDatabase)
 
 afterAll(async () => {
   await disconnectToTestDatabase()
+  await testServer.server.close()
 })

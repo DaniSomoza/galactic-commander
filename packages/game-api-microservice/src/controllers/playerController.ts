@@ -4,8 +4,7 @@ import Joi from 'joi'
 
 import validateInputData from 'auth-microservice/dist/utils/validateInputData'
 import handleErrorResponse from 'auth-microservice/dist/errors/handleErrorResponse'
-import UnauthorizedError from 'auth-microservice/dist/errors/Unauthorized'
-import { verifyJWT } from 'auth-microservice/dist/lib/jwt'
+import { checkSessionToken, getJWTFromAuthHeader } from 'auth-microservice/dist/lib/jwt'
 
 import playerService from '../services/playerService'
 
@@ -25,15 +24,14 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
 
     const { raceName, universeName } = request.body as CreatePlayerData
 
-    // TODO: create a helper for this in the auth-service
-    const authorizationHeader = request.headers.authorization
-    const jwtToken = authorizationHeader?.replace('Bearer ', '') || ''
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
 
-    const { username, email } = checkSessionToken(jwtToken)
+    const { username, email, isActivated } = checkSessionToken(jwtToken)
 
     const userCreated = await playerService.createPlayer({
       email,
       username,
+      isActivated,
       raceName,
       universeName
     })
@@ -43,14 +41,6 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
     const { code, body } = handleErrorResponse(error)
 
     return response.code(code).send(body)
-  }
-}
-
-function checkSessionToken(jwtToken: string) {
-  try {
-    return verifyJWT(jwtToken)
-  } catch (error) {
-    throw new UnauthorizedError('invalid session token', { jwtToken })
   }
 }
 

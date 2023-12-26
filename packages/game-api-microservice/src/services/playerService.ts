@@ -14,6 +14,7 @@ import ConflictError from 'auth-microservice/dist/errors/ConflictError'
 type PlayerData = {
   username: string
   email: string
+  isActivated: boolean
   raceName: string
   universeName: string
 }
@@ -21,9 +22,14 @@ type PlayerData = {
 async function createPlayer({
   username,
   email,
+  isActivated,
   raceName,
   universeName
 }: PlayerData): Promise<ITask<NewPlayerTaskType>> {
+  if (!isActivated) {
+    throw new ConflictError('user is not activated', { username })
+  }
+
   const raceData = await raceRepository.findRaceByName(raceName)
 
   if (!raceData) {
