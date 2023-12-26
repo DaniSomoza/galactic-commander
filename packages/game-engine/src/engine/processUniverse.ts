@@ -9,11 +9,9 @@ async function processUniverse(universe: IUniverseDocument) {
   const universeId = universe._id
 
   if (!universe.isProcessingInProgress) {
-    console.log(`---[${currentSecond}]---`)
     const tasks = await taskRepository.getPendingTasksByUniverse(universeId, currentSecond)
+    console.log(`[${currentSecond}] [${formatDate(currentSecond)}] --- tasks: ${tasks.length}`)
     const hasTasksToProcess = tasks.length > 0
-
-    console.log('tasks: ', tasks.length)
 
     if (hasTasksToProcess) {
       universe.isProcessingInProgress = true
@@ -25,9 +23,19 @@ async function processUniverse(universe: IUniverseDocument) {
     universe.isProcessingInProgress = false
     universe.lastProcessedTime = currentSecond
     await universe.save()
-
-    console.log(`---[END]---`)
   }
 }
 
 export default processUniverse
+
+function formatDate(timestamp: number) {
+  return new Intl.DateTimeFormat('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).format(new Date(timestamp))
+}
