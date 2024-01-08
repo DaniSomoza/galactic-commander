@@ -11,8 +11,9 @@ import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from './mocks/planetMocks'
 import PlanetModel, { IPlanetDocument } from '../models/PlanetModel'
 import planetRepository from '../repositories/planetRepository'
 import getTaskModel, { TaskType } from '../models/TaskModel'
-import UniverseModel from '../models/UniverseModel'
+import UniverseModel, { IUniverse } from '../models/UniverseModel'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import universeRepository from '../repositories/universeRepository'
 
 // initialize database
 let mongoTestDB = new MongoMemoryServer()
@@ -40,12 +41,17 @@ export async function mockTestGameDatabase() {
 
   // player test 1 pirate
   PLAYER_TEST_1_PIRATE.race = (await raceRepository.findRaceByName(pirates.name)) as IRace
+  PLAYER_TEST_1_PIRATE.universe = (await universeRepository.findUniverseByName(
+    UNIVERSE_TEST_MOCK.name
+  )) as IUniverse
   const player1PrincipalPlanet = (await planetRepository.findPlanetByCoordinates(
     PRINCIPAL_PLANET_TEST_1.coordinates
   )) as IPlanetDocument
   PLAYER_TEST_1_PIRATE.principalPlanet = player1PrincipalPlanet
   PLAYER_TEST_1_PIRATE.planets = [player1PrincipalPlanet]
   PLAYER_TEST_1_PIRATE.planetsExplored = [player1PrincipalPlanet]
+  // TODO: bonus
+  // TODO: ADD researches
   const player1Pirate = await PlayerModel.create(PLAYER_TEST_1_PIRATE)
 
   // update planets

@@ -8,6 +8,7 @@ import {
   IPlanet
 } from '../models/PlanetModel'
 import getRandomNumber from './getRandomNumber'
+import getSecond from './getSecond'
 
 // TODO: add more galaxies based on number of players, time, etc... (and send an email notification for it)
 
@@ -25,7 +26,7 @@ function generatePlanets(): IPlanet[] {
 
             resources: DEFAULT_PLANET_RESOURCES,
             resourceQuality: getRandomNumber(0, 100),
-            lastResourceProductionTime: 0,
+            lastResourceProductionTime: getSecond(new Date().getTime()),
 
             coordinates: {
               galaxy,

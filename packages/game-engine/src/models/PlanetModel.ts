@@ -55,6 +55,9 @@ const PlanetSchema: Schema = new Schema(
       required: false,
       default: null
     },
+
+    // TODO: Add universe
+
     colonizedAt: { type: Number },
 
     resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },

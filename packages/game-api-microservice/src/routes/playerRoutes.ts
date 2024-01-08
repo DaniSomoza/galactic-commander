@@ -15,7 +15,6 @@ const createPlayerRoute: Route = {
 //   handler: playerController.getPlayer
 // }
 
-// const userRoutes = [createPlayerRoute, getPlayerRoute]
-const userRoutes = [createPlayerRoute]
+const playerRoutes = [createPlayerRoute]
 
-export default userRoutes
+export default playerRoutes

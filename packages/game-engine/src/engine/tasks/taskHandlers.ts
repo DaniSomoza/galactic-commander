@@ -2,11 +2,13 @@ import { Document } from 'mongoose'
 import {
   TaskType,
   ITaskTypeDocument,
-  RESEARCH_TASK_TYPE,
-  NEW_PLAYER_TASK_TYPE
+  NEW_PLAYER_TASK_TYPE,
+  FINISH_RESEARCH_TASK_TYPE,
+  START_RESEARCH_TASK_TYPE
 } from '../../models/TaskModel'
-import processResearchTask from './processResearchTask'
 import processNewPlayerTask from './processNewPlayerTask'
+import processFinishResearchTask from './processFinishResearchTask'
+import processStartResearchTask from './processStartResearchTask'
 
 type taskPriority = {
   [Type in TaskType]: number
@@ -14,7 +16,8 @@ type taskPriority = {
 
 const TASK_PRIORITY: taskPriority = {
   [NEW_PLAYER_TASK_TYPE]: 1,
-  [RESEARCH_TASK_TYPE]: 2
+  [FINISH_RESEARCH_TASK_TYPE]: 2,
+  [START_RESEARCH_TASK_TYPE]: 3
 }
 
 export type TaskHandler<Type extends TaskType> = (
@@ -36,9 +39,14 @@ export const TASK_HANDLER: TaskHandlerType = {
     handler: processNewPlayerTask,
     priority: TASK_PRIORITY[NEW_PLAYER_TASK_TYPE]
   },
-  [RESEARCH_TASK_TYPE]: {
+  [FINISH_RESEARCH_TASK_TYPE]: {
     processTasksInParallel: true,
-    handler: processResearchTask,
-    priority: TASK_PRIORITY[RESEARCH_TASK_TYPE]
+    handler: processFinishResearchTask,
+    priority: TASK_PRIORITY[FINISH_RESEARCH_TASK_TYPE]
+  },
+  [START_RESEARCH_TASK_TYPE]: {
+    processTasksInParallel: true,
+    handler: processStartResearchTask,
+    priority: TASK_PRIORITY[START_RESEARCH_TASK_TYPE]
   }
 }

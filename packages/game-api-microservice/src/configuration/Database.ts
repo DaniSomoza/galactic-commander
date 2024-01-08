@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 
+import 'game-engine/dist/models/ResearchModel'
+import 'game-engine/dist/models/PlanetModel'
+import 'game-engine/dist/models/RaceModel'
+
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_PORT, MONGO_GAME_DB } = process.env
 
 const connectToDatabase = async () => {
