@@ -4,13 +4,14 @@ import mongoose from 'mongoose'
 import Server from '../configuration/Server'
 import playerRoutes from '../routes/playerRoutes'
 import PlayerModel from 'game-engine/dist/models/PlayerModel'
-import UniverseModel from 'game-engine/dist/models/UniverseModel'
+import UniverseModel, { IUniverse } from 'game-engine/dist/models/UniverseModel'
 import UNIVERSE_TEST_MOCK from 'game-engine/dist/test/mocks/universeMocks'
 import races from 'game-engine/dist/assets/races/races'
 import pirates from 'game-engine/dist/assets/races/pirates'
 import RaceModel, { IRace } from 'game-engine/dist/models/RaceModel'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import planetRepository from 'game-engine/dist/repositories/planetRepository'
+import universeRepository from 'game-engine/dist/repositories/universeRepository'
 import PlanetModel, { IPlanetDocument } from 'game-engine/dist/models/PlanetModel'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from 'game-engine/dist/test/mocks/planetMocks'
@@ -42,12 +43,17 @@ export async function mockTestGameDatabase() {
 
   // player test 1 pirate
   PLAYER_TEST_1_PIRATE.race = (await raceRepository.findRaceByName(pirates.name)) as IRace
+  PLAYER_TEST_1_PIRATE.universe = (await universeRepository.findUniverseByName(
+    UNIVERSE_TEST_MOCK.name
+  )) as IUniverse
   const player1PrincipalPlanet = (await planetRepository.findPlanetByCoordinates(
     PRINCIPAL_PLANET_TEST_1.coordinates
   )) as IPlanetDocument
   PLAYER_TEST_1_PIRATE.principalPlanet = player1PrincipalPlanet
   PLAYER_TEST_1_PIRATE.planets = [player1PrincipalPlanet]
   PLAYER_TEST_1_PIRATE.planetsExplored = [player1PrincipalPlanet]
+  // TODO: bonus
+  // TODO: researches
   const player1Pirate = await PlayerModel.create(PLAYER_TEST_1_PIRATE)
 
   // update planets

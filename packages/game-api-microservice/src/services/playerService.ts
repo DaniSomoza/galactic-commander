@@ -42,8 +42,11 @@ async function createPlayer({
     throw new NotFoundError('invalid universe', { universeName })
   }
 
-  const player = await playerRepository.findPlayerByUsername(username)
-  const duplicatedPlayerTask = await taskRepository.findNewPlayerTaskByUsername(username)
+  const player = await playerRepository.findPlayerByUsername(username, universeData._id)
+  const duplicatedPlayerTask = await taskRepository.findNewPlayerTaskByUsername(
+    username,
+    universeData._id
+  )
 
   if (player || duplicatedPlayerTask) {
     throw new ConflictError('player already created', { username })

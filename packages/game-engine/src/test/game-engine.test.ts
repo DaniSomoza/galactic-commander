@@ -15,15 +15,15 @@ import { TASK_HANDLER } from '../engine/tasks/taskHandlers'
 import taskRepository from '../repositories/taskRepository'
 import GameEngineError from '../engine/errors/GameEngineError'
 
-const originalHandler = TASK_HANDLER.NewPlayerTask.handler
+const originalHandler = TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler
 
 describe('game-engine', () => {
   beforeEach(() => {
-    TASK_HANDLER.NewPlayerTask.handler = jest.fn()
+    TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = jest.fn()
   })
 
   afterEach(() => {
-    TASK_HANDLER.NewPlayerTask.handler = originalHandler
+    TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = originalHandler
     jest.restoreAllMocks()
   })
 
@@ -49,7 +49,7 @@ describe('game-engine', () => {
     const testUniverse = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
 
     const fakeTaskHandler = jest.fn()
-    TASK_HANDLER.NewPlayerTask.handler = fakeTaskHandler
+    TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
     const fakeTask = createFakeTask(testUniverse!._id)
 
@@ -88,7 +88,7 @@ describe('game-engine', () => {
       throw new GameEngineError('test invalid Task')
     })
 
-    TASK_HANDLER.NewPlayerTask.handler = fakeTaskHandler
+    TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
     const fakeTask = createFakeTask(testUniverse!._id)
 

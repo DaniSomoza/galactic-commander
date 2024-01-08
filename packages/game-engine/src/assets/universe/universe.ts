@@ -1,8 +1,9 @@
+import getSecond from '../../helpers/getSecond'
 import { IUniverse } from '../../models/UniverseModel'
 
 const universe: IUniverse = {
   name: 'alfa-universe',
-  lastProcessedTime: 0,
+  lastProcessedTime: getSecond(new Date().getTime()),
   isProcessingInProgress: false
 }
 

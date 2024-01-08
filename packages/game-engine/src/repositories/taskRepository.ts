@@ -4,7 +4,8 @@ import getTaskModel, {
   NewPlayerTaskType,
   NEW_PLAYER_TASK_TYPE,
   PENDING_TASK_STATUS,
-  TaskType
+  TaskType,
+  StartResearchTaskType
 } from '../models/TaskModel'
 
 async function getPendingTasksByUniverse(universeId: mongoose.Types.ObjectId, second: number) {
@@ -24,11 +25,23 @@ async function createPlayerTask(taskData: ITask<NewPlayerTaskType>) {
   return newPlayerTask.save()
 }
 
-async function findNewPlayerTaskByUsername(username: string) {
+async function createStartResearchTask(taskData: ITask<StartResearchTaskType>) {
+  const NewPlayerTaskModel = getTaskModel<StartResearchTaskType>()
+  const newPlayerTask = new NewPlayerTaskModel(taskData)
+  return newPlayerTask.save()
+}
+
+async function findNewPlayerTaskByUsername(
+  username: string,
+  universeId: mongoose.Types.ObjectId,
+  status = PENDING_TASK_STATUS
+) {
   const NewPlayerTaskModel = getTaskModel<NewPlayerTaskType>()
   return NewPlayerTaskModel.findOne({
     type: NEW_PLAYER_TASK_TYPE,
-    'data.username': username
+    'data.username': username,
+    universe: universeId,
+    status
   }).exec()
 }
 
@@ -40,6 +53,7 @@ async function findTaskById(taskId: mongoose.Types.ObjectId) {
 const taskRepository = {
   findTaskById,
   createPlayerTask,
+  createStartResearchTask,
   getPendingTasksByUniverse,
   findNewPlayerTaskByUsername
 }

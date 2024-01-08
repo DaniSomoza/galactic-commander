@@ -5,15 +5,20 @@ import planetRepository from '../../repositories/planetRepository'
 import raceRepository from '../../repositories/raceRepository'
 import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
+import universeRepository from '../../repositories/universeRepository'
+import { IResearchDocument } from '../../models/ResearchModel'
+
+const INITIAL_RESEARCH_LEVEL = 0
 
 async function processNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
   second: number
 ): Promise<Document[]> {
   // get all the required data from DB
-  const [availablePrincipalPlanets, race] = await Promise.all([
+  const [availablePrincipalPlanets, race, universe] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
-    raceRepository.findRaceById(task.data.race)
+    raceRepository.findRaceById(task.data.race),
+    universeRepository.findUniverseById(task.universe)
   ])
 
   if (availablePrincipalPlanets.length === 0) {
@@ -24,11 +29,18 @@ async function processNewPlayerTask(
     throw new GameEngineError('invalid race')
   }
 
+  if (!universe) {
+    throw new GameEngineError('invalid universe')
+  }
+
   const principalPlanet = getRandomPlanet(availablePrincipalPlanets)
+
+  const researches = race.researches as IResearchDocument[]
 
   const newPlayerData: IPlayer = {
     username: task.data.username,
     email: task.data.email,
+    universe,
 
     race,
 
@@ -37,12 +49,23 @@ async function processNewPlayerTask(
     planets: [principalPlanet._id],
     planetsExplored: [principalPlanet._id],
 
-    bonus: [race.bonus],
+    bonus: [
+      {
+        bonus: race.bonus,
+        origin: race._id,
+        type: 'Race'
+      }
+    ],
+
+    points: [],
+
+    researches: researches.map((research) => ({
+      research: research._id,
+      level: INITIAL_RESEARCH_LEVEL
+    })),
 
     fleetEnergy: race.baseFleetEnergy,
-    troopsPopulation: race.baseTroopsPopulation,
-    // TODO: check this (and in the tests)
-    resourceProduction: 1 // default production: 1 resource per second
+    troopsPopulation: race.baseTroopsPopulation
   }
 
   const newPlayer = new PlayerModel(newPlayerData)
