@@ -5,7 +5,7 @@ export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
 export const DEFAULT_TROOPS_POPULATION = 10
 export const DEFAULT_RESOURCE_NAME = 'metal'
-export const DEFAULT_INITIAL_RESOURCES = 1_000
+export const DEFAULT_INITIAL_RESOURCES = 10_000
 export const DEFAULT_INTERGALACTIC_TRAVEL_THRESHOLD = 8
 
 export type SpaceScoutDrone = 'spaceScoutDrone'

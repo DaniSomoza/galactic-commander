@@ -28,6 +28,10 @@ async function processStartResearchTask(
     throw new GameEngineError('invalid player')
   }
 
+  if (player.activeResearch) {
+    throw new GameEngineError('player already researching')
+  }
+
   const raceResearches = player.race.researches as IResearchDocument[]
   const research = raceResearches.find((research) => research._id.equals(task.data.research))
 
@@ -35,31 +39,14 @@ async function processStartResearchTask(
     throw new GameEngineError('invalid research')
   }
 
-  if (player.activeResearch) {
-    throw new GameEngineError('player already researching')
-  }
-
   const playerResearches = player.researches as IPlayerResearch[]
   const playerResearch = playerResearches.find(
     (playerResearch) => playerResearch.research.name === research.name
   )
 
-  if (!playerResearch) {
-    throw new GameEngineError('invalid player research')
-  }
+  const level = playerResearch?.level || 0
 
-  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
-  const baseResearchDuration = calculateResearchDuration(
-    playerResearch.research,
-    playerResearch.level
-  )
-  const researchDuration = baseResearchDuration * (100 / researchBonus)
-  const executeTaskAt = getSecond(second + researchDuration)
-
-  const researchResourceCost = calculateResearchResourceCost(
-    playerResearch.research,
-    playerResearch.level
-  )
+  const researchResourceCost = calculateResearchResourceCost(research, level)
 
   const hasEnoughResources = player.principalPlanet.resources >= researchResourceCost
 
@@ -67,10 +54,22 @@ async function processStartResearchTask(
     throw new GameEngineError('no resources available')
   }
 
+  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+  const baseResearchDuration = calculateResearchDuration(research, level)
+
+  const researchDuration = baseResearchDuration * (100 / researchBonus)
+  const executeTaskAt = getSecond(second + researchDuration)
+
   const principalPlanet = player.principalPlanet as IPlanetDocument
 
   principalPlanet.resources -= researchResourceCost
-  player.activeResearch = playerResearch
+  const activeResearch = {
+    research: research._id,
+    level: level + 1
+    // TODO: Add more data like executeTaskAt
+  }
+
+  player.activeResearch = activeResearch
 
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {

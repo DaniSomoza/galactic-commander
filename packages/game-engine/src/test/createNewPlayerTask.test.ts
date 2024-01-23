@@ -127,10 +127,13 @@ describe('process new player creation Task', () => {
       expect(playerBonus[bonusName]).toEqual(playerRace.bonus[bonusName])
     })
 
-    // TODO: Add researches
-    // TODO: Add activeResearch
-    expect(createdPlayer!.fleetEnergy).toEqual(newPlayerRace?.baseFleetEnergy)
-    expect(createdPlayer!.troopsPopulation).toEqual(newPlayerRace?.baseTroopsPopulation)
+    expect(createdPlayer!.points).toEqual([])
+
+    expect(createdPlayer!.researches).toEqual([])
+    expect(createdPlayer!.activeResearch).toBeUndefined()
+
+    expect(createdPlayer!.fleetEnergy).toEqual(0)
+    expect(createdPlayer!.troopsPopulation).toEqual(0)
 
     expect(newPrincipalPlanet!.owner).toEqual(createdPlayer!._id)
     expect(newPrincipalPlanet!.isPrincipal).toBe(true)

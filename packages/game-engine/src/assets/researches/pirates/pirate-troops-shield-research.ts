@@ -8,7 +8,9 @@ const PIRATE_TROOPS_SHIELD_RESEARCH: IResearch = {
   resourceCost: 150,
   bonus: {
     troopsShieldBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_TROOPS_SHIELD_RESEARCH

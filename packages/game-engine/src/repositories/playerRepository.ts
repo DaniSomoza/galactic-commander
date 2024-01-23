@@ -30,8 +30,8 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
     .exec()
 }
 
-async function findPlayerById(raceId: mongoose.Types.ObjectId) {
-  return PlayerModel.findById(raceId)
+async function findPlayerById(playerId: mongoose.Types.ObjectId) {
+  return PlayerModel.findById(playerId)
     .populate('principalPlanet')
     .populate({
       path: 'race',

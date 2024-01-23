@@ -24,14 +24,16 @@ export default async function calculateResourceProduction(
     if (isPlayerTaskData(task.data)) {
       const player = await playerRepository.findPlayerById(task.data.player)
 
-      const playerPlanets = player?.planets as IPlanetDocument[]
+      if (player) {
+        const playerPlanets = player.planets as IPlanetDocument[]
 
-      playerPlanets.forEach((playerPlanet: IPlanetDocument) => {
-        const isAlreadyIncluded = planets.some((planet) => planet._id.equals(playerPlanet._id))
-        if (!isAlreadyIncluded) {
-          planets.push(playerPlanet)
-        }
-      })
+        playerPlanets.forEach((playerPlanet: IPlanetDocument) => {
+          const isAlreadyIncluded = planets.some((planet) => planet._id.equals(playerPlanet._id))
+          if (!isAlreadyIncluded) {
+            planets.push(playerPlanet)
+          }
+        })
+      }
     }
   }
 

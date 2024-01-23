@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-export const DEFAULT_PLANET_RESOURCES = 1000
+export const DEFAULT_PLANET_RESOURCES = 10_000
 
 export const GALAXIES = 3
 export const SECTORS_PER_GALAXIES = 6

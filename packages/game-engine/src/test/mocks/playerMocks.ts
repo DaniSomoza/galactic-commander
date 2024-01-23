@@ -20,8 +20,8 @@ export const PLAYER_TEST_1_PIRATE: IPlayer = {
   points: [],
   researches: [],
 
-  fleetEnergy: pirates.baseFleetEnergy,
-  troopsPopulation: pirates.baseTroopsPopulation
+  fleetEnergy: 0,
+  troopsPopulation: 0
 }
 
 const ALL_PLAYERS_MOCK = [PLAYER_TEST_1_PIRATE]

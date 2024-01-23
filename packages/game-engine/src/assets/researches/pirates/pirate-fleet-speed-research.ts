@@ -8,7 +8,9 @@ const PIRATE_FLEET_SPEED_RESEARCH: IResearch = {
   raceName: pirates.name,
   bonus: {
     fleetSpeedBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_FLEET_SPEED_RESEARCH

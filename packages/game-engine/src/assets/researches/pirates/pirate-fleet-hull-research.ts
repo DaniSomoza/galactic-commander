@@ -8,7 +8,9 @@ const PIRATE_FLEET_HULL_RESEARCH: IResearch = {
   raceName: pirates.name,
   bonus: {
     fleetHullBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_FLEET_HULL_RESEARCH

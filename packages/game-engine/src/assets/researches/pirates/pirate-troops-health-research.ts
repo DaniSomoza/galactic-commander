@@ -8,7 +8,9 @@ const PIRATE_TROOPS_HEALTH_RESEARCH: IResearch = {
   resourceCost: 100,
   bonus: {
     troopsHealthBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_TROOPS_HEALTH_RESEARCH

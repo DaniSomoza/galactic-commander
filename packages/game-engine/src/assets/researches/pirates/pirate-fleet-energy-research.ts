@@ -6,9 +6,9 @@ const PIRATE_FLEET_ENERGY_RESEARCH: IResearch = {
   initialTime: 25_000,
   resourceCost: 200,
   raceName: pirates.name,
-  bonus: {
-    fleetEnergyBonus: 10
-  }
+  bonus: {},
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: true
 }
 
 export default PIRATE_FLEET_ENERGY_RESEARCH

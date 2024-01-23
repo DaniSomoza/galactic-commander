@@ -8,7 +8,9 @@ const PIRATE_COMPUTING_RESEARCH: IResearch = {
     maxFleetsAllowedBonus: 1
   },
   resourceCost: 100,
-  initialTime: 20_000
+  initialTime: 20_000,
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_COMPUTING_RESEARCH

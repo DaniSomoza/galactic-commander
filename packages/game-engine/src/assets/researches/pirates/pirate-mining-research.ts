@@ -8,7 +8,9 @@ const PIRATE_MINING_RESEARCH: IResearch = {
   resourceCost: 150,
   bonus: {
     resourceProductionBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_MINING_RESEARCH

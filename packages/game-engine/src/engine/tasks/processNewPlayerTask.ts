@@ -6,9 +6,6 @@ import raceRepository from '../../repositories/raceRepository'
 import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
 import universeRepository from '../../repositories/universeRepository'
-import { IResearchDocument } from '../../models/ResearchModel'
-
-const INITIAL_RESEARCH_LEVEL = 0
 
 async function processNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
@@ -35,8 +32,6 @@ async function processNewPlayerTask(
 
   const principalPlanet = getRandomPlanet(availablePrincipalPlanets)
 
-  const researches = race.researches as IResearchDocument[]
-
   const newPlayerData: IPlayer = {
     username: task.data.username,
     email: task.data.email,
@@ -45,7 +40,6 @@ async function processNewPlayerTask(
     race,
 
     principalPlanet,
-
     planets: [principalPlanet._id],
     planetsExplored: [principalPlanet._id],
 
@@ -58,14 +52,10 @@ async function processNewPlayerTask(
     ],
 
     points: [],
+    researches: [],
 
-    researches: researches.map((research) => ({
-      research: research._id,
-      level: INITIAL_RESEARCH_LEVEL
-    })),
-
-    fleetEnergy: race.baseFleetEnergy,
-    troopsPopulation: race.baseTroopsPopulation
+    fleetEnergy: 0,
+    troopsPopulation: 0
   }
 
   const newPlayer = new PlayerModel(newPlayerData)

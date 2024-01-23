@@ -41,6 +41,8 @@ export async function mockTestGameDatabase() {
   // add all planets
   await Promise.all([...ALL_PLANETS_MOCK.map((planet) => PlanetModel.create(planet))])
 
+  // TODO: create a new test player instead of this in a before each instead of this...
+
   // player test 1 pirate
   PLAYER_TEST_1_PIRATE.race = (await raceRepository.findRaceByName(pirates.name)) as IRace
   PLAYER_TEST_1_PIRATE.universe = (await universeRepository.findUniverseByName(

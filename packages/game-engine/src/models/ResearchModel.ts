@@ -8,6 +8,9 @@ export interface IResearch {
   initialTime: number
   // TODO: ADD A ENUM initialTime 100 150 200 & 250
   resourceCost: number
+
+  isTroopsPopulationResearch: boolean
+  isFleetEnergyResearch: boolean
 }
 
 export interface IBonus {
@@ -30,7 +33,6 @@ export interface IBonus {
   fleetCargoBonus?: number
   fleetBuildingBonus?: number
   maxFleetsAllowedBonus?: number
-  fleetEnergyBonus?: number
 
   // Troops Bonus
   troopsAttackBonus?: number
@@ -40,7 +42,6 @@ export interface IBonus {
   troopsShieldPiercingBonus?: boolean
   troopsShieldRegenerationBonus?: number
   troopsTrainingBonus?: number
-  troopsPopulationBonus?: number
 
   // Defenses Bonus
   defensesAttackBonus?: number
@@ -81,7 +82,6 @@ export const BonusSchema = new Schema({
   fleetCargoBonus: { type: Number, required: false },
   fleetBuildingBonus: { type: Number, required: false },
   maxFleetsAllowedBonus: { type: Number, required: false },
-  fleetEnergyBonus: { type: Number, required: false },
 
   // Troops Bonus
   troopsAttackBonus: { type: Number, required: false },
@@ -91,7 +91,6 @@ export const BonusSchema = new Schema({
   troopsShieldPiercingBonus: { type: Boolean, required: false },
   troopsShieldRegenerationBonus: { type: Number, required: false },
   troopsTrainingBonus: { type: Number, required: false },
-  troopsPopulationBonus: { type: Number, required: false },
 
   // Defenses Bonus
   defensesAttackBonus: { type: Number, required: false },
@@ -122,7 +121,10 @@ export const ResearchSchema = new Schema({
   raceName: { type: String, required: true },
   // TODO: add enums!
   initialTime: { type: Number, required: true },
-  resourceCost: { type: Number, required: true }
+  resourceCost: { type: Number, required: true },
+
+  isTroopsPopulationResearch: { type: Boolean, required: true, default: false },
+  isFleetEnergyResearch: { type: Boolean, required: true, default: false }
 })
 
 export type IResearchDocument = IResearch & Document

@@ -8,7 +8,9 @@ const PIRATE_FLEET_BUILDING_RESEARCH: IResearch = {
   initialTime: 25_000,
   bonus: {
     fleetBuildingBonus: 10
-  }
+  },
+  isTroopsPopulationResearch: false,
+  isFleetEnergyResearch: false
 }
 
 export default PIRATE_FLEET_BUILDING_RESEARCH

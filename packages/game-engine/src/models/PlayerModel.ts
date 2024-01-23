@@ -83,6 +83,7 @@ export const PlayerBonusSchema = new Schema({
   }
 })
 
+// TODO: remove schema ?
 export const PlayerPointsSchema = new Schema({
   points: { type: Number, required: true },
   origin: {
@@ -94,7 +95,8 @@ export const PlayerPointsSchema = new Schema({
     type: String,
     required: true,
     enum: ['Unit', 'Research']
-  }
+  },
+  second: { type: Number, required: true }
 })
 
 const PlayerSchema: Schema = new Schema(
@@ -140,6 +142,7 @@ const PlayerSchema: Schema = new Schema(
         required: true
       }
     ],
+
     activeResearch: {
       type: PlayerResearchSchema,
       required: false
