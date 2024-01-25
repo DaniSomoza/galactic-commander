@@ -45,8 +45,8 @@ async function findNewPlayerTaskByUsername(
   }).exec()
 }
 
-async function findTaskById(taskId: mongoose.Types.ObjectId) {
-  const NewPlayerTaskModel = getTaskModel<NewPlayerTaskType>()
+async function findTaskById<Type extends TaskType>(taskId: mongoose.Types.ObjectId) {
+  const NewPlayerTaskModel = getTaskModel<Type>()
   return NewPlayerTaskModel.findById(taskId).exec()
 }
 

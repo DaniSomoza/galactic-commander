@@ -14,6 +14,7 @@ export type IPlayerPoint = {
   origin: mongoose.Types.ObjectId
   type: 'Unit' | 'Research'
   second: number
+  // TODO: add extra data based on type?
 }
 
 export type IPlayerBonus = {

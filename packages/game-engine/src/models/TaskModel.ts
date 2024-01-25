@@ -62,6 +62,7 @@ export interface ITask<Type extends TaskType> {
   universe: mongoose.Types.ObjectId
   isCancellable: boolean
 
+  // TODO: add executeTaskAt mandatory ???
   executeTaskAt: number | null
   processedAt: number | null
   processingDuration: number | null

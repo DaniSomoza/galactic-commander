@@ -9,7 +9,7 @@ import universeRepository from 'game-engine/dist/repositories/universeRepository
 import { NEW_PLAYER_TASK_TYPE, PENDING_TASK_STATUS } from 'game-engine/dist/models/TaskModel'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 
-import { testServer } from './testSetup'
+import { testServer } from './helpers/testServer'
 
 describe('players task', () => {
   it('creates a new valid player task', async () => {
