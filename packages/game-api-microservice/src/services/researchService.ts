@@ -10,6 +10,7 @@ import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
 import getSecond from 'game-engine/dist/helpers/getSecond'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
+import BadRequestError from 'auth-microservice/dist/errors/BadRequestError'
 
 type ResearchData = {
   username: string
@@ -39,7 +40,7 @@ async function startResearch({
   }
 
   if (executeTaskAt && executeTaskAt < new Date().getTime()) {
-    throw new NotFoundError('invalid schedule', { executeTaskAt })
+    throw new BadRequestError('invalid schedule', { executeTaskAt })
   }
 
   // TODO: create base Task

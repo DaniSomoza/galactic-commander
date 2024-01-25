@@ -197,7 +197,7 @@ describe('researches task', () => {
 
     const error = JSON.parse(response.body)
 
-    expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+    expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     expect(error.error).toEqual('invalid schedule')
   })
 })
