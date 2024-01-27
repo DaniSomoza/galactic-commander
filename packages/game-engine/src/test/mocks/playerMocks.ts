@@ -1,10 +1,12 @@
 import pirates from '../../assets/races/pirates'
 import { IPlayer } from '../../models/PlayerModel'
 import { PRINCIPAL_PLANET_TEST_1 } from './planetMocks'
+import UNIVERSE_TEST_MOCK from './universeMocks'
 
 export const PLAYER_TEST_1_PIRATE: IPlayer = {
   username: 'username_test_1',
   email: 'username_1@test.com',
+  universe: UNIVERSE_TEST_MOCK,
 
   race: pirates,
 
@@ -14,11 +16,12 @@ export const PLAYER_TEST_1_PIRATE: IPlayer = {
 
   planetsExplored: [PRINCIPAL_PLANET_TEST_1],
 
-  bonus: [pirates.bonus],
+  bonus: [],
+  points: [],
+  researches: [],
 
-  fleetEnergy: pirates.baseFleetEnergy,
-  troopsPopulation: pirates.baseTroopsPopulation,
-  resourceProduction: 1
+  fleetEnergy: 0,
+  troopsPopulation: 0
 }
 
 const ALL_PLAYERS_MOCK = [PLAYER_TEST_1_PIRATE]

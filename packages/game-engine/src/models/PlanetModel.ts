@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-export const DEFAULT_PLANET_RESOURCES = 1000
+export const DEFAULT_PLANET_RESOURCES = 10_000
 
 export const GALAXIES = 3
 export const SECTORS_PER_GALAXIES = 6
@@ -55,6 +55,9 @@ const PlanetSchema: Schema = new Schema(
       required: false,
       default: null
     },
+
+    // TODO: Add universe
+
     colonizedAt: { type: Number },
 
     resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },

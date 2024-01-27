@@ -1,0 +1,53 @@
+import { FastifyReply, FastifyRequest } from 'fastify'
+import StatusCodes from 'http-status-codes'
+import Joi from 'joi'
+
+import validateInputData from 'auth-microservice/dist/utils/validateInputData'
+import handleErrorResponse from 'auth-microservice/dist/errors/handleErrorResponse'
+import { checkSessionToken, getJWTFromAuthHeader } from 'auth-microservice/dist/lib/jwt'
+
+import researchService from '../services/researchService'
+
+type StartResearchData = {
+  researchName: string
+  universeName: string
+
+  executeTaskAt?: number
+}
+
+const researchValidationSchema = Joi.object<StartResearchData>({
+  researchName: Joi.string().required(),
+  universeName: Joi.string().required(),
+  executeTaskAt: Joi.number().optional()
+})
+
+async function startResearch(request: FastifyRequest, response: FastifyReply) {
+  try {
+    await validateInputData(request.body, researchValidationSchema)
+
+    const { researchName, universeName, executeTaskAt } = request.body as StartResearchData
+
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
+
+    const { username } = checkSessionToken(jwtToken)
+
+    const startResearchTask = await researchService.startResearch({
+      username,
+      researchName,
+      universeName,
+      executeTaskAt
+    })
+
+    response.code(StatusCodes.CREATED).send(startResearchTask)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
+const researchController = {
+  startResearch
+}
+
+export default researchController

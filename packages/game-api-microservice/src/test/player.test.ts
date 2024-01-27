@@ -5,10 +5,11 @@ import pirates from 'game-engine/dist/assets/races/pirates'
 import UNIVERSE_TEST_MOCK from 'game-engine/dist/test/mocks/universeMocks'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
+import universeRepository from 'game-engine/dist/repositories/universeRepository'
 import { NEW_PLAYER_TASK_TYPE, PENDING_TASK_STATUS } from 'game-engine/dist/models/TaskModel'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 
-import { testServer } from './testSetup'
+import { testServer } from './helpers/testServer'
 
 describe('players task', () => {
   it('creates a new valid player task', async () => {
@@ -16,6 +17,8 @@ describe('players task', () => {
       raceName: pirates.name,
       universeName: UNIVERSE_TEST_MOCK.name
     }
+
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
 
     const userData = {
       username: 'new_test_username',
@@ -27,7 +30,9 @@ describe('players task', () => {
 
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -48,7 +53,10 @@ describe('players task', () => {
     expect(taskCreated.data.email).toEqual(userData.email)
     expect(taskCreated.data.race).toEqual(race!._id.toString())
 
-    const newPlayerTask = await taskRepository.findNewPlayerTaskByUsername(userData.username)
+    const newPlayerTask = await taskRepository.findNewPlayerTaskByUsername(
+      userData.username,
+      universe!._id
+    )
 
     expect(newPlayerTask?.data.username).toBe(userData.username)
   })
@@ -69,7 +77,11 @@ describe('players task', () => {
 
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -79,7 +91,9 @@ describe('players task', () => {
     })
 
     expect(response.statusCode).toEqual(StatusCodes.CONFLICT)
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
   })
 
   it('returns a not found error if race is invalid', async () => {
@@ -96,9 +110,13 @@ describe('players task', () => {
       isBanned: false
     }
 
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -108,7 +126,9 @@ describe('players task', () => {
     })
 
     expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
   })
 
   it('returns a not found error if universe is invalid', async () => {
@@ -125,9 +145,13 @@ describe('players task', () => {
       isBanned: false
     }
 
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -137,7 +161,9 @@ describe('players task', () => {
     })
 
     expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
   })
 
   it('returns a conflict error if a player is already created', async () => {
@@ -154,9 +180,13 @@ describe('players task', () => {
       isBanned: false
     }
 
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -166,7 +196,9 @@ describe('players task', () => {
     })
 
     expect(response.statusCode).toEqual(StatusCodes.CONFLICT)
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
   })
 
   it('returns a conflict error if a task player is already created', async () => {
@@ -183,9 +215,13 @@ describe('players task', () => {
       isBanned: false
     }
 
+    const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+
     const authHeader = `Bearer ${createJWT(userData)}`
 
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).toBeNull()
 
     const response = await testServer.server.inject({
       method: 'POST',
@@ -196,7 +232,9 @@ describe('players task', () => {
 
     // Task created
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
-    expect(await taskRepository.findNewPlayerTaskByUsername(userData.username)).not.toBeNull()
+    expect(
+      await taskRepository.findNewPlayerTaskByUsername(userData.username, universe!._id)
+    ).not.toBeNull()
 
     const duplicatedResponse = await testServer.server.inject({
       method: 'POST',

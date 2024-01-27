@@ -1,10 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose'
+import { BonusSchema, IBonus, IResearch } from './ResearchModel'
 
 export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
 export const DEFAULT_TROOPS_POPULATION = 10
 export const DEFAULT_RESOURCE_NAME = 'metal'
-export const DEFAULT_INITIAL_RESOURCES = 1000
+export const DEFAULT_INITIAL_RESOURCES = 10_000
 export const DEFAULT_INTERGALACTIC_TRAVEL_THRESHOLD = 8
 
 export type SpaceScoutDrone = 'spaceScoutDrone'
@@ -17,7 +18,7 @@ export type SpaceBattleStation = 'spaceBattleStation'
 export type SpacePlanetaryBomber = 'spacePlanetaryBomber'
 export type SpaceCargo = 'spaceCargo'
 
-// TODO: move this
+// TODO: move this to Units ?
 export type ShipsTypes =
   | SpaceScoutDrone
   | SpaceFighter
@@ -28,58 +29,6 @@ export type ShipsTypes =
   | SpaceBattleStation
   | SpacePlanetaryBomber
   | SpaceCargo
-
-// TODO: move this
-export interface IBonus {
-  // General Bonus
-  researchBonus: number
-  resourceProductionBonus: number
-  stealthFleetsMode: boolean
-  stealthFleetsDetection: boolean
-  extraPlanetsBonus: number
-  intergalacticTravelBonus: boolean
-
-  // Fleet Bonus
-  fleetAttackBonus: number
-  fleetHullBonus: number
-  fleetHullRegenerationBonus: number // only for organic ships
-  fleetShieldBonus: number
-  fleetShieldPiercingBonus: boolean
-  fleetShieldRegenerationBonus: number
-  fleetSpeedBonus: number
-  fleetCargoBonus: number
-  fleetBuildingBonus: number
-  maxFleetsAllowedBonus: number
-  fleetEnergyBonus: number
-
-  // Troops Bonus
-  troopsAttackBonus: number
-  troopsHealthBonus: number
-  troopsHealthRegenerationBonus: number // medics ???
-  troopsShieldBonus: number
-  troopsShieldPiercingBonus: boolean
-  troopsShieldRegenerationBonus: number
-  troopsTrainingBonus: number
-  troopsPopulationBonus: number
-
-  // Defenses Bonus
-  defensesAttackBonus: number
-  defensesHullBonus: number
-  defensesShieldBonus: number
-  defensesShieldRegenerationBonus: number
-  defensesBuildingBonus: number
-
-  // Capture Units Bonus
-  fleetCaptureBonus: number
-  spaceFighterCaptureBonus: number
-  spaceCarrierCaptureBonus: number
-  spaceCruiserCaptureBonus: number
-  spaceDestroyerCaptureBonus: number
-  spaceCargoCaptureBonus: number
-  spaceFrigateCaptureBonus: number
-  spacePlanetaryBomberCaptureBonus: number
-  spaceBattleStationCaptureBonus: number
-}
 
 type Aggressive = 'Aggressive'
 type Defensive = 'Defensive'
@@ -101,7 +50,6 @@ type RaceType =
   | Colonizer
 
 export interface IRace {
-  // Race basic data
   name: string
   description: string
   image: string
@@ -112,65 +60,14 @@ export interface IRace {
   baseResources: number // initial resources in the principal planet
   resourceName: string
   intergalacticTravelThreshold: number
+  researches: IResearch[]
+
   // TODO: create another types for this
-  // researches: [] // TBD migration
-  // units: [] // TBD migration
+  // units: [] // TBD migration REMEMBER: implement Requisites!
   // specials: [] // TBD migration
 
   bonus: IBonus
 }
-
-// TODO: meter esto en otro fichero
-export const BonusSchema = new Schema({
-  // General Bonus
-  researchBonus: { type: Number, required: true, default: 0 },
-  resourceProductionBonus: { type: Number, required: true, default: 0 },
-  stealthFleetsMode: { type: Boolean, required: true, default: false },
-  stealthFleetsDetection: { type: Boolean, required: true, default: false },
-  extraPlanetsBonus: { type: Number, required: true, default: 0 },
-  intergalacticTravelBonus: { type: Boolean, required: true, default: false },
-
-  // Fleet Bonus
-  fleetAttackBonus: { type: Number, required: true, default: 0 },
-  fleetHullBonus: { type: Number, required: true, default: 0 },
-  fleetHullRegenerationBonus: { type: Number, required: true, default: 0 }, // only for organic ships
-  fleetShieldBonus: { type: Number, required: true, default: 0 },
-  fleetShieldPiercingBonus: { type: Boolean, required: true, default: false },
-  fleetShieldRegenerationBonus: { type: Number, required: true, default: 0 },
-  fleetSpeedBonus: { type: Number, required: true, default: 0 },
-  fleetCargoBonus: { type: Number, required: true, default: 0 },
-  fleetBuildingBonus: { type: Number, required: true, default: 0 },
-  maxFleetsAllowedBonus: { type: Number, required: true, default: 0 },
-  fleetEnergyBonus: { type: Number, required: true, default: 0 },
-
-  // Troops Bonus
-  troopsAttackBonus: { type: Number, required: true, default: 0 },
-  troopsHealthBonus: { type: Number, required: true, default: 0 },
-  troopsHealthRegenerationBonus: { type: Number, required: true, default: 0 }, // medics ???
-  troopsShieldBonus: { type: Number, required: true, default: 0 },
-  troopsShieldPiercingBonus: { type: Boolean, required: true, default: false },
-  troopsShieldRegenerationBonus: { type: Number, required: true, default: 0 },
-  troopsTrainingBonus: { type: Number, required: true, default: 0 },
-  troopsPopulationBonus: { type: Number, required: true, default: 0 },
-
-  // Defenses Bonus
-  defensesAttackBonus: { type: Number, required: true, default: 0 },
-  defensesHullBonus: { type: Number, required: true, default: 0 },
-  defensesShieldBonus: { type: Number, required: true, default: 0 },
-  defensesShieldRegenerationBonus: { type: Number, required: true, default: 0 },
-  defensesBuildingBonus: { type: Number, required: true, default: 0 },
-
-  // Capture Units Bonus
-  fleetCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceFighterCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceCarrierCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceCruiserCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceDestroyerCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceCargoCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceFrigateCaptureBonus: { type: Number, required: true, default: 0 },
-  spacePlanetaryBomberCaptureBonus: { type: Number, required: true, default: 0 },
-  spaceBattleStationCaptureBonus: { type: Number, required: true, default: 0 }
-})
 
 const RaceSchema: Schema = new Schema(
   {
@@ -205,7 +102,7 @@ const RaceSchema: Schema = new Schema(
     specials: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Specials',
+        ref: 'Special',
         required: true
       }
     ],

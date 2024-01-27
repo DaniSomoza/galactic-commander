@@ -11,7 +11,7 @@ export type TaskStatus =
   | typeof ERROR_TASK_STATUS
   | typeof CANCELLED_TASK_STATUS
 
-export const NEW_PLAYER_TASK_TYPE = 'NewPlayerTask'
+export const NEW_PLAYER_TASK_TYPE = 'NEW_PLAYER_TASK'
 export type NewPlayerTaskType = typeof NEW_PLAYER_TASK_TYPE
 export type NewPlayerTaskData = {
   username: string
@@ -19,33 +19,41 @@ export type NewPlayerTaskData = {
   race: mongoose.Types.ObjectId
 }
 
-export const RESEARCH_TASK_TYPE = 'ResearchTask'
-export type ResearchTaskType = typeof RESEARCH_TASK_TYPE
-export type ResearchTaskData = {
-  // TODO: implement task data
+export const START_RESEARCH_TASK_TYPE = 'START_RESEARCH_TASK'
+export type StartResearchTaskType = typeof START_RESEARCH_TASK_TYPE
+export type StartResearchTaskData = {
+  player: mongoose.Types.ObjectId
+  research: mongoose.Types.ObjectId
 }
 
-const EXPLORE_PLANET_TASK_TYPE = 'ExplorePlanetTask'
-export type ExplorePlanetTaskType = typeof EXPLORE_PLANET_TASK_TYPE
-export type ExplorePlanetTaskData = {
-  // TODO: implement task data
+export const FINISH_RESEARCH_TASK_TYPE = 'FINISH_RESEARCH_TASK'
+export type FinishResearchTaskType = typeof FINISH_RESEARCH_TASK_TYPE
+export type FinishResearchTaskData = {
+  player: mongoose.Types.ObjectId
+  research: mongoose.Types.ObjectId
+  researchDuration: number
+  researchResourceCost: number
 }
 
-export type TaskType = NewPlayerTaskType | ResearchTaskType
+// const EXPLORE_PLANET_TASK_TYPE = 'ExplorePlanetTask'
+// export type ExplorePlanetTaskType = typeof EXPLORE_PLANET_TASK_TYPE
+// export type ExplorePlanetTaskData = {
+//   // TODO: implement task data
+// }
+
+export type TaskType = NewPlayerTaskType | StartResearchTaskType | FinishResearchTaskType
 export type TaskData<T extends TaskType> = T extends NewPlayerTaskType
   ? NewPlayerTaskData
-  : T extends ResearchTaskType
-    ? ResearchTaskData
-    : T extends ExplorePlanetTaskType
-      ? ExplorePlanetTaskData
+  : T extends StartResearchTaskType
+    ? StartResearchTaskData
+    : T extends FinishResearchTaskType
+      ? FinishResearchTaskData
       : never
 
 type HistoryItem = {
   taskStatus: TaskStatus
   updatedAt: number
 }
-
-// TODO: add outData
 
 export interface ITask<Type extends TaskType> {
   type: Type
@@ -54,6 +62,7 @@ export interface ITask<Type extends TaskType> {
   universe: mongoose.Types.ObjectId
   isCancellable: boolean
 
+  // TODO: add executeTaskAt mandatory ???
   executeTaskAt: number | null
   processedAt: number | null
   processingDuration: number | null
