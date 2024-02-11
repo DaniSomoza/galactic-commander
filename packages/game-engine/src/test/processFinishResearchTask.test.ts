@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 
 import PIRATE_FLEET_ATTACK_RESEARCH from '../assets/researches/pirates/pirate-fleet-attack-research'
 import processTasks from '../engine/processTasks'
-import { IResearchDocument } from '../models/ResearchModel'
 import getTaskModel, {
   ITask,
   PENDING_TASK_STATUS,
@@ -25,13 +24,13 @@ describe('process finish research task', () => {
     it('level 1 bonus research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_FLEET_ATTACK_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -83,17 +82,17 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -102,7 +101,7 @@ describe('process finish research task', () => {
 
       // fleetAttackBonus 10%
       expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(10)
-      expect(researchPlayer?.bonus[0].origin).toEqual(research._id)
+      expect(researchPlayer?.bonus[0].origin).toEqual(research?._id)
       expect(researchPlayer?.bonus[0].type).toEqual('Research')
       expect(researchPlayer?.bonus.length).toEqual(1)
     })
@@ -110,13 +109,13 @@ describe('process finish research task', () => {
     it('level 2 bonus research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_FLEET_ATTACK_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -207,22 +206,22 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research._id)
+      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
@@ -231,7 +230,7 @@ describe('process finish research task', () => {
 
       // fleetAttackBonus 20%
       expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(20)
-      expect(researchPlayer?.bonus[0].origin).toEqual(research._id)
+      expect(researchPlayer?.bonus[0].origin).toEqual(research?._id)
       expect(researchPlayer?.bonus[0].type).toEqual('Research')
       expect(researchPlayer?.bonus.length).toEqual(1)
     })
@@ -241,13 +240,13 @@ describe('process finish research task', () => {
     it('level 1 fleet energy research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_FLEET_ENERGY_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -259,7 +258,7 @@ describe('process finish research task', () => {
 
       await player?.save()
 
-      expect(player?.fleetEnergy).toBe(0)
+      expect(player?.units.fleets.energy).toBe(0)
 
       const finishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
@@ -301,34 +300,34 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       // new energy
-      expect(researchPlayer?.fleetEnergy).toBe(pirates.baseFleetEnergy)
+      expect(researchPlayer?.units.fleets.energy).toBe(pirates.baseFleetEnergy)
     })
 
     it('level 2 fleet energy research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_FLEET_ENERGY_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -419,26 +418,26 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research._id)
+      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
       // new energy
-      expect(researchPlayer?.fleetEnergy).toBe(300)
+      expect(researchPlayer?.units.fleets.energy).toBe(300)
     })
   })
 
@@ -446,13 +445,13 @@ describe('process finish research task', () => {
     it('level 1 troops population research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_TROOPS_POPULATION_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -464,7 +463,7 @@ describe('process finish research task', () => {
 
       await player?.save()
 
-      expect(player?.troopsPopulation).toBe(0)
+      expect(player?.units.troops.population).toBe(0)
 
       const finishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
@@ -506,34 +505,34 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       // new troops population value
-      expect(researchPlayer?.troopsPopulation).toBe(pirates.baseTroopsPopulation)
+      expect(researchPlayer?.units.troops.population).toBe(pirates.baseTroopsPopulation)
     })
 
     it('level 2 troops population research', async () => {
       const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
       const player = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       const research = player?.race.researches.find(
         (research) => research.name === PIRATE_TROOPS_POPULATION_RESEARCH.name
-      ) as IResearchDocument
+      )
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
@@ -624,26 +623,26 @@ describe('process finish research task', () => {
       expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
       const researchPlayer = await playerRepository.findPlayerByUsername(
-        PLAYER_TEST_1_PIRATE.username,
+        PLAYER_TEST_1_PIRATE.user.username,
         universe!._id
       )
 
       expect(researchPlayer?.activeResearch).toBe(undefined)
       expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research.name)
+      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research._id)
+      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research._id)
+      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
       // new troops population value
-      expect(researchPlayer?.troopsPopulation).toBe(22)
+      expect(researchPlayer?.units.troops.population).toBe(22)
     })
   })
 
@@ -696,7 +695,7 @@ describe('process finish research task', () => {
   it('task error if no valid research is present in the research data', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 

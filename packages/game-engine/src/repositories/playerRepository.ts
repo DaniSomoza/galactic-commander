@@ -3,8 +3,15 @@ import mongoose from 'mongoose'
 import PlayerModel from '../models/PlayerModel'
 
 async function findPlayerByUsername(username: string, universeId: mongoose.Types.ObjectId) {
-  return PlayerModel.findOne({ username, universe: universeId })
-    .populate('principalPlanet')
+  return PlayerModel.findOne({ 'user.username': username, universe: universeId })
+    .populate('planets.principal')
+    .populate({
+      path: 'planets.colonies',
+      populate: {
+        path: 'owner',
+        model: 'Player'
+      }
+    })
     .populate({
       path: 'race',
       populate: {
@@ -19,12 +26,11 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
         model: 'Research'
       }
     })
-    .populate('activeResearch')
     .populate({
-      path: 'planets',
+      path: 'activeResearch',
       populate: {
-        path: 'owner',
-        model: 'Player'
+        path: 'research',
+        model: 'Research'
       }
     })
     .exec()
@@ -32,7 +38,14 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
 
 async function findPlayerById(playerId: mongoose.Types.ObjectId) {
   return PlayerModel.findById(playerId)
-    .populate('principalPlanet')
+    .populate('planets.principal')
+    .populate({
+      path: 'planets.colonies',
+      populate: {
+        path: 'owner',
+        model: 'Player'
+      }
+    })
     .populate({
       path: 'race',
       populate: {
@@ -43,15 +56,15 @@ async function findPlayerById(playerId: mongoose.Types.ObjectId) {
     .populate({
       path: 'researches',
       populate: {
-        path: 'research'
+        path: 'research',
+        model: 'Research'
       }
     })
-    .populate('activeResearch')
     .populate({
-      path: 'planets',
+      path: 'activeResearch',
       populate: {
-        path: 'owner',
-        model: 'Player'
+        path: 'research',
+        model: 'Research'
       }
     })
     .exec()

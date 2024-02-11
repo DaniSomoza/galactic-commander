@@ -2,7 +2,9 @@
 const generatePlanets = require('../dist/helpers/generatePlanets.js').default
 
 async function up(db) {
-  const planets = generatePlanets()
+  const universe = await db.collection('universe').find()
+
+  const planets = generatePlanets(universe._id)
 
   return await db.collection('planets').insertMany(planets)
 }

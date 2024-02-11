@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Model, Document } from 'mongoose'
 
 export interface IResearch {
   name: string
@@ -62,57 +62,60 @@ export interface IBonus {
   spaceBattleStationCaptureBonus?: number
 }
 
-export const BonusSchema = new Schema({
-  // General Bonus
-  researchBonus: { type: Number, required: false },
-  resourceProductionBonus: { type: Number, required: false },
-  stealthFleetsMode: { type: Boolean, required: false },
-  stealthFleetsDetection: { type: Boolean, required: false },
-  extraPlanetsBonus: { type: Number, required: false },
-  intergalacticTravelBonus: { type: Boolean, required: false },
+export const BonusSchema = new Schema(
+  {
+    // General Bonus
+    researchBonus: { type: Number, required: false },
+    resourceProductionBonus: { type: Number, required: false },
+    stealthFleetsMode: { type: Boolean, required: false },
+    stealthFleetsDetection: { type: Boolean, required: false },
+    extraPlanetsBonus: { type: Number, required: false },
+    intergalacticTravelBonus: { type: Boolean, required: false },
 
-  // Fleet Bonus
-  fleetAttackBonus: { type: Number, required: false },
-  fleetHullBonus: { type: Number, required: false },
-  fleetHullRegenerationBonus: { type: Number, required: false }, // only for organic ships
-  fleetShieldBonus: { type: Number, required: false },
-  fleetShieldPiercingBonus: { type: Boolean, required: false },
-  fleetShieldRegenerationBonus: { type: Number, required: false },
-  fleetSpeedBonus: { type: Number, required: false },
-  fleetCargoBonus: { type: Number, required: false },
-  fleetBuildingBonus: { type: Number, required: false },
-  maxFleetsAllowedBonus: { type: Number, required: false },
+    // Fleet Bonus
+    fleetAttackBonus: { type: Number, required: false },
+    fleetHullBonus: { type: Number, required: false },
+    fleetHullRegenerationBonus: { type: Number, required: false }, // only for organic ships
+    fleetShieldBonus: { type: Number, required: false },
+    fleetShieldPiercingBonus: { type: Boolean, required: false },
+    fleetShieldRegenerationBonus: { type: Number, required: false },
+    fleetSpeedBonus: { type: Number, required: false },
+    fleetCargoBonus: { type: Number, required: false },
+    fleetBuildingBonus: { type: Number, required: false },
+    maxFleetsAllowedBonus: { type: Number, required: false },
 
-  // Troops Bonus
-  troopsAttackBonus: { type: Number, required: false },
-  troopsHealthBonus: { type: Number, required: false },
-  troopsHealthRegenerationBonus: { type: Number, required: false }, // medics ???
-  troopsShieldBonus: { type: Number, required: false },
-  troopsShieldPiercingBonus: { type: Boolean, required: false },
-  troopsShieldRegenerationBonus: { type: Number, required: false },
-  troopsTrainingBonus: { type: Number, required: false },
+    // Troops Bonus
+    troopsAttackBonus: { type: Number, required: false },
+    troopsHealthBonus: { type: Number, required: false },
+    troopsHealthRegenerationBonus: { type: Number, required: false }, // medics ???
+    troopsShieldBonus: { type: Number, required: false },
+    troopsShieldPiercingBonus: { type: Boolean, required: false },
+    troopsShieldRegenerationBonus: { type: Number, required: false },
+    troopsTrainingBonus: { type: Number, required: false },
 
-  // Defenses Bonus
-  defensesAttackBonus: { type: Number, required: false },
-  defensesHullBonus: { type: Number, required: false },
-  defensesShieldBonus: { type: Number, required: false },
-  defensesShieldRegenerationBonus: { type: Number, required: false },
-  defensesBuildingBonus: { type: Number, required: false },
+    // Defenses Bonus
+    defensesAttackBonus: { type: Number, required: false },
+    defensesHullBonus: { type: Number, required: false },
+    defensesShieldBonus: { type: Number, required: false },
+    defensesShieldRegenerationBonus: { type: Number, required: false },
+    defensesBuildingBonus: { type: Number, required: false },
 
-  // Capture Units Bonus
-  fleetCaptureBonus: { type: Number, required: false },
-  spaceFighterCaptureBonus: { type: Number, required: false },
-  spaceCarrierCaptureBonus: { type: Number, required: false },
-  spaceCruiserCaptureBonus: { type: Number, required: false },
-  spaceDestroyerCaptureBonus: { type: Number, required: false },
-  spaceCargoCaptureBonus: { type: Number, required: false },
-  spaceFrigateCaptureBonus: { type: Number, required: false },
-  spacePlanetaryBomberCaptureBonus: { type: Number, required: false },
-  spaceBattleStationCaptureBonus: { type: Number, required: false }
-})
+    // Capture Units Bonus
+    fleetCaptureBonus: { type: Number, required: false },
+    spaceFighterCaptureBonus: { type: Number, required: false },
+    spaceCarrierCaptureBonus: { type: Number, required: false },
+    spaceCruiserCaptureBonus: { type: Number, required: false },
+    spaceDestroyerCaptureBonus: { type: Number, required: false },
+    spaceCargoCaptureBonus: { type: Number, required: false },
+    spaceFrigateCaptureBonus: { type: Number, required: false },
+    spacePlanetaryBomberCaptureBonus: { type: Number, required: false },
+    spaceBattleStationCaptureBonus: { type: Number, required: false }
+  },
+  { _id: false }
+)
 
 export const ResearchSchema = new Schema({
-  bonus: { type: BonusSchema, required: true },
+  bonus: { type: BonusSchema, required: true, _id: false },
   name: {
     type: String,
     required: true,
@@ -127,8 +130,11 @@ export const ResearchSchema = new Schema({
   isFleetEnergyResearch: { type: Boolean, required: true, default: false }
 })
 
-export type IResearchDocument = IResearch & Document
+export interface IResearchDocument extends IResearch, Document {}
 
-const ResearchModel = mongoose.model<IResearch>('Research', ResearchSchema)
+const ResearchModel: Model<IResearchDocument> = mongoose.model<IResearchDocument>(
+  'Research',
+  ResearchSchema
+)
 
 export default ResearchModel
