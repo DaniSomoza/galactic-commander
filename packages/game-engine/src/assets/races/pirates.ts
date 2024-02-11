@@ -7,10 +7,15 @@ import {
   DEFAULT_TROOPS_POPULATION,
   IRace
 } from '../../models/RaceModel'
+import { IResearch } from '../../models/ResearchModel'
 
 const PIRATE_CAPTURE_BONUS = 20 // 20 % ships capture
 
-const pirates: IRace = {
+type IBaseRace = {
+  researches: IResearch[]
+} & Omit<IRace, 'researches'>
+
+const pirates: IBaseRace = {
   name: 'pirates',
   description: 'pirate race description',
   image: 'image_url',
@@ -24,7 +29,7 @@ const pirates: IRace = {
   researches: [],
 
   bonus: {
-    // Capture Units Bonus
+    // Capture Fleets Bonus
     fleetCaptureBonus: PIRATE_CAPTURE_BONUS
   }
 }

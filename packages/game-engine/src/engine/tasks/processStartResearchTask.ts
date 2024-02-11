@@ -1,8 +1,6 @@
-import mongoose from 'mongoose'
 import applyBonus from '../../helpers/applyBonus'
 import getSecond from '../../helpers/getSecond'
-import { IPlayerResearch } from '../../models/PlayerModel'
-import { IResearch, IResearchDocument } from '../../models/ResearchModel'
+import { IResearch } from '../../models/ResearchModel'
 import getTaskModel, {
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskType,
@@ -14,7 +12,6 @@ import getTaskModel, {
 import playerRepository from '../../repositories/playerRepository'
 import GameEngineError from '../errors/GameEngineError'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
-import { IPlanetDocument } from '../../models/PlanetModel'
 
 // TODO: only taskData required
 async function processStartResearchTask(
@@ -32,15 +29,15 @@ async function processStartResearchTask(
     throw new GameEngineError('player already researching')
   }
 
-  const raceResearches = player.race.researches as IResearchDocument[]
-  const research = raceResearches.find((research) => research._id.equals(task.data.research))
+  const research = player.race.researches.find((research) =>
+    research._id.equals(task.data.research)
+  )
 
   if (!research) {
     throw new GameEngineError('invalid research')
   }
 
-  const playerResearches = player.researches as IPlayerResearch[]
-  const playerResearch = playerResearches.find(
+  const playerResearch = player.researches.find(
     (playerResearch) => playerResearch.research.name === research.name
   )
 
@@ -48,7 +45,7 @@ async function processStartResearchTask(
 
   const researchResourceCost = calculateResearchResourceCost(research, level)
 
-  const hasEnoughResources = player.principalPlanet.resources >= researchResourceCost
+  const hasEnoughResources = player.planets.principal.resources >= researchResourceCost
 
   if (!hasEnoughResources) {
     throw new GameEngineError('no resources available')
@@ -60,7 +57,7 @@ async function processStartResearchTask(
   const researchDuration = baseResearchDuration * (100 / researchBonus)
   const executeTaskAt = getSecond(second + researchDuration)
 
-  const principalPlanet = player.principalPlanet as IPlanetDocument
+  const principalPlanet = player.planets.principal
 
   principalPlanet.resources -= researchResourceCost
   const activeResearch = {
@@ -74,7 +71,7 @@ async function processStartResearchTask(
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
     type: FINISH_RESEARCH_TASK_TYPE,
-    universe: player.universe as unknown as mongoose.Types.ObjectId,
+    universe: player.universe._id,
 
     data: {
       player: player._id,

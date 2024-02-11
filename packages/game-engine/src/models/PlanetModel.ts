@@ -1,4 +1,5 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document, Model } from 'mongoose'
+import { IPlayerDocument } from './PlayerModel'
 
 export const DEFAULT_PLANET_RESOURCES = 10_000
 
@@ -18,12 +19,14 @@ export type PlanetCoordinates = {
 
 export interface IPlanet {
   name: string
-  owner: mongoose.Types.ObjectId | null
+  owner: IPlayerDocument | null
   colonizedAt: number
 
   resources: number
   resourceQuality: number
   lastResourceProductionTime: number
+
+  universe: mongoose.Types.ObjectId
 
   coordinates: PlanetCoordinates
 
@@ -56,7 +59,7 @@ const PlanetSchema: Schema = new Schema(
       default: null
     },
 
-    // TODO: Add universe
+    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
 
     colonizedAt: { type: Number },
 
@@ -93,8 +96,8 @@ const PlanetSchema: Schema = new Schema(
   }
 )
 
-export type IPlanetDocument = IPlanet & Document
+export interface IPlanetDocument extends IPlanet, Document {}
 
-const PlanetModel = mongoose.model<IPlanet>('Planet', PlanetSchema)
+const PlanetModel: Model<IPlanetDocument> = mongoose.model<IPlanetDocument>('Planet', PlanetSchema)
 
 export default PlanetModel

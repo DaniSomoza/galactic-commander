@@ -9,7 +9,6 @@ import {
   FinishResearchTaskData
 } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
-import { IPlayer } from '../../models/PlayerModel'
 import applyBonus, { BASE_BONUS } from '../../helpers/applyBonus'
 
 export default async function calculateResourceProduction(
@@ -25,9 +24,9 @@ export default async function calculateResourceProduction(
       const player = await playerRepository.findPlayerById(task.data.player)
 
       if (player) {
-        const playerPlanets = player.planets as IPlanetDocument[]
+        const playerPlanets = player.planets.colonies
 
-        playerPlanets.forEach((playerPlanet: IPlanetDocument) => {
+        playerPlanets.forEach((playerPlanet) => {
           const isAlreadyIncluded = planets.some((planet) => planet._id.equals(playerPlanet._id))
           if (!isAlreadyIncluded) {
             planets.push(playerPlanet)
@@ -61,7 +60,7 @@ function calculateResourceProductionBonus(planet: IPlanetDocument): number {
     return BASE_BONUS
   }
 
-  const player = planet.owner as unknown as IPlayer
+  const player = planet.owner
   const productionBonus = applyBonus(player.bonus, 'resourceProductionBonus', true)
 
   return productionBonus

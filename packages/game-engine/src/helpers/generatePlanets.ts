@@ -9,10 +9,12 @@ import {
 } from '../models/PlanetModel'
 import getRandomNumber from './getRandomNumber'
 import getSecond from './getSecond'
+import mongoose from 'mongoose'
+
+// TODO: create a universeConfig for test (galaxy, sector, system, planet)
 
 // TODO: add more galaxies based on number of players, time, etc... (and send an email notification for it)
-
-function generatePlanets(): IPlanet[] {
+function generatePlanets(universe: mongoose.Types.ObjectId): IPlanet[] {
   const planets: IPlanet[] = []
 
   for (let galaxy = 1; galaxy <= GALAXIES; galaxy++) {
@@ -23,6 +25,8 @@ function generatePlanets(): IPlanet[] {
             name: generateDefaultPlanetName(),
             owner: null,
             colonizedAt: 0,
+
+            universe,
 
             resources: DEFAULT_PLANET_RESOURCES,
             resourceQuality: getRandomNumber(0, 100),

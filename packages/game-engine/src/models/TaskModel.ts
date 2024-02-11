@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Model, Document } from 'mongoose'
 
 export const PENDING_TASK_STATUS = 'PENDING'
 export const PROCESSED_TASK_STATUS = 'PROCESSED'
@@ -50,7 +50,7 @@ export type TaskData<T extends TaskType> = T extends NewPlayerTaskType
       ? FinishResearchTaskData
       : never
 
-type HistoryItem = {
+type HistoryStatusItem = {
   taskStatus: TaskStatus
   updatedAt: number
 }
@@ -58,17 +58,14 @@ type HistoryItem = {
 export interface ITask<Type extends TaskType> {
   type: Type
   data: TaskData<Type>
-  status: TaskStatus
   universe: mongoose.Types.ObjectId
-  isCancellable: boolean
 
-  // TODO: add executeTaskAt mandatory ???
+  isCancellable: boolean
+  status: TaskStatus
   executeTaskAt: number | null
   processedAt: number | null
   processingDuration: number | null
-
-  history: HistoryItem[]
-
+  history: HistoryStatusItem[]
   errorDetails: string | null
 }
 
@@ -97,9 +94,10 @@ const TaskSchema: Schema = new Schema(
   }
 )
 
-export type ITaskDocument = ITask<TaskType> & Document
-export type ITaskTypeDocument<Type extends TaskType> = ITask<Type> & Document
+export interface ITaskDocument extends ITask<TaskType>, Document {}
+export interface ITaskTypeDocument<Type extends TaskType> extends ITask<Type>, Document {}
 
 export default function getTaskModel<Type extends TaskType>() {
-  return mongoose.model<ITask<Type>>('Task', TaskSchema)
+  const TaskModel: Model<ITask<Type>> = mongoose.model<ITask<Type>>('Task', TaskSchema)
+  return TaskModel
 }

@@ -1,7 +1,9 @@
 import pirates from '../../assets/races/pirates'
 import { IPlanet } from '../../models/PlanetModel'
 
-export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
+type IBasePlanet = Omit<IPlanet, 'universe'>
+
+export const PRINCIPAL_PLANET_TEST_1: IBasePlanet = {
   name: 'principal_planet_test_1',
   owner: null,
   colonizedAt: 0,
@@ -29,7 +31,7 @@ export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
   isBuildingDefenses: false
 }
 
-export const AVAILABLE_PLANET_TEST_1: IPlanet = {
+export const AVAILABLE_PLANET_TEST_1: IBasePlanet = {
   name: 'available_planet_test_1',
   owner: null,
   colonizedAt: 0,
