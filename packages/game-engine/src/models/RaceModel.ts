@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Model } from 'mongoose'
-import { BonusSchema, IBonus, IResearchDocument } from './ResearchModel'
+import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
 
 export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
@@ -109,7 +109,7 @@ const RaceSchema: Schema = new Schema(
       }
     ],
 
-    bonus: { _id: false, type: BonusSchema, required: true }
+    bonus: BonusType
   },
   {
     timestamps: true

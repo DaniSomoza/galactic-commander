@@ -1,12 +1,9 @@
-import { Document } from 'mongoose'
-
 import { IBonus } from '../../models/ResearchModel'
 
 function upgradeBonus(bonus: IBonus, level: number): IBonus {
-  const updatedBonus: Partial<IBonus> = {}
+  const updatedBonus: IBonus = {}
 
-  // TODO: improve this
-  Object.keys((bonus as Document)?.toObject()).forEach((key) => {
+  Object.keys(bonus).forEach((key) => {
     const value = bonus[key as keyof IBonus]
 
     if (typeof value === 'number') {

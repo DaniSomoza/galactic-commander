@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
-import { BonusSchema, IBonus, IResearchDocument } from './ResearchModel'
+import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
 import { IRaceDocument } from './RaceModel'
 import { IUniverseDocument } from './UniverseModel'
 import { IPlanetDocument } from './PlanetModel'
@@ -64,6 +64,7 @@ export interface IPlayer {
   bonus: IPlayerBonus[]
   points: IPlayerPoints[]
   researches: IPlayerResearch[]
+  // TODO: activeResearch within researches ???
   activeResearch?: IPlayerResearch
   units: IPlayerUnits
 }
@@ -95,7 +96,7 @@ const PlayerSchema: Schema = new Schema({
   bonus: [
     {
       _id: false,
-      bonus: { type: BonusSchema, required: true, _id: false },
+      bonus: BonusType,
       origin: { type: Schema.Types.ObjectId, required: true },
       type: { type: String, required: true }
     }

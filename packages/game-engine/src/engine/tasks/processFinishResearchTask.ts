@@ -1,10 +1,10 @@
-import { IBonus } from '../../models/ResearchModel'
 import { ITaskTypeDocument, FinishResearchTaskType } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
 import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
 import upgradeBonus from '../bonus/upgradeBonus'
+import { IBonus } from '../../models/ResearchModel'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
