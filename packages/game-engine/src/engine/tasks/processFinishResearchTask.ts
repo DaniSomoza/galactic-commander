@@ -47,14 +47,14 @@ async function processFinishResearchTask(
   const hasBonusToUpdate = hasBonus(research.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.bonus.find((bonus) => bonus.origin.equals(task.data.research))
+    const PlayerBonus = player.bonus.find((bonus) => bonus.source.equals(task.data.research))
 
     if (PlayerBonus) {
       PlayerBonus.bonus = upgradeBonus(research.bonus, newLevel)
     } else {
       player.bonus.push({
         bonus: research.bonus,
-        origin: task.data.research,
+        source: task.data.research,
         type: 'Research'
       })
     }
@@ -69,7 +69,8 @@ async function processFinishResearchTask(
   }
 
   const points = task.data.researchResourceCost
-  player.points = addPoints(player.points, points, task.data.research._id, 'Research', second)
+  const pointsSource = task.data.research._id
+  player.points = addPoints(player.points, points, pointsSource, 'Research', second)
 
   player.activeResearch = undefined
 
@@ -79,7 +80,8 @@ async function processFinishResearchTask(
 export default processFinishResearchTask
 
 function hasBonus(bonus: IBonus): boolean {
-  return bonus && Object.keys(bonus).length > 0
+  const hasBonusDefined = Object.keys(bonus).some((perk) => !!bonus[perk as keyof IBonus])
+  return bonus && hasBonusDefined
 }
 
 const TROOP_POPULATION_FACTOR = 2.55

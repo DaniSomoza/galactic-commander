@@ -17,23 +17,13 @@ interface IPlayerPlanet {
 
 export interface IPlayerBonus {
   bonus: IBonus
-  // // TODO: rename origin to source
-  // source: {
-  //   id: mongoose.Types.ObjectId
-  //   model: 'Unit' | 'Research'
-  // }
-  origin: mongoose.Types.ObjectId
+  source: mongoose.Types.ObjectId
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
 export interface IPlayerPoints {
   points: number
-  // // TODO: rename origin to source
-  // source: {
-  //   id: mongoose.Types.ObjectId
-  //   model: 'Unit' | 'Research'
-  // }
-  origin: mongoose.Types.ObjectId
+  source: mongoose.Types.ObjectId
   type: 'Unit' | 'Research' | 'Battle'
   second: number
 }
@@ -41,6 +31,12 @@ export interface IPlayerPoints {
 interface IPlayerResearch {
   research: IResearchDocument
   level: number
+}
+
+interface IPlayerActiveResearch {
+  research: IResearchDocument
+  level: number
+  executeTaskAt: number
 }
 
 interface IPlayerUnits {
@@ -60,19 +56,18 @@ export interface IPlayer {
   race: IRaceDocument
   universe: IUniverseDocument
   planets: IPlayerPlanet
-  // TODO: rename this to perks
   bonus: IPlayerBonus[]
   points: IPlayerPoints[]
   researches: IPlayerResearch[]
-  // TODO: activeResearch within researches ???
-  activeResearch?: IPlayerResearch
+  activeResearch?: IPlayerActiveResearch
   units: IPlayerUnits
 }
 
 const ActiveResearchSchema = new Schema(
   {
     research: { type: Schema.Types.ObjectId, ref: 'Research' },
-    level: { type: Number }
+    level: { type: Number },
+    executeTaskAt: { type: Number }
   },
   { _id: false }
 )
@@ -97,7 +92,7 @@ const PlayerSchema: Schema = new Schema({
     {
       _id: false,
       bonus: BonusType,
-      origin: { type: Schema.Types.ObjectId, required: true },
+      source: { type: Schema.Types.ObjectId, required: true },
       type: { type: String, required: true }
     }
   ],
@@ -107,7 +102,7 @@ const PlayerSchema: Schema = new Schema({
       _id: false,
       points: { type: Number, required: true },
       second: { type: Number, required: true },
-      origin: { type: Schema.Types.ObjectId, required: true },
+      source: { type: Schema.Types.ObjectId, required: true },
       type: { type: String, required: true }
     }
   ],
@@ -123,31 +118,8 @@ const PlayerSchema: Schema = new Schema({
   activeResearch: {
     type: ActiveResearchSchema,
     required: false,
-    default: undefined // Explicitamente establecer como undefined si no se proporciona
+    default: undefined
   },
-
-  // activeResearch: {
-  //   // required: false,
-  //   // TODO: create a schema!!!
-  //   research: { type: Schema.Types.ObjectId, ref: 'Research' },
-  //   level: { type: Number }
-  // },
-
-  // TODO: change researches
-  // researches: {
-  //   researched: [
-  //     {
-  //       research: { type: Schema.Types.ObjectId, ref: 'Research' },
-  //       level: { type: Number, required: true }
-  //     }
-  //   ],
-  //   // or current
-  //   active: {
-  //     required: false,
-  //     research: { type: Schema.Types.ObjectId, ref: 'Research' },
-  //     level: { type: Number, required: true }
-  //   }
-  // },
 
   units: {
     troops: {

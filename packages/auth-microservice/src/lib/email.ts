@@ -22,13 +22,13 @@ async function sendEmail(userEmail: string, username: string, activationLink: st
   }
 
   return transporter.sendMail(email, (error, info) => {
-    if (error) {
-      return console.log('Email error: ', error)
-    }
-
     transporter.close()
 
-    console.log('Email sent: ' + info.response)
+    if (error) {
+      return console.log('sendEmail error: ', error)
+    }
+
+    console.log('sendEmail success: ' + info.response)
   })
 }
 

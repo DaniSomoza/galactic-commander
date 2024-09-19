@@ -60,10 +60,11 @@ async function processStartResearchTask(
   const principalPlanet = player.planets.principal
 
   principalPlanet.resources -= researchResourceCost
+
   const activeResearch = {
     research: research._id,
-    level: level + 1
-    // TODO: Add more data like executeTaskAt
+    level: level + 1,
+    executeTaskAt
   }
 
   player.activeResearch = activeResearch

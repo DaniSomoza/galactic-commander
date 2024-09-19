@@ -4,13 +4,13 @@ import { IPlayerPoints } from '../../models/PlayerModel'
 function addPoints(
   playerPoints: IPlayerPoints[],
   points: number,
-  origin: mongoose.Types.ObjectId,
+  source: mongoose.Types.ObjectId,
   type: IPlayerPoints['type'],
   second: number
 ): IPlayerPoints[] {
   const newPoints: IPlayerPoints = {
     points,
-    origin,
+    source,
     type,
     second
   }

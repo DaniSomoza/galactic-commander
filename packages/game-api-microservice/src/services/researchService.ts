@@ -41,7 +41,7 @@ async function startResearch({
     throw new BadRequestError('invalid schedule', { executeTaskAt })
   }
 
-  // TODO: create base Task
+  // TODO: create base Task util
   const startResearchTask: ITask<StartResearchTaskType> = {
     type: START_RESEARCH_TASK_TYPE,
     universe: universe._id,

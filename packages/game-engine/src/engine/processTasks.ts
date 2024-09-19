@@ -89,9 +89,6 @@ async function setTaskAsProcessed<Type extends TaskType>(
     task.status = PROCESSED_TASK_STATUS
     task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
   } catch (error) {
-    // TODO: delete this log
-    console.log('!!!! ERROR: ', error)
-
     if (error instanceof MongoServerError) {
       task.errorDetails = error.message
     }

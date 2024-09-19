@@ -37,7 +37,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -92,7 +93,7 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -101,7 +102,7 @@ describe('process finish research task', () => {
 
       // fleetAttackBonus 10%
       expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(10)
-      expect(researchPlayer?.bonus[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.bonus[0].source).toEqual(research?._id)
       expect(researchPlayer?.bonus[0].type).toEqual('Research')
       expect(researchPlayer?.bonus.length).toEqual(1)
     })
@@ -122,7 +123,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -162,7 +164,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 2
+        level: 2,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -216,12 +219,12 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[1].source).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
@@ -230,7 +233,7 @@ describe('process finish research task', () => {
 
       // fleetAttackBonus 20%
       expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(20)
-      expect(researchPlayer?.bonus[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.bonus[0].source).toEqual(research?._id)
       expect(researchPlayer?.bonus[0].type).toEqual('Research')
       expect(researchPlayer?.bonus.length).toEqual(1)
     })
@@ -253,7 +256,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -310,7 +314,7 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -334,7 +338,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -374,7 +379,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -428,11 +434,11 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[1].source).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
@@ -458,7 +464,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -515,7 +522,7 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -536,11 +543,6 @@ describe('process finish research task', () => {
 
       const researchDuration = 1_000
       const researchResourceCost = 1_000
-
-      player!.activeResearch = {
-        research: research!._id,
-        level: 1
-      }
 
       await player?.save()
 
@@ -579,7 +581,8 @@ describe('process finish research task', () => {
 
       player!.activeResearch = {
         research: research!._id,
-        level: 1
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration
       }
 
       await player?.save()
@@ -633,11 +636,11 @@ describe('process finish research task', () => {
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
-      expect(researchPlayer?.points[0].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[0].source).toEqual(research?._id)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
-      expect(researchPlayer?.points[1].origin).toEqual(research?._id)
+      expect(researchPlayer?.points[1].source).toEqual(research?._id)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
