@@ -3,6 +3,7 @@ import { IBonus } from '../models/ResearchModel'
 
 export const BASE_BONUS = 100
 
+// TODO: move this to /bonus
 function applyBonus(
   playerBonus: IPlayerBonus[],
   bonusName: keyof IBonus,

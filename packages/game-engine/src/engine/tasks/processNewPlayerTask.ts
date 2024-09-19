@@ -6,16 +6,18 @@ import raceRepository from '../../repositories/raceRepository'
 import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
 import universeRepository from '../../repositories/universeRepository'
+import playerRepository from '../../repositories/playerRepository'
 
 async function processNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
   second: number
 ): Promise<Document[]> {
   // get all the required data from DB
-  const [availablePrincipalPlanets, race, universe] = await Promise.all([
+  const [availablePrincipalPlanets, race, universe, player] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
     raceRepository.findRaceById(task.data.race),
-    universeRepository.findUniverseById(task.universe)
+    universeRepository.findUniverseById(task.universe),
+    playerRepository.findPlayerByUsername(task.data.username, task.universe)
   ])
 
   if (availablePrincipalPlanets.length === 0) {
@@ -30,32 +32,55 @@ async function processNewPlayerTask(
     throw new GameEngineError('invalid universe')
   }
 
+  if (player) {
+    throw new GameEngineError('player already created')
+  }
+
   const principalPlanet = getRandomPlanet(availablePrincipalPlanets)
 
   const newPlayerData: IPlayer = {
-    username: task.data.username,
-    email: task.data.email,
-    universe,
+    user: {
+      username: task.data.username,
+      email: task.data.email
+    },
 
-    race,
+    universe: universe._id,
 
-    principalPlanet,
-    planets: [principalPlanet._id],
-    planetsExplored: [principalPlanet._id],
+    race: race._id,
+
+    planets: {
+      principal: principalPlanet._id,
+      colonies: [principalPlanet._id],
+      explored: [principalPlanet._id]
+    },
 
     bonus: [
       {
         bonus: race.bonus,
-        origin: race._id,
+        source: race._id,
         type: 'Race'
       }
     ],
 
     points: [],
-    researches: [],
 
-    fleetEnergy: 0,
-    troopsPopulation: 0
+    researches: {
+      researched: []
+    },
+
+    units: {
+      troops: {
+        population: 0
+      },
+
+      fleets: {
+        energy: 0
+      },
+
+      defenses: {
+        structures: 0
+      }
+    }
   }
 
   const newPlayer = new PlayerModel(newPlayerData)
@@ -65,7 +90,7 @@ async function processNewPlayerTask(
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
-  principalPlanet.resourceQuality = 100 // max value
+  principalPlanet.resourceQuality = 100 // max value for principal planets by default
   principalPlanet.lastResourceProductionTime = second
 
   // we create the player before update the planet

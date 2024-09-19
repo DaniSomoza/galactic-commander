@@ -19,8 +19,6 @@ import pirates from '../assets/races/pirates'
 import processTasks from '../engine/processTasks'
 import PlayerModel, { IPlayer } from '../models/PlayerModel'
 import { IBonus } from '../models/ResearchModel'
-import { IRaceDocument } from '../models/RaceModel'
-import { IPlanetDocument } from '../models/PlanetModel'
 
 describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {
@@ -106,19 +104,19 @@ describe('process new player creation Task', () => {
     expect(processedTask!.isCancellable).toBe(false)
     expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
 
-    expect(createdPlayer!.username).toBe(task!.data.username)
-    expect(createdPlayer!.email).toBe(task!.data.email)
+    expect(createdPlayer!.user.username).toBe(task!.data.username)
+    expect(createdPlayer!.user.email).toBe(task!.data.email)
 
-    const playerRace = createdPlayer!.race as IRaceDocument
+    const playerRace = createdPlayer!.race
 
     expect(playerRace._id).toEqual(task!.data.race)
 
-    const playerPrincipalPlanet = createdPlayer!.principalPlanet as IPlanetDocument
-    const playerPlanets = createdPlayer!.planets as IPlanetDocument[]
-    const playerPlanetsExplored = createdPlayer!.planetsExplored as IPlanetDocument[]
+    const playerPrincipalPlanet = createdPlayer!.planets.principal
+    const colonies = createdPlayer!.planets.colonies
+    const playerPlanetsExplored = createdPlayer!.planets.explored
 
     expect(playerPrincipalPlanet._id).toEqual(newPrincipalPlanet!._id)
-    expect(playerPlanets.map((planet) => planet._id)).toEqual([newPrincipalPlanet!._id])
+    expect(colonies.map((planet) => planet._id)).toEqual([newPrincipalPlanet!._id])
     expect(playerPlanetsExplored.map((planet) => planet._id)).toEqual([newPrincipalPlanet!._id])
     const playerBonus = createdPlayer!.bonus[0].bonus
 
@@ -129,11 +127,11 @@ describe('process new player creation Task', () => {
 
     expect(createdPlayer!.points).toEqual([])
 
-    expect(createdPlayer!.researches).toEqual([])
-    expect(createdPlayer!.activeResearch).toBeUndefined()
+    expect(createdPlayer!.researches.researched).toEqual([])
+    expect(createdPlayer!.researches.activeResearch).toBeUndefined()
 
-    expect(createdPlayer!.fleetEnergy).toEqual(0)
-    expect(createdPlayer!.troopsPopulation).toEqual(0)
+    expect(createdPlayer!.units.fleets.energy).toEqual(0)
+    expect(createdPlayer!.units.troops.population).toEqual(0)
 
     expect(newPrincipalPlanet!.owner).toEqual(createdPlayer!._id)
     expect(newPrincipalPlanet!.isPrincipal).toBe(true)
@@ -296,10 +294,9 @@ describe('process new player creation Task', () => {
     expect(newPrincipalPlanet!.owner).toBeNull()
   })
 
-  it('task error if player creation error', async () => {
+  it('task error if player already exists', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
 
-    const newPlayerUsername = 'invalid_test_username'
     const newPlayerEmail = 'test_username@example.com'
     const newPlayerRace = await raceRepository.findRaceByName(pirates.name)
 
@@ -307,7 +304,7 @@ describe('process new player creation Task', () => {
       type: NEW_PLAYER_TASK_TYPE,
       universe: universe!._id,
       data: {
-        username: newPlayerUsername,
+        username: 'invalid_test_username',
         email: newPlayerEmail,
         race: newPlayerRace!._id
       },
@@ -332,8 +329,14 @@ describe('process new player creation Task', () => {
     const taskModel = getTaskModel<NewPlayerTaskType>()
     await taskModel.create(newPlayerTask)
 
-    const task = await taskRepository.findNewPlayerTaskByUsername(newPlayerUsername, universe!._id)
-    const player = await playerRepository.findPlayerByUsername(newPlayerUsername, universe!._id)
+    const task = await taskRepository.findNewPlayerTaskByUsername(
+      'invalid_test_username',
+      universe!._id
+    )
+    const player = await playerRepository.findPlayerByUsername(
+      'invalid_test_username',
+      universe!._id
+    )
     const principalPlanet = await planetRepository.findPlanetByCoordinates(
       AVAILABLE_PLANET_TEST_1.coordinates
     )
@@ -351,31 +354,46 @@ describe('process new player creation Task', () => {
 
     // we force a player already exists error
     const newPlayerData: IPlayer = {
-      username: newPlayerUsername,
-      email: newPlayerEmail,
+      user: {
+        username: 'invalid_test_username',
+        email: newPlayerEmail
+      },
+
       race: newPlayerRace!,
       universe: universe!,
 
-      principalPlanet: principalPlanet!,
-
-      planets: [principalPlanet!],
-      planetsExplored: [principalPlanet!],
+      planets: {
+        principal: principalPlanet!,
+        colonies: [principalPlanet!],
+        explored: [principalPlanet!._id]
+      },
 
       bonus: [],
       points: [],
-      researches: [],
+      researches: {
+        researched: []
+      },
 
-      fleetEnergy: newPlayerRace!.baseFleetEnergy,
-      troopsPopulation: newPlayerRace!.baseTroopsPopulation
+      units: {
+        troops: {
+          population: newPlayerRace!.baseTroopsPopulation
+        },
+        fleets: {
+          energy: newPlayerRace!.baseFleetEnergy
+        },
+        defenses: {
+          structures: 0
+        }
+      }
     }
 
-    await (await PlayerModel.create(newPlayerData)).save()
+    await PlayerModel.create(newPlayerData)
 
     // we process the invalid task here
     await processTasks([task!], universe!)
 
     const processedTask = await taskRepository.findNewPlayerTaskByUsername(
-      newPlayerUsername,
+      'invalid_test_username',
       universe!._id,
       ERROR_TASK_STATUS
     )
@@ -386,9 +404,7 @@ describe('process new player creation Task', () => {
     expect(processedTask!.status).toBe(ERROR_TASK_STATUS)
     expect(processedTask!.isCancellable).toBe(false)
     expect(processedTask!.processedAt).toBe(universe?.lastProcessedTime)
-    expect(processedTask!.errorDetails).toBe(
-      'E11000 duplicate key error collection: test.players index: username_1 dup key: { username: "invalid_test_username" }'
-    )
+    expect(processedTask!.errorDetails).toBe('player already created')
 
     expect(newPrincipalPlanet!.owner).toBeNull()
   })

@@ -17,19 +17,18 @@ import taskRepository from '../repositories/taskRepository'
 import universeRepository from '../repositories/universeRepository'
 import { PLAYER_TEST_1_PIRATE } from './mocks/playerMocks'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
-import { IPlanetDocument } from '../models/PlanetModel'
 
 describe('process start research task', () => {
   it('process a valid start research task', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
     const research = player?.race.researches.find(
       (research) => research.name === PIRATE_FLEET_ATTACK_RESEARCH.name
-    ) as IResearchDocument
+    )
 
     // TODO: implement createBaseTask helper function
     const startResearchTask: ITask<StartResearchTaskType> = {
@@ -70,10 +69,10 @@ describe('process start research task', () => {
 
     const playerResearch = await playerRepository.findPlayerById(player!._id)
 
-    expect((playerResearch?.activeResearch?.research as IResearchDocument)._id).toEqual(
-      research._id
+    expect((playerResearch?.researches.activeResearch?.research as IResearchDocument)._id).toEqual(
+      research!._id
     )
-    expect(playerResearch?.activeResearch?.level).toEqual(1)
+    expect(playerResearch?.researches.activeResearch?.level).toEqual(1)
 
     // TODO: ADD expect(processedTask!.status).toBe(PROCESSED_TASK_STATUS)
 
@@ -84,7 +83,7 @@ describe('process start research task', () => {
     const finishResearchTasksData = finishResearchTasks!.data as FinishResearchTaskData
 
     expect(finishResearchTasksData.player).toEqual(player?._id)
-    expect(finishResearchTasksData.research).toEqual(research._id)
+    expect(finishResearchTasksData.research).toEqual(research?._id)
     expect(finishResearchTasksData.researchDuration).toEqual(23000)
     expect(finishResearchTasksData.researchResourceCost).toEqual(200)
     expect(finishResearchTasks!.executeTaskAt).toEqual(24000)
@@ -94,7 +93,7 @@ describe('process start research task', () => {
   it('task error if no valid player is present in the research data', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
@@ -143,7 +142,7 @@ describe('process start research task', () => {
   it('task error if player is already researching ', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
@@ -194,7 +193,7 @@ describe('process start research task', () => {
   it('task error if no valid research is present in the research data', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
@@ -239,7 +238,7 @@ describe('process start research task', () => {
   it('task error if no resources available in the principal planet', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
@@ -248,9 +247,8 @@ describe('process start research task', () => {
     ) as IResearchDocument
 
     // update planet resources
-    player!.principalPlanet.resources = 0
-
-    await (player!.principalPlanet as IPlanetDocument).save()
+    player!.planets.principal.resources = 0
+    await player!.planets.principal.save()
 
     // TODO: implement createBaseTask helper function
     const startResearchTask: ITask<StartResearchTaskType> = {

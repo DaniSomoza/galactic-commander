@@ -4,14 +4,11 @@ import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import {
   ERROR_TASK_STATUS,
   FINISH_RESEARCH_TASK_TYPE,
-  FinishResearchTaskType,
   ITaskDocument,
   ITaskTypeDocument,
   NEW_PLAYER_TASK_TYPE,
-  NewPlayerTaskType,
   PROCESSED_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
-  StartResearchTaskType,
   TaskType
 } from '../models/TaskModel'
 import { IUniverseDocument } from '../models/UniverseModel'
@@ -23,6 +20,8 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
 
   for (const { tasks, second } of tasksGroupedBySeconds) {
+    // TODO: execute tasks by type
+
     // 0.- Calculate player resources
     await calculateResourceProduction(tasks, second)
 
@@ -31,31 +30,19 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
 
     const newPlayerTaskHandler = TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler
 
-    await processTasksSequentially(
-      newPlayerTasks as ITaskTypeDocument<NewPlayerTaskType>[],
-      newPlayerTaskHandler,
-      second
-    )
+    await processTasksSequentially(newPlayerTasks, newPlayerTaskHandler, second)
 
     // 2.- Finish Research Tasks
     const finishResearchTaskHandler = TASK_HANDLER[FINISH_RESEARCH_TASK_TYPE].handler
 
     const finishResearchTasks = tasks.filter((task) => task.type === FINISH_RESEARCH_TASK_TYPE)
-    await processTasksInParallel(
-      finishResearchTasks as ITaskTypeDocument<FinishResearchTaskType>[],
-      finishResearchTaskHandler,
-      second
-    )
+    await processTasksInParallel(finishResearchTasks, finishResearchTaskHandler, second)
 
     // 3.- Start Research Tasks
     const startResearchTaskHandler = TASK_HANDLER[START_RESEARCH_TASK_TYPE].handler
 
     const startResearchTasks = tasks.filter((task) => task.type === START_RESEARCH_TASK_TYPE)
-    await processTasksSequentially(
-      startResearchTasks as ITaskTypeDocument<StartResearchTaskType>[],
-      startResearchTaskHandler,
-      second
-    )
+    await processTasksSequentially(startResearchTasks, startResearchTaskHandler, second)
 
     // update universe
     universe.lastProcessedTime = second
@@ -67,7 +54,7 @@ export default processTasks
 
 // TODO: add tests here
 async function processTasksSequentially<Type extends TaskType>(
-  tasks: ITaskTypeDocument<Type>[],
+  tasks: ITaskDocument[],
   handler: TaskHandler<Type>,
   second: number
 ) {
@@ -77,7 +64,7 @@ async function processTasksSequentially<Type extends TaskType>(
 }
 
 async function processTasksInParallel<Type extends TaskType>(
-  tasks: ITaskTypeDocument<Type>[],
+  tasks: ITaskDocument[],
   handler: TaskHandler<Type>,
   second: number
 ) {
@@ -85,13 +72,13 @@ async function processTasksInParallel<Type extends TaskType>(
 }
 
 async function setTaskAsProcessed<Type extends TaskType>(
-  task: ITaskTypeDocument<Type>,
+  task: ITaskDocument,
   handler: TaskHandler<Type>,
   second: number
 ) {
   const startTime = new Date().getTime()
   try {
-    await handler(task, second)
+    await handler(task as ITaskTypeDocument<Type>, second)
     task.status = PROCESSED_TASK_STATUS
     task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
   } catch (error) {

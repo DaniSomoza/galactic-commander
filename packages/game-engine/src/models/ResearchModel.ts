@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Model, Document } from 'mongoose'
 
 export interface IResearch {
   name: string
@@ -62,7 +62,7 @@ export interface IBonus {
   spaceBattleStationCaptureBonus?: number
 }
 
-export const BonusSchema = new Schema({
+export const BonusType = {
   // General Bonus
   researchBonus: { type: Number, required: false },
   resourceProductionBonus: { type: Number, required: false },
@@ -109,10 +109,10 @@ export const BonusSchema = new Schema({
   spaceFrigateCaptureBonus: { type: Number, required: false },
   spacePlanetaryBomberCaptureBonus: { type: Number, required: false },
   spaceBattleStationCaptureBonus: { type: Number, required: false }
-})
+}
 
 export const ResearchSchema = new Schema({
-  bonus: { type: BonusSchema, required: true },
+  bonus: BonusType,
   name: {
     type: String,
     required: true,
@@ -127,8 +127,11 @@ export const ResearchSchema = new Schema({
   isFleetEnergyResearch: { type: Boolean, required: true, default: false }
 })
 
-export type IResearchDocument = IResearch & Document
+export interface IResearchDocument extends IResearch, Document {}
 
-const ResearchModel = mongoose.model<IResearch>('Research', ResearchSchema)
+const ResearchModel: Model<IResearchDocument> = mongoose.model<IResearchDocument>(
+  'Research',
+  ResearchSchema
+)
 
 export default ResearchModel

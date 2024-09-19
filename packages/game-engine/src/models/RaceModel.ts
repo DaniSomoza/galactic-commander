@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose'
-import { BonusSchema, IBonus, IResearch } from './ResearchModel'
+import mongoose, { Document, Schema, Model } from 'mongoose'
+import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
 
 export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
@@ -60,7 +60,7 @@ export interface IRace {
   baseResources: number // initial resources in the principal planet
   resourceName: string
   intergalacticTravelThreshold: number
-  researches: IResearch[]
+  researches: IResearchDocument[]
 
   // TODO: create another types for this
   // units: [] // TBD migration REMEMBER: implement Requisites!
@@ -85,6 +85,7 @@ const RaceSchema: Schema = new Schema(
       required: true,
       default: DEFAULT_INTERGALACTIC_TRAVEL_THRESHOLD
     },
+
     researches: [
       {
         type: Schema.Types.ObjectId,
@@ -92,6 +93,7 @@ const RaceSchema: Schema = new Schema(
         required: true
       }
     ],
+
     units: [
       {
         type: Schema.Types.ObjectId,
@@ -107,15 +109,15 @@ const RaceSchema: Schema = new Schema(
       }
     ],
 
-    bonus: { type: BonusSchema, required: true }
+    bonus: BonusType
   },
   {
     timestamps: true
   }
 )
 
-export type IRaceDocument = IRace & Document
+export interface IRaceDocument extends IRace, Document {}
 
-const RaceModel = mongoose.model<IRace>('Race', RaceSchema)
+const RaceModel: Model<IRaceDocument> = mongoose.model<IRaceDocument>('Race', RaceSchema)
 
 export default RaceModel

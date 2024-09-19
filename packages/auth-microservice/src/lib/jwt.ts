@@ -21,7 +21,7 @@ export function verifyJWT(token: string): CleanUserData {
 export function checkSessionToken(jwtToken: string) {
   try {
     return verifyJWT(jwtToken)
-  } catch (error) {
+  } catch {
     throw new UnauthorizedError('invalid session token', { jwtToken })
   }
 }

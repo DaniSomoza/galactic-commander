@@ -173,7 +173,7 @@ describe('players task', () => {
     }
 
     const userData = {
-      username: PLAYER_TEST_1_PIRATE.username,
+      username: PLAYER_TEST_1_PIRATE.user.username,
       email: 'new_test_user@email.com',
       isActivated: true,
       isAdmin: false,

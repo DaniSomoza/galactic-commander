@@ -1,171 +1,144 @@
-import mongoose, { Schema } from 'mongoose'
-import { IRace } from './RaceModel'
-import { IPlanet } from './PlanetModel'
-import { IUniverse } from './UniverseModel'
-import { BonusSchema, IBonus, IResearch } from './ResearchModel'
+import mongoose, { Schema, Model, Document } from 'mongoose'
+import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
+import { IRaceDocument } from './RaceModel'
+import { IUniverseDocument } from './UniverseModel'
+import { IPlanetDocument } from './PlanetModel'
 
-export type IPlayerResearch = {
-  research: IResearch
-  level: number
+interface IPlayerUser {
+  username: string
+  email: string
 }
 
-export type IPlayerPoint = {
-  points: number
-  origin: mongoose.Types.ObjectId
-  type: 'Unit' | 'Research'
-  second: number
-  // TODO: add extra data based on type?
+interface IPlayerPlanet {
+  principal: IPlanetDocument
+  colonies: IPlanetDocument[]
+  explored: mongoose.Types.ObjectId[]
 }
 
-export type IPlayerBonus = {
+export interface IPlayerBonus {
   bonus: IBonus
-  origin: mongoose.Types.ObjectId
+  source: mongoose.Types.ObjectId
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
-export interface IPlayer {
-  username: string
-  email: string
-
-  race: IRace
-
-  universe: IUniverse
-
-  principalPlanet: IPlanet
-  planets: IPlanet[]
-  planetsExplored: IPlanet[]
-
-  bonus: IPlayerBonus[]
-
-  points: IPlayerPoint[]
-
-  fleetEnergy: number
-  troopsPopulation: number
-
-  researches: IPlayerResearch[]
-  activeResearch?: IPlayerResearch
-
-  // TODO: implement specials
-  // specials: ISpecial[]
-
-  // TODO: implement fleets
-  // fleets: IFleet[]
-  // isBuildingFleets: boolean
-
-  // TODO: unblocked/Available Units
-  // availableUnits: IUnit[],
-  // isTrainingTroops: boolean
-  // isBuildingDefenses: boolean
-
-  // TODO: Alliance
-  // alliance: IAlliance,
+export interface IPlayerPoints {
+  points: number
+  source: mongoose.Types.ObjectId
+  type: 'Unit' | 'Research' | 'Battle'
+  second: number
 }
 
-export const PlayerResearchSchema = new Schema({
-  research: {
-    type: Schema.Types.ObjectId,
-    ref: 'Research',
-    required: true
-  },
-  level: { type: Number, required: true, default: 0 }
-})
+interface IPlayerResearch {
+  researched: {
+    research: IResearchDocument
+    level: number
+  }[]
+  activeResearch?: IPlayerActiveResearch
+}
 
-export const PlayerBonusSchema = new Schema({
-  bonus: { type: BonusSchema, required: true },
-  origin: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    refPath: 'type'
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['Planet', 'Special', 'Unit', 'Research', 'Race']
+interface IPlayerActiveResearch {
+  research: IResearchDocument
+  level: number
+  executeTaskAt: number
+}
+
+interface IPlayerUnits {
+  troops: {
+    population: number
   }
-})
-
-// TODO: remove schema ?
-export const PlayerPointsSchema = new Schema({
-  points: { type: Number, required: true },
-  origin: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    refPath: 'type'
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['Unit', 'Research']
-  },
-  second: { type: Number, required: true }
-})
-
-const PlayerSchema: Schema = new Schema(
-  {
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-
-    race: {
-      type: Schema.Types.ObjectId,
-      ref: 'Race',
-      required: true
-    },
-
-    universe: {
-      type: Schema.Types.ObjectId,
-      ref: 'Universe',
-      required: true
-    },
-
-    principalPlanet: {
-      type: Schema.Types.ObjectId,
-      ref: 'Planet',
-      required: true
-    },
-    planets: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Planet',
-        required: true
-      }
-    ],
-    planetsExplored: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Planet',
-        required: true
-      }
-    ],
-
-    researches: [
-      {
-        type: PlayerResearchSchema,
-        required: true
-      }
-    ],
-
-    activeResearch: {
-      type: PlayerResearchSchema,
-      required: false
-    },
-
-    // isBuildingFleets: { type: Boolean, required: true, default: false },
-    // isTrainingTroops: { type: Boolean, required: true, default: false },
-    // isBuildingDefenses: { type: Boolean, required: true, default: false },
-
-    bonus: [{ type: PlayerBonusSchema, required: true }],
-    points: [{ type: PlayerPointsSchema, required: true }],
-
-    fleetEnergy: { type: Number, required: true },
-    troopsPopulation: { type: Number, required: true }
-  },
-  {
-    timestamps: true
+  fleets: {
+    energy: number
   }
+  defenses: {
+    structures: number
+  }
+}
+
+export interface IPlayer {
+  user: IPlayerUser
+  race: IRaceDocument
+  universe: IUniverseDocument
+  planets: IPlayerPlanet
+  bonus: IPlayerBonus[]
+  points: IPlayerPoints[]
+  researches: IPlayerResearch
+  units: IPlayerUnits
+}
+
+const ActiveResearchSchema = new Schema(
+  {
+    research: { type: Schema.Types.ObjectId, ref: 'Research' },
+    level: { type: Number },
+    executeTaskAt: { type: Number }
+  },
+  { _id: false }
 )
 
-export type IPlayerDocument = IPlayer & Document
+const PlayerSchema: Schema = new Schema({
+  user: {
+    username: { type: String, required: true },
+    email: { type: String, required: true }
+  },
 
-const PlayerModel = mongoose.model<IPlayer>('Player', PlayerSchema)
+  race: { type: Schema.Types.ObjectId, ref: 'Race', required: true },
+
+  universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+
+  planets: {
+    principal: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
+    colonies: [{ type: Schema.Types.ObjectId, ref: 'Planet' }],
+    explored: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
+  },
+
+  bonus: [
+    {
+      _id: false,
+      bonus: BonusType,
+      source: { type: Schema.Types.ObjectId, required: true },
+      type: { type: String, required: true }
+    }
+  ],
+
+  points: [
+    {
+      _id: false,
+      points: { type: Number, required: true },
+      second: { type: Number, required: true },
+      source: { type: Schema.Types.ObjectId, required: true },
+      type: { type: String, required: true }
+    }
+  ],
+
+  researches: {
+    researched: [
+      {
+        _id: false,
+        research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
+        level: { type: Number, required: true }
+      }
+    ],
+    activeResearch: {
+      type: ActiveResearchSchema,
+      required: false,
+      default: undefined
+    }
+  },
+
+  units: {
+    troops: {
+      population: { type: Number, required: true }
+    },
+    fleets: {
+      energy: { type: Number, required: true }
+    },
+    defenses: {
+      structures: { type: Number, required: true }
+    }
+  }
+})
+
+export interface IPlayerDocument extends IPlayer, Document {}
+
+const PlayerModel: Model<IPlayerDocument> = mongoose.model<IPlayerDocument>('Player', PlayerSchema)
 
 export default PlayerModel

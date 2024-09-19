@@ -4,7 +4,6 @@ import {
   PENDING_TASK_STATUS,
   START_RESEARCH_TASK_TYPE
 } from 'game-engine/dist/models/TaskModel'
-import { IResearchDocument } from 'game-engine/dist/models/ResearchModel'
 import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
@@ -32,8 +31,7 @@ async function startResearch({
     throw new NotFoundError('invalid player', { username, universeName })
   }
 
-  const raceResearches = player.race.researches as IResearchDocument[]
-  const research = raceResearches.find((research) => research.name === researchName)
+  const research = player.race.researches.find((research) => research.name === researchName)
 
   if (!research) {
     throw new NotFoundError('invalid research', { researchName })
@@ -43,7 +41,7 @@ async function startResearch({
     throw new BadRequestError('invalid schedule', { executeTaskAt })
   }
 
-  // TODO: create base Task
+  // TODO: create base Task util
   const startResearchTask: ITask<StartResearchTaskType> = {
     type: START_RESEARCH_TASK_TYPE,
     universe: universe._id,

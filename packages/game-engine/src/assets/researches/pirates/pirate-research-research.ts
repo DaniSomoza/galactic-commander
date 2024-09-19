@@ -1,9 +1,8 @@
 import { IResearch } from '../../../models/ResearchModel'
-import pirates from '../../races/pirates'
 
 const PIRATE_RESEARCH_RESEARCH: IResearch = {
   name: 'PIRATE_RESEARCH_RESEARCH',
-  raceName: pirates.name,
+  raceName: 'pirates',
   initialTime: 23_000,
   resourceCost: 200,
   bonus: {

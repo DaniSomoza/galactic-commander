@@ -14,7 +14,6 @@ import {
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 
 import { testServer } from './helpers/testServer'
-import { IResearchDocument } from 'game-engine/models/ResearchModel'
 import getSecond from 'game-engine/dist/helpers/getSecond'
 
 describe('researches task', () => {
@@ -26,18 +25,18 @@ describe('researches task', () => {
 
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
     const player = await playerRepository.findPlayerByUsername(
-      PLAYER_TEST_1_PIRATE.username,
+      PLAYER_TEST_1_PIRATE.user.username,
       universe!._id
     )
 
-    const raceResearches = player!.race.researches as IResearchDocument[]
+    const raceResearches = player!.race.researches
     const research = raceResearches.find(
       (research) => research.name === PIRATE_FLEET_ATTACK_RESEARCH.name
     )
 
     const userData = {
-      username: PLAYER_TEST_1_PIRATE.username,
-      email: PLAYER_TEST_1_PIRATE.email,
+      username: PLAYER_TEST_1_PIRATE.user.username,
+      email: PLAYER_TEST_1_PIRATE.user.email,
       isActivated: true,
       isAdmin: false,
       isBanned: false
@@ -87,8 +86,8 @@ describe('researches task', () => {
     }
 
     const userData = {
-      username: PLAYER_TEST_1_PIRATE.username,
-      email: PLAYER_TEST_1_PIRATE.email,
+      username: PLAYER_TEST_1_PIRATE.user.username,
+      email: PLAYER_TEST_1_PIRATE.user.email,
       isActivated: true,
       isAdmin: false,
       isBanned: false
@@ -119,7 +118,7 @@ describe('researches task', () => {
 
     const userData = {
       username: 'invalid_player',
-      email: PLAYER_TEST_1_PIRATE.email,
+      email: PLAYER_TEST_1_PIRATE.user.email,
       isActivated: true,
       isAdmin: false,
       isBanned: false
@@ -147,8 +146,8 @@ describe('researches task', () => {
     }
 
     const userData = {
-      username: PLAYER_TEST_1_PIRATE.username,
-      email: PLAYER_TEST_1_PIRATE.email,
+      username: PLAYER_TEST_1_PIRATE.user.username,
+      email: PLAYER_TEST_1_PIRATE.user.email,
       isActivated: true,
       isAdmin: false,
       isBanned: false
@@ -179,8 +178,8 @@ describe('researches task', () => {
     }
 
     const userData = {
-      username: PLAYER_TEST_1_PIRATE.username,
-      email: PLAYER_TEST_1_PIRATE.email,
+      username: PLAYER_TEST_1_PIRATE.user.username,
+      email: PLAYER_TEST_1_PIRATE.user.email,
       isActivated: true,
       isAdmin: false,
       isBanned: false
