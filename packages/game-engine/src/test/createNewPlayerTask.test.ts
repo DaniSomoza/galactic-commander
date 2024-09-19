@@ -381,7 +381,9 @@ describe('process new player creation Task', () => {
         fleets: {
           energy: newPlayerRace!.baseFleetEnergy
         },
-        defenses: {}
+        defenses: {
+          structures: 0
+        }
       }
     }
 

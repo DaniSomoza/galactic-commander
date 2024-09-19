@@ -50,7 +50,7 @@ interface IPlayerUnits {
     energy: number
   }
   defenses: {
-    // TODO: implement defenses
+    structures: number
   }
 }
 
@@ -131,7 +131,9 @@ const PlayerSchema: Schema = new Schema({
     fleets: {
       energy: { type: Number, required: true }
     },
-    defenses: {}
+    defenses: {
+      structures: { type: Number, required: true }
+    }
   }
 })
 

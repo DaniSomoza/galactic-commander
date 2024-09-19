@@ -19,7 +19,9 @@ export const PLAYER_TEST_1_PIRATE: IBasePlayer = {
     fleets: {
       energy: 0
     },
-    defenses: {}
+    defenses: {
+      structures: 0
+    }
   }
 }
 

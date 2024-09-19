@@ -77,7 +77,9 @@ async function processNewPlayerTask(
         energy: 0
       },
 
-      defenses: {}
+      defenses: {
+        structures: 0
+      }
     }
   }
 
