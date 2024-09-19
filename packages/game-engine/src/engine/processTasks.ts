@@ -20,14 +20,10 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
 
   for (const { tasks, second } of tasksGroupedBySeconds) {
-    const startTime = new Date().getTime()
-
     // TODO: execute tasks by type
 
     // 0.- Calculate player resources
     await calculateResourceProduction(tasks, second)
-    // TODO: remove this log
-    console.log('time to calculate resources: ', new Date().getTime() - startTime)
 
     // 1.- New player Tasks
     const newPlayerTasks = tasks.filter((task) => task.type === NEW_PLAYER_TASK_TYPE)
@@ -51,9 +47,6 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
     // update universe
     universe.lastProcessedTime = second
     await universe.save()
-
-    // TODO: remove this log
-    console.log('time to calculate tasks: ', new Date().getTime() - startTime)
   }
 }
 
