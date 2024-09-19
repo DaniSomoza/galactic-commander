@@ -69,10 +69,10 @@ describe('process start research task', () => {
 
     const playerResearch = await playerRepository.findPlayerById(player!._id)
 
-    expect((playerResearch?.activeResearch?.research as IResearchDocument)._id).toEqual(
+    expect((playerResearch?.researches.activeResearch?.research as IResearchDocument)._id).toEqual(
       research!._id
     )
-    expect(playerResearch?.activeResearch?.level).toEqual(1)
+    expect(playerResearch?.researches.activeResearch?.level).toEqual(1)
 
     // TODO: ADD expect(processedTask!.status).toBe(PROCESSED_TASK_STATUS)
 

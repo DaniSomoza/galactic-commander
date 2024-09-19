@@ -29,8 +29,11 @@ export interface IPlayerPoints {
 }
 
 interface IPlayerResearch {
-  research: IResearchDocument
-  level: number
+  researched: {
+    research: IResearchDocument
+    level: number
+  }[]
+  activeResearch?: IPlayerActiveResearch
 }
 
 interface IPlayerActiveResearch {
@@ -58,8 +61,7 @@ export interface IPlayer {
   planets: IPlayerPlanet
   bonus: IPlayerBonus[]
   points: IPlayerPoints[]
-  researches: IPlayerResearch[]
-  activeResearch?: IPlayerActiveResearch
+  researches: IPlayerResearch
   units: IPlayerUnits
 }
 
@@ -107,18 +109,19 @@ const PlayerSchema: Schema = new Schema({
     }
   ],
 
-  researches: [
-    {
-      _id: false,
-      research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
-      level: { type: Number, required: true }
+  researches: {
+    researched: [
+      {
+        _id: false,
+        research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
+        level: { type: Number, required: true }
+      }
+    ],
+    activeResearch: {
+      type: ActiveResearchSchema,
+      required: false,
+      default: undefined
     }
-  ],
-
-  activeResearch: {
-    type: ActiveResearchSchema,
-    required: false,
-    default: undefined
   },
 
   units: {

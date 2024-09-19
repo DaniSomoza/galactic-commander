@@ -35,7 +35,7 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -87,9 +87,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(1)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
@@ -121,7 +121,7 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -162,7 +162,7 @@ describe('process finish research task', () => {
       // we process the task here
       await processTasks([level1ResearchTask!], universe!)
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 2,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -213,9 +213,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(2)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
@@ -254,7 +254,7 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -308,9 +308,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(1)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
@@ -336,7 +336,7 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -377,7 +377,7 @@ describe('process finish research task', () => {
       // we process the task here
       await processTasks([firstTask!], universe!)
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -428,9 +428,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(2)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
@@ -462,7 +462,7 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -516,9 +516,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(1)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(1)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
@@ -579,7 +579,7 @@ describe('process finish research task', () => {
       // we process the task here
       await processTasks([firstTask!], universe!)
 
-      player!.activeResearch = {
+      player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
         executeTaskAt: new Date().getTime() + researchDuration
@@ -630,9 +630,9 @@ describe('process finish research task', () => {
         universe!._id
       )
 
-      expect(researchPlayer?.activeResearch).toBe(undefined)
-      expect(researchPlayer?.researches[0].level).toBe(2)
-      expect(researchPlayer?.researches[0].research.name).toEqual(research?.name)
+      expect(researchPlayer?.researches.activeResearch).toBe(undefined)
+      expect(researchPlayer?.researches.researched[0].level).toBe(2)
+      expect(researchPlayer?.researches.researched[0].research.name).toEqual(research?.name)
 
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)

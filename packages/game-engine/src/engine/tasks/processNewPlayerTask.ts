@@ -64,7 +64,9 @@ async function processNewPlayerTask(
 
     points: [],
 
-    researches: [],
+    researches: {
+      researched: []
+    },
 
     units: {
       troops: {
@@ -86,7 +88,7 @@ async function processNewPlayerTask(
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
-  principalPlanet.resourceQuality = 100 // max value
+  principalPlanet.resourceQuality = 100 // max value for principal planets by default
   principalPlanet.lastResourceProductionTime = second
 
   // we create the player before update the planet

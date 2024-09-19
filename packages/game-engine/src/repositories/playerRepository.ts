@@ -20,14 +20,14 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
       }
     })
     .populate({
-      path: 'researches',
+      path: 'researches.researched',
       populate: {
         path: 'research',
         model: 'Research'
       }
     })
     .populate({
-      path: 'activeResearch',
+      path: 'researches.activeResearch',
       populate: {
         path: 'research',
         model: 'Research'
@@ -54,14 +54,14 @@ async function findPlayerById(playerId: mongoose.Types.ObjectId) {
       }
     })
     .populate({
-      path: 'researches',
+      path: 'researches.researched',
       populate: {
         path: 'research',
         model: 'Research'
       }
     })
     .populate({
-      path: 'activeResearch',
+      path: 'researches.activeResearch',
       populate: {
         path: 'research',
         model: 'Research'

@@ -25,7 +25,7 @@ async function processStartResearchTask(
     throw new GameEngineError('invalid player')
   }
 
-  if (player.activeResearch) {
+  if (player.researches.activeResearch) {
     throw new GameEngineError('player already researching')
   }
 
@@ -37,7 +37,7 @@ async function processStartResearchTask(
     throw new GameEngineError('invalid research')
   }
 
-  const playerResearch = player.researches.find(
+  const playerResearch = player.researches.researched.find(
     (playerResearch) => playerResearch.research.name === research.name
   )
 
@@ -67,7 +67,7 @@ async function processStartResearchTask(
     executeTaskAt
   }
 
-  player.activeResearch = activeResearch
+  player.researches.activeResearch = activeResearch
 
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {

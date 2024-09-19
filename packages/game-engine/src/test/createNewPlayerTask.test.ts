@@ -127,8 +127,8 @@ describe('process new player creation Task', () => {
 
     expect(createdPlayer!.points).toEqual([])
 
-    expect(createdPlayer!.researches).toEqual([])
-    expect(createdPlayer!.activeResearch).toBeUndefined()
+    expect(createdPlayer!.researches.researched).toEqual([])
+    expect(createdPlayer!.researches.activeResearch).toBeUndefined()
 
     expect(createdPlayer!.units.fleets.energy).toEqual(0)
     expect(createdPlayer!.units.troops.population).toEqual(0)
@@ -370,7 +370,9 @@ describe('process new player creation Task', () => {
 
       bonus: [],
       points: [],
-      researches: [],
+      researches: {
+        researched: []
+      },
 
       units: {
         troops: {

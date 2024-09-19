@@ -25,7 +25,7 @@ async function processFinishResearchTask(
     throw new GameEngineError('invalid research')
   }
 
-  const playerResearch = player.researches.find(
+  const playerResearch = player.researches.researched.find(
     (playerResearch) => playerResearch.research.name === research.name
   )
 
@@ -35,7 +35,7 @@ async function processFinishResearchTask(
 
   // upgrade player researches
   if (isFirstLevel) {
-    player.researches.push({
+    player.researches.researched.push({
       research,
       level: 1
     })
@@ -72,7 +72,7 @@ async function processFinishResearchTask(
   const pointsSource = task.data.research._id
   player.points = addPoints(player.points, points, pointsSource, 'Research', second)
 
-  player.activeResearch = undefined
+  player.researches.activeResearch = undefined
 
   return Promise.all([player.save()])
 }
