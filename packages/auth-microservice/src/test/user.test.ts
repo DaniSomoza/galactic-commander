@@ -2,6 +2,7 @@ import StatusCodes from 'http-status-codes'
 
 import UserModel from '../models/UserModel'
 import * as emailLib from '../lib/email'
+import * as jwtLib from '../lib/jwt'
 import { testServer } from './testSetup'
 import { ACTIVE_USER, BANNED_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
@@ -223,6 +224,12 @@ describe('users', () => {
 
   describe('user login', () => {
     it('creates a user session with valid credentials', async () => {
+      const testSessionTokenMock = 'mocked-jwt-token'
+      const createJWTMock = jest.spyOn(jwtLib, 'createJWT')
+      createJWTMock.mockReturnValue(testSessionTokenMock)
+
+      expect(createJWTMock).not.toHaveBeenCalled()
+
       const response = await testServer.server.inject({
         method: 'POST',
         url: '/user/session',
@@ -236,6 +243,14 @@ describe('users', () => {
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(sessionToken).toBeDefined()
+      expect(createJWTMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: ACTIVE_USER.email
+        })
+      )
+      expect(sessionToken).toEqual(testSessionTokenMock)
+
+      createJWTMock.mockRestore()
     })
 
     it('returns unauthorized error with invalid credentials', async () => {

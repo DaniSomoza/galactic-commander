@@ -48,17 +48,19 @@ yarn coverage
 
 ## Roadmap
 
-- [x] **Auth microservice**: create users, validate email, get user info and create user sessions (JWT)
-- [ ] **Pending Auth microservice endpoints**: change password, forgot password, reset password, update user data and delete account
-- [x] **Auth microservice**: add unit tests with jest
-- [x] **Github actions**: add Github actions (test, coverage reports with coveralls)
-- [ ] **Pending Github actions**: add Sonar action
-- [ ] **First version of the frontend**: register (create + validate email), login, forgot password, change password
-- [ ] **game-api**: add migration support
-- [ ] **game-engine**: Create Universe (define races, planets)
-- [ ] **game-api microservice**: create a player (select race & select universe & principal planet)
-- [ ] **game-engine**: Define task types & processing scheduler
-- [ ] **game-api microservice**: Players can create tasks
-- [ ] **first release**: Release system & dev & Prod environment (Github actions)
+- [ ] **First version of the frontend**: Register (create + validate email), login, create player, select race, and create research task. Track planet resources and active researches. Show player bonus in the UI
+- [ ] **game-api microservice, game-engine & frontend**: Players can build units (research required to unlock units)
+- [ ] **game-api microservice, game-engine & frontend**: Players can deploy fleets (only deploy spaceship units)
+- [x] **Auth microservice**: Create users, validate email, retrieve user info, and create user sessions (JWT)
+- [ ] **Pending Auth microservice endpoints**: Change password, forgot password, reset password, update user data and delete account
+- [x] **Auth microservice**: Add unit tests with jest
+- [x] **Github actions**: Add Github actions (test, coverage reports with coveralls)
+- [ ] **Pending Github actions**: Add Sonar action
+- [x] **game-api**: Add migration support
+- [x] **game-engine**: Create Universe (define races, planets)
+- [x] **game-api microservice**: Create a player (select race & select universe & principal planet)
+- [x] **game-engine**: Define task types & processing scheduler
+- [x] **game-api microservice**: Players can create tasks
+- [ ] **first release**: Release system & dev & prod environments (GitHub actions).
 - [ ] **preview PR branches**: (Github actions)
-- [ ] **Badges**: (badges in te README.md)
+- [ ] **Badges**: Add badges in the README.md

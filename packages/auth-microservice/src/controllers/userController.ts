@@ -79,9 +79,9 @@ async function login(request: FastifyRequest, response: FastifyReply) {
 
     const { email, password } = request.body as loginData
 
-    const sessionToken = await userService.login(email, password)
+    const { user, sessionToken } = await userService.login(email, password)
 
-    response.code(StatusCodes.OK).send({ sessionToken })
+    response.code(StatusCodes.OK).send({ user, sessionToken })
   } catch (error) {
     const { code, body } = handleErrorResponse(error)
 
