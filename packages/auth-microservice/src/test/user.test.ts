@@ -2,6 +2,7 @@ import StatusCodes from 'http-status-codes'
 
 import UserModel from '../models/UserModel'
 import * as emailLib from '../lib/email'
+import * as jwtLib from '../lib/jwt'
 import { testServer } from './testSetup'
 import { ACTIVE_USER, BANNED_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
@@ -224,7 +225,7 @@ describe('users', () => {
   describe('user login', () => {
     it('creates a user session with valid credentials', async () => {
       const testSessionTokenMock = 'mocked-jwt-token'
-      const createJWTMock = jest.spyOn(require('../lib/jwt'), 'createJWT')
+      const createJWTMock = jest.spyOn(jwtLib, 'createJWT')
       createJWTMock.mockReturnValue(testSessionTokenMock)
 
       expect(createJWTMock).not.toHaveBeenCalled()
