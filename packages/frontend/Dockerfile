@@ -9,18 +9,13 @@ RUN yarn install --frozen-lockfile
 
 RUN yarn build
 
-# Stage 2: Auth Image
-FROM node:20-slim
+# Stage 2: Nginx
+FROM nginx:alpine
 
-WORKDIR /app
+COPY --from=builder /usr/app/packages/frontend/dist /usr/share/nginx/html
 
-# dependencies
-COPY --from=builder /usr/app/package.json ./
-COPY --from=builder /usr/app/node_modules ./node_modules
+# COPY nginx.conf /etc/nginx/nginx.conf
 
-# code
-COPY --from=builder /usr/app/packages ./packages
+EXPOSE 80
 
-EXPOSE 3000
-
-CMD ["node", "packages/frontend/dist/index"]
+CMD ["nginx", "-g", "daemon off;"]
