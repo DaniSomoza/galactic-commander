@@ -13,6 +13,7 @@ type CreateUserData = {
   password: string
 }
 
+// TODO: create validation utils to use them in the frontend validations
 const userValidationSchema = Joi.object<CreateUserData>({
   email: Joi.string().email().required(),
   username: Joi.string().alphanum().min(5).max(30).required(),

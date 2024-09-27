@@ -1,14 +1,13 @@
 import Server from './configuration/Server'
 import gameApiRoutes from './routes/gameApiRoutes'
 import connectToDatabase from './configuration/Database'
-
-const { FRONTEND_ORIGIN } = process.env
+import getFrontendOrigins from './utils/getFrontendOrigins'
 
 async function main() {
   await connectToDatabase()
 
   const serverOptions = { logger: true }
-  const origins = [String(FRONTEND_ORIGIN)]
+  const origins = getFrontendOrigins()
   const gameApiServer = new Server(serverOptions)
 
   gameApiServer.configureCors(origins)

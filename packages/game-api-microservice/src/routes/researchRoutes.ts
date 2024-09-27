@@ -11,6 +11,8 @@ const startResearchRoute: Route = {
 
 // TODO: implement cancel research task
 
+// TODO: implement update research task
+
 const researchRoutes = [startResearchRoute]
 
 export default researchRoutes

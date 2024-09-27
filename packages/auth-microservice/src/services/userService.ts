@@ -9,8 +9,9 @@ import ConflictError from '../errors/ConflictError'
 import ForbiddenError from '../errors/Forbidden'
 import UnauthorizedError from '../errors/Unauthorized'
 import { createJWT, checkSessionToken } from '../lib/jwt'
+import getFrontendOrigins from '../utils/getFrontendOrigins'
 
-const { FRONTEND_ORIGIN } = process.env
+const frontendOrigins = getFrontendOrigins()
 
 type CreateUserData = {
   email: string
@@ -22,7 +23,7 @@ async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
   const { username, email, password } = newUserData
 
   const activationCode = generateActivationCode()
-  const activationLink = `${FRONTEND_ORIGIN}${ACTIVATE_USER_PATH}?activationCode=${activationCode}`
+  const activationLink = `${frontendOrigins[0]}${ACTIVATE_USER_PATH}?activationCode=${activationCode}`
 
   const hashedPassword = await generateHash(password)
 

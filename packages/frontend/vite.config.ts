@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
+import dotenv from 'dotenv'
 
-// https://vitejs.dev/config/
+dotenv.config({ path: resolve(__dirname, '../../.env') })
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react()]
 })
