@@ -1,14 +1,13 @@
 import Server from './configuration/Server'
 import authRoutes from './routes/authRoutes'
 import connectToDatabase from './configuration/Database'
-
-const { FRONTEND_ORIGIN } = process.env
+import getFrontendOrigins from './utils/getFrontendOrigins'
 
 async function main() {
   await connectToDatabase()
 
   const serverOptions = { logger: true }
-  const origins = [String(FRONTEND_ORIGIN)]
+  const origins = getFrontendOrigins()
   const authServer = new Server(serverOptions)
 
   authServer.configureCors(origins)
