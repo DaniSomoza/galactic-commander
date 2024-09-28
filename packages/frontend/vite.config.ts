@@ -7,9 +7,8 @@ import { configDefaults } from 'vitest/config'
 dotenv.config({ path: resolve(__dirname, '../../.env') })
 
 export default defineConfig({
-  // @ts-ignore
   plugins: [react()],
-  // @ts-ignore
+  // @ts-expect-error
   test: {
     globals: true,
     environment: 'jsdom',
