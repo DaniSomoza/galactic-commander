@@ -8,7 +8,7 @@ dotenv.config({ path: resolve(__dirname, '../../.env') })
 
 export default defineConfig({
   plugins: [react()],
-  // @ts-expect-error
+  // @ts-expect-error vite config test
   test: {
     globals: true,
     environment: 'jsdom',
