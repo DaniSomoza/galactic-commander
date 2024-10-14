@@ -1,4 +1,5 @@
 import { Document } from 'mongoose'
+
 import getRandomPlanet from '../../helpers/getRandomPlanet'
 import PlayerModel, { IPlayer } from '../../models/PlayerModel'
 import planetRepository from '../../repositories/planetRepository'
@@ -65,7 +66,8 @@ async function processNewPlayerTask(
     points: [],
 
     researches: {
-      researched: []
+      researched: [],
+      queue: []
     },
 
     units: {

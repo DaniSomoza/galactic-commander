@@ -1,4 +1,4 @@
-import { IBonus } from '../../models/ResearchModel'
+import { IBonus } from '../../types/bonus'
 
 function upgradeBonus(bonus: IBonus, level: number): IBonus {
   const updatedBonus: IBonus = {}

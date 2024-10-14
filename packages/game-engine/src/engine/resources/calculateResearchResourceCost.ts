@@ -11,9 +11,10 @@ function calculateResearchResourceCost(research: IResearch, level: number): numb
   }
 
   const previousLevel = level - 1
+  const nextLevel = level + 1
   const previousCost = calculateResearchResourceCost(research, previousLevel)
 
-  return previousCost + (previousCost * RESEARCH_COST_FACTOR) / level
+  return previousCost + (previousCost * RESEARCH_COST_FACTOR) / nextLevel
 }
 
 export default calculateResearchResourceCost

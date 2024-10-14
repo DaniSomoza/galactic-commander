@@ -49,8 +49,6 @@
     ]
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2",
-    "migrate-mongo": "^11.0.0"
+    "dotenv": "^16.4.5"
   }
 }

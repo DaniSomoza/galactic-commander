@@ -19,7 +19,7 @@ const pirates: IBaseRace = {
   name: 'pirates',
   description: 'pirate race description',
   image: 'image_url',
-  type: ['Aggressive', 'Raiders'],
+  tags: ['Aggressive', 'Raiders'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,

@@ -4,17 +4,24 @@ import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import {
   ERROR_TASK_STATUS,
   FINISH_RESEARCH_TASK_TYPE,
+  FinishResearchTaskData,
   ITaskDocument,
   ITaskTypeDocument,
   NEW_PLAYER_TASK_TYPE,
+  NewPlayerTaskData,
   PROCESSED_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
+  StartResearchTaskData,
   TaskType
 } from '../models/TaskModel'
-import { IUniverseDocument } from '../models/UniverseModel'
+import playerRepository from '../repositories/playerRepository'
 import GameEngineError from './errors/GameEngineError'
-import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
+import { IUniverseDocument } from '../models/UniverseModel'
+import { IPlanetDocument } from '../models/PlanetModel'
+import { IPlayerDocument } from '../models/PlayerModel'
 import calculateResourceProduction from './resources/calculateResourceProduction'
+import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
+import applyBonus from '../helpers/applyBonus'
 
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
@@ -22,8 +29,10 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
   for (const { tasks, second } of tasksGroupedBySeconds) {
     // TODO: execute tasks by type
 
+    // TODO: get tasks again ???
+
     // 0.- Calculate player resources
-    await calculateResourceProduction(tasks, second)
+    await processResourceProduction(tasks, second)
 
     // 1.- New player Tasks
     const newPlayerTasks = tasks.filter((task) => task.type === NEW_PLAYER_TASK_TYPE)
@@ -98,4 +107,62 @@ async function setTaskAsProcessed<Type extends TaskType>(
   const endTime = new Date().getTime()
   task.processingDuration = endTime - startTime
   return task.save()
+}
+
+async function processResourceProduction(
+  tasks: ITaskTypeDocument<TaskType>[],
+  second: number
+): Promise<IPlanetDocument[]> {
+  const planets: {
+    planet: IPlanetDocument
+    owner: IPlayerDocument
+  }[] = []
+
+  // TODO: implement targetPlanet feature
+  for (const task of tasks) {
+    // calculate all player planet production
+    if (isPlayerTaskData(task.data)) {
+      const player = await playerRepository.findPlayerById(task.data.player)
+
+      if (player) {
+        const playerPlanets = player.planets.colonies
+
+        playerPlanets.forEach((playerPlanet) => {
+          const isAlreadyIncluded = planets.some(({ planet }) =>
+            planet._id.equals(playerPlanet._id)
+          )
+
+          if (!isAlreadyIncluded) {
+            planets.push({
+              planet: playerPlanet,
+              owner: player
+            })
+          }
+        })
+      }
+    }
+  }
+
+  return Promise.all(
+    planets.map(({ planet, owner }) => {
+      const ownerResourceProductionBonus = applyBonus(owner.bonus, 'resourceProductionBonus', true)
+
+      planet.resources = calculateResourceProduction(
+        second,
+        planet.resources,
+        planet.lastResourceProductionTime,
+        planet.resourceQuality,
+        ownerResourceProductionBonus
+      )
+      planet.lastResourceProductionTime = second
+
+      return planet.save()
+    })
+  )
+}
+
+function isPlayerTaskData(
+  taskData: NewPlayerTaskData | StartResearchTaskData | FinishResearchTaskData
+): taskData is StartResearchTaskData | FinishResearchTaskData {
+  return 'player' in taskData
 }

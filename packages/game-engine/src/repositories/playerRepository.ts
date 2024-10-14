@@ -6,11 +6,7 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
   return PlayerModel.findOne({ 'user.username': username, universe: universeId })
     .populate('planets.principal')
     .populate({
-      path: 'planets.colonies',
-      populate: {
-        path: 'owner',
-        model: 'Player'
-      }
+      path: 'planets.colonies'
     })
     .populate({
       path: 'race',

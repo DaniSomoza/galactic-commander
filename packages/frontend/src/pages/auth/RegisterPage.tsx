@@ -8,7 +8,8 @@ import Grid from '@mui/material/Grid2'
 import Link from '@mui/material/Link'
 import Button from '@mui/material/Button'
 
-import { registerUser } from '../endpoints/auth/authEndpoints'
+import { registerUser } from '../../endpoints/auth/authEndpoints'
+import { LOGIN_PATH } from '../../routes/routes'
 
 function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -27,6 +28,8 @@ function RegisterPage() {
 
   // TODO: Add form validations
   // TODO: Add unhappy paths (register call fails...)
+
+  // TODO: Create a polling in Check your email and redirect to login
 
   return (
     <Container component="main" maxWidth="xs" disableGutters>
@@ -84,11 +87,12 @@ function RegisterPage() {
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid>
-                    {/* TODO: create login link */}
-                    Already have an account?
-                    <Link href="#" variant="body2">
-                      Sign in
-                    </Link>
+                    <Typography>
+                      Already have an account?{' '}
+                      <Link href={LOGIN_PATH} variant="body2">
+                        Sign in
+                      </Link>
+                    </Typography>
                   </Grid>
                 </Grid>
               </Box>

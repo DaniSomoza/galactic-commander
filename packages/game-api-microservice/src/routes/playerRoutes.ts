@@ -1,7 +1,6 @@
 import { Route } from '../configuration/Server'
 import playerController from '../controllers/playerController'
-
-export const PLAYER_PATH = '/player'
+import { PLAYER_PATH } from './constants'
 
 const createPlayerRoute: Route = {
   url: PLAYER_PATH,
@@ -9,12 +8,12 @@ const createPlayerRoute: Route = {
   handler: playerController.createPlayer
 }
 
-// const getPlayerRoute: Route = {
-//   url: PLAYER_PATH,
-//   method: 'GET',
-//   handler: playerController.getPlayer
-// }
+const getPlayerRoute: Route = {
+  url: PLAYER_PATH,
+  method: 'GET',
+  handler: playerController.getPlayer
+}
 
-const playerRoutes = [createPlayerRoute]
+const playerRoutes = [createPlayerRoute, getPlayerRoute]
 
 export default playerRoutes

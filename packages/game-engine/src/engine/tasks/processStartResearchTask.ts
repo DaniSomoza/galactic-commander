@@ -61,14 +61,6 @@ async function processStartResearchTask(
 
   principalPlanet.resources -= researchResourceCost
 
-  const activeResearch = {
-    research: research._id,
-    level: level + 1,
-    executeTaskAt
-  }
-
-  player.researches.activeResearch = activeResearch
-
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
     type: FINISH_RESEARCH_TASK_TYPE,
@@ -101,6 +93,15 @@ async function processStartResearchTask(
 
   const taskModel = getTaskModel<FinishResearchTaskType>()
   const newTask = new taskModel(finishResearchTask)
+
+  const activeResearch = {
+    research: research._id,
+    level: level + 1,
+    executeTaskAt,
+    taskId: newTask._id
+  }
+
+  player.researches.activeResearch = activeResearch
 
   return Promise.all([newTask.save(), principalPlanet.save(), player.save()])
 }

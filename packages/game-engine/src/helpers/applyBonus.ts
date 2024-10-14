@@ -1,21 +1,20 @@
-import { IPlayerBonus } from '../models/PlayerModel'
-import { IBonus } from '../models/ResearchModel'
+import { IBonus } from '../types/bonus'
 
 export const BASE_BONUS = 100
 
 // TODO: move this to /bonus
 function applyBonus(
-  playerBonus: IPlayerBonus[],
+  playerBonus: { bonus: IBonus }[],
   bonusName: keyof IBonus,
   isNumericBonus: true
 ): number
 function applyBonus(
-  playerBonus: IPlayerBonus[],
+  playerBonus: { bonus: IBonus }[],
   bonusName: keyof IBonus,
   isNumericBonus: false
 ): boolean
 function applyBonus(
-  playerBonus: IPlayerBonus[],
+  playerBonus: { bonus: IBonus }[],
   bonusName: keyof IBonus,
   isNumericBonus: boolean
 ): number | boolean {

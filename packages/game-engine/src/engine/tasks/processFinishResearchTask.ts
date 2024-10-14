@@ -4,7 +4,7 @@ import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
 import upgradeBonus from '../bonus/upgradeBonus'
-import { IBonus } from '../../models/ResearchModel'
+import { IBonus } from '../../types/bonus'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -73,6 +73,13 @@ async function processFinishResearchTask(
   player.points = addPoints(player.points, points, pointsSource, 'Research', second)
 
   player.researches.activeResearch = undefined
+
+  // TODO: check player queue!!!!
+
+  // TODO: add here the taskId
+  // TODO: add research queue! (in finish task)
+  // TODO: add addresearch queue endpoint
+  // si no hay nada en la cola directamente crear la research task que dice querer encolar
 
   return Promise.all([player.save()])
 }

@@ -78,7 +78,7 @@ type TaskHandlerType = {
 
 export const TASK_HANDLER: TaskHandlerType = {
   [NEW_PLAYER_TASK_TYPE]: {
-    processTasksInParallel: false,
+    processTasksInParallel: false, // this is important to prevent duplicate players
     handler: processNewPlayerTask,
     priority: TASK_PRIORITY[NEW_PLAYER_TASK_TYPE]
   },

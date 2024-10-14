@@ -1,25 +1,26 @@
 import { generateHash, validateHash } from '../lib/encrypt'
 import { sendEmail } from '../lib/email'
 import { generateActivationCode } from '../lib/uuid'
-import { ACTIVATE_USER_PATH } from '../routes/userRoutes'
+import { ACTIVATE_USER_PATH } from '../routes/constants'
 import userRepository from '../repositories/userRepository'
-import cleanUserFields, { CleanUserData } from '../utils/cleanUserFields'
+import cleanUserFields from '../utils/cleanUserFields'
 import NotFoundError from '../errors/NotFoundError'
 import ConflictError from '../errors/ConflictError'
 import ForbiddenError from '../errors/Forbidden'
 import UnauthorizedError from '../errors/Unauthorized'
 import { createJWT, checkSessionToken } from '../lib/jwt'
 import getFrontendOrigins from '../utils/getFrontendOrigins'
+import {
+  CreateUserData,
+  LoginResponseType,
+  createUserResponseType,
+  getUserResponseType,
+  userActivationResponseType
+} from '../types/User'
 
 const frontendOrigins = getFrontendOrigins()
 
-type CreateUserData = {
-  email: string
-  username: string
-  password: string
-}
-
-async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
+async function createUser(newUserData: CreateUserData): Promise<createUserResponseType> {
   const { username, email, password } = newUserData
 
   const activationCode = generateActivationCode()
@@ -39,10 +40,10 @@ async function createUser(newUserData: CreateUserData): Promise<CleanUserData> {
 
   sendEmail(email, username, activationLink)
 
-  return cleanUserFields(userCreated)
+  return { user: cleanUserFields(userCreated) }
 }
 
-async function activateUser(activationCode: string) {
+async function activateUser(activationCode: string): Promise<userActivationResponseType> {
   const user = await userRepository.findUserByActivationCode(activationCode)
 
   if (!user) {
@@ -57,10 +58,16 @@ async function activateUser(activationCode: string) {
 
   const userActivated = await userRepository.updateUser(user._id.toString(), { isActivated: true })
 
-  return cleanUserFields(userActivated!)
+  if (!userActivated) {
+    throw new ConflictError('error, unable to activate the user', { user: cleanUserFields(user) })
+  }
+
+  return {
+    user: cleanUserFields(userActivated)
+  }
 }
 
-async function login(email: string, password: string) {
+async function login(email: string, password: string): Promise<LoginResponseType> {
   const user = await userRepository.findUserByEmail(email)
 
   if (!user) {
@@ -73,13 +80,14 @@ async function login(email: string, password: string) {
     throw new UnauthorizedError('wrong credentials', { email })
   }
 
-  const isUserActivated = user.isActivated
-  const isUserBanned = user.isBanned
   const userData = cleanUserFields(user)
+  const isUserActivated = user.isActivated
 
   if (!isUserActivated) {
     throw new ForbiddenError('user not activated', userData)
   }
+
+  const isUserBanned = user.isBanned
 
   if (isUserBanned) {
     throw new ForbiddenError('user banned', userData)
@@ -93,7 +101,7 @@ async function login(email: string, password: string) {
   }
 }
 
-async function getUser(jwtToken: string) {
+async function getUser(jwtToken: string): Promise<getUserResponseType> {
   const userData = checkSessionToken(jwtToken)
 
   const user = await userRepository.findUserByEmail(userData.email)
@@ -113,7 +121,7 @@ async function getUser(jwtToken: string) {
     throw new ForbiddenError('user banned', userData)
   }
 
-  return cleanUserFields(user)
+  return { user: cleanUserFields(user) }
 }
 
 const userService = {

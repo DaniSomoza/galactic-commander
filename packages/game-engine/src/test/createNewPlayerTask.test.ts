@@ -18,7 +18,7 @@ import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
 import pirates from '../assets/races/pirates'
 import processTasks from '../engine/processTasks'
 import PlayerModel, { IPlayer } from '../models/PlayerModel'
-import { IBonus } from '../models/ResearchModel'
+import { IBonus } from '../types/bonus'
 
 describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {
@@ -371,7 +371,8 @@ describe('process new player creation Task', () => {
       bonus: [],
       points: [],
       researches: {
-        researched: []
+        researched: [],
+        queue: []
       },
 
       units: {

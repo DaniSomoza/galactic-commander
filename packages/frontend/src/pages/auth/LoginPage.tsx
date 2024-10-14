@@ -9,23 +9,22 @@ import Grid from '@mui/material/Grid2'
 import Link from '@mui/material/Link'
 import Button from '@mui/material/Button'
 
-import { login } from '../endpoints/auth/authEndpoints'
-import { DASHBOARD_PATH } from '../routes/routes'
+import { GAME_DASHBOARD_PATH, REGISTER_PATH } from '../../routes/routes'
+import { useAuthorization } from '../../store/AuthorizationContext'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
+  const { login } = useAuthorization()
 
   const handleSubmitLogin: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
 
-    const response = await login(email, password)
+    await login(email, password)
 
-    console.log('response: ', response)
-
-    navigate(DASHBOARD_PATH)
+    navigate(GAME_DASHBOARD_PATH)
   }
 
   // TODO: Add form validations
@@ -52,8 +51,10 @@ function LoginPage() {
                     label="Email"
                     name="email"
                     autoComplete="email"
+                    autoFocus
                   />
                 </Grid>
+
                 <Grid size={{ xs: 12 }}>
                   <TextField
                     id="password"
@@ -68,16 +69,19 @@ function LoginPage() {
                   />
                 </Grid>
               </Grid>
+
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Login
               </Button>
+
               <Grid container justifyContent="flex-end">
                 <Grid>
-                  {/* TODO: create user link */}
-                  Don't have an account?
-                  <Link href="#" variant="body2">
-                    Sign up
-                  </Link>
+                  <Typography>
+                    Don't have an account?{' '}
+                    <Link href={REGISTER_PATH} variant="body2">
+                      Sign up
+                    </Link>
+                  </Typography>
                 </Grid>
               </Grid>
             </Box>

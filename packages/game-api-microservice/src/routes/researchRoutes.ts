@@ -11,7 +11,17 @@ const startResearchRoute: Route = {
 
 // TODO: implement cancel research task
 
-// TODO: implement update research task
+// TODO: implement update research task / reschedule task?
+
+// TODO: implement a queue system
+
+// could be a prop in the player
+
+// resarch = {
+//   research
+//   ...
+//   queue: ["researchName1", "researchName1", "researchName2", "researchName3", ...]
+// }
 
 const researchRoutes = [startResearchRoute]
 

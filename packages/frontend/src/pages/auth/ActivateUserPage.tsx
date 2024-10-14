@@ -5,12 +5,14 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 
-import { activateUser } from '../endpoints/auth/authEndpoints'
-import { LOGIN_PATH, REGISTER_PATH } from '../routes/routes'
+import { activateUser } from '../../endpoints/auth/authEndpoints'
+import { LOGIN_PATH, REGISTER_PATH } from '../../routes/routes'
 
 function ActivateUserPage() {
   const [queryParams] = useSearchParams()
   const navigate = useNavigate()
+
+  // TODO: show a "Account Activated! and show a button to create player "
 
   useEffect(() => {
     const userActivation = async () => {

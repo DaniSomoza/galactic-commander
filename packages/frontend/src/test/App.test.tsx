@@ -7,6 +7,6 @@ import App from '../App'
 test('loads and displays the App Dashboard', async () => {
   render(<App />)
 
-  const element = screen.getByText(/Home Page/i)
+  const element = screen.getByText(/Galactic Commander/i)
   expect(element).toBeInTheDocument()
 })

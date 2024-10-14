@@ -21,12 +21,12 @@ class Api {
     this.axiosInstance.defaults.headers.common['Authorization'] = authHeader
   }
 
-  get(endpoint: string, config: AxiosRequestConfig) {
-    return this.axiosInstance.get(endpoint, config)
+  get<R>(endpoint: string, config?: AxiosRequestConfig) {
+    return this.axiosInstance.get<R>(endpoint, config)
   }
 
-  post<T>(endpoint: string, payload: T, config?: AxiosRequestConfig) {
-    return this.axiosInstance.post(endpoint, payload, config)
+  post<R, T>(endpoint: string, payload: T, config?: AxiosRequestConfig) {
+    return this.axiosInstance.post<R>(endpoint, payload, config)
   }
 }
 

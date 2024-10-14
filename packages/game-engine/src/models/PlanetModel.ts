@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
-import { IPlayerDocument } from './PlayerModel'
 
 export const DEFAULT_PLANET_RESOURCES = 10_000
 
@@ -19,7 +18,7 @@ export type PlanetCoordinates = {
 
 export interface IPlanet {
   name: string
-  owner: IPlayerDocument | null
+  owner: mongoose.Types.ObjectId | null
   colonizedAt: number
 
   resources: number

@@ -37,7 +37,7 @@ function useTheme() {
 }
 
 type ThemeProviderProps = {
-  children: JSX.Element[]
+  children: JSX.Element | JSX.Element[]
 }
 
 function ThemeProvider({ children }: ThemeProviderProps) {

@@ -14,7 +14,7 @@ const fotox: IRace = {
   name: 'fotox',
   description: 'fotox race description',
   image: 'image_url',
-  type: ['Aggressive', 'Colonizer'],
+  tags: ['Aggressive', 'Colonizer'],
   maxPlanetsAllowed: FOTOX_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,
