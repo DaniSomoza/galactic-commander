@@ -5,6 +5,8 @@ import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
 import upgradeBonus from '../bonus/upgradeBonus'
 import { IBonus } from '../../types/bonus'
+import createStartResearchTask from './utils/createStartResearchTask'
+import taskRepository from '../../repositories/taskRepository'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -74,12 +76,14 @@ async function processFinishResearchTask(
 
   player.researches.activeResearch = undefined
 
-  // TODO: check player queue!!!!
+  // check player research queue
+  const nextResearchId = player.researches.queue.shift()
 
-  // TODO: add here the taskId
-  // TODO: add research queue! (in finish task)
-  // TODO: add addresearch queue endpoint
-  // si no hay nada en la cola directamente crear la research task que dice querer encolar
+  if (nextResearchId) {
+    const startResearchTask = createStartResearchTask(task.universe._id, player._id, nextResearchId)
+
+    await taskRepository.createStartResearchTask(startResearchTask)
+  }
 
   return Promise.all([player.save()])
 }
