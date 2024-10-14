@@ -49,8 +49,13 @@ yarn coverage
 ## Roadmap
 
 - [ ] **First version of the frontend**: Register (create + validate email), login, create player, select race, and create research task. Track planet resources and active researches. Show player bonus in the UI
-- [ ] **game-api microservice, game-engine & frontend**: Players can build units (research required to unlock units)
+- [ ] **game-api microservice, game-engine & frontend**: Players can build units (ships, troops, defenses & heroes) (research required to unlock units) specials & units from special planets???
 - [ ] **game-api microservice, game-engine & frontend**: Players can deploy fleets (only deploy spaceship units)
+- [ ] **game-api microservice, game-engine & frontend**: Players activate specials
+- [ ] **game-api & frontend**: Add CDN to store assets like images (profile pics, unit img, race img, research img, specials img, planets img...) update user profile pic flow
+- [ ] **frontend && Content**: Add translate support in frontend
+- [ ] **Content**: Add all races, units, specials, heroes, special planets ???
+- [ ] **Content**: Players
 - [x] **Auth microservice**: Create users, validate email, retrieve user info, and create user sessions (JWT)
 - [ ] **Pending Auth microservice endpoints**: Change password, forgot password, reset password, update user data and delete account
 - [x] **Auth microservice**: Add unit tests with jest

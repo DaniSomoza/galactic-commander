@@ -46,8 +46,43 @@ async function startResearch(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
+type AddResearchToQueueData = {
+  researchName: string
+  universeName: string
+}
+
+const addResearchToQueueValidationSchema = Joi.object<AddResearchToQueueData>({
+  researchName: Joi.string().required(),
+  universeName: Joi.string().required()
+})
+
+async function addResearchToQueue(request: FastifyRequest, response: FastifyReply) {
+  try {
+    await validateInputData(request.body, addResearchToQueueValidationSchema)
+
+    const { researchName, universeName } = request.body as AddResearchToQueueData
+
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
+
+    const { username } = checkSessionToken(jwtToken)
+
+    const player = await researchService.addResearchToQueue({
+      username,
+      researchName,
+      universeName
+    })
+
+    response.code(StatusCodes.OK).send(player)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
 const researchController = {
-  startResearch
+  startResearch,
+  addResearchToQueue
 }
 
 export default researchController

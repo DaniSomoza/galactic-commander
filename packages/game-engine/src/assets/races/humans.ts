@@ -13,7 +13,7 @@ const humans: IRace = {
   name: 'humans',
   description: 'humans race description',
   image: 'image_url',
-  type: ['Colonizer'], // TODO: get proper types
+  tags: ['Colonizer'], // TODO: get proper types
   maxPlanetsAllowed: HUMANS_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: HUMANS_TROOPS_POPULATION,

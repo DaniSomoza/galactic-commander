@@ -13,7 +13,7 @@ const saurians: IRace = {
   name: 'saurians',
   description: 'saurians race description',
   image: 'image_url',
-  type: ['Aggressive', 'Stealth'],
+  tags: ['Aggressive', 'Stealth'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: SAURIANS_TROOPS_POPULATION,

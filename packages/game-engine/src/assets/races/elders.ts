@@ -14,7 +14,7 @@ const elders: IRace = {
   name: 'elders',
   description: 'elders race description',
   image: 'image_url',
-  type: ['Aggressive', 'Scientist'],
+  tags: ['Aggressive', 'Scientist'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: ELDERS_FLEET_ENERGY,
   baseTroopsPopulation: ELDERS_TROOPS_POPULATION,

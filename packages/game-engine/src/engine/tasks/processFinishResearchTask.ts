@@ -4,7 +4,9 @@ import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
 import upgradeBonus from '../bonus/upgradeBonus'
-import { IBonus } from '../../models/ResearchModel'
+import { IBonus } from '../../types/bonus'
+import createStartResearchTask from './utils/createStartResearchTask'
+import taskRepository from '../../repositories/taskRepository'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -73,6 +75,15 @@ async function processFinishResearchTask(
   player.points = addPoints(player.points, points, pointsSource, 'Research', second)
 
   player.researches.activeResearch = undefined
+
+  // check player research queue
+  const nextResearchId = player.researches.queue.shift()
+
+  if (nextResearchId) {
+    const startResearchTask = createStartResearchTask(task.universe._id, player._id, nextResearchId)
+
+    await taskRepository.createStartResearchTask(startResearchTask)
+  }
 
   return Promise.all([player.save()])
 }

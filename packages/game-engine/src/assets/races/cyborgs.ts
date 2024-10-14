@@ -14,7 +14,7 @@ const cyborgs: IRace = {
   name: 'cyborgs',
   description: 'cyborgs race description',
   image: 'image_url',
-  type: ['Aggressive', 'Colonizer', 'Explorer'],
+  tags: ['Aggressive', 'Colonizer', 'Explorer'],
   maxPlanetsAllowed: CYBORGS_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,

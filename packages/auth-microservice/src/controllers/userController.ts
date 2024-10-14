@@ -2,17 +2,13 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import StatusCodes from 'http-status-codes'
 import Joi from 'joi'
 
+import { CreateUserData, activateUserData, loginData } from '../types/User'
 import validateInputData from '../utils/validateInputData'
 import userService from '../services/userService'
 import handleErrorResponse from '../errors/handleErrorResponse'
 import { getJWTFromAuthHeader } from '../lib/jwt'
 
-type CreateUserData = {
-  email: string
-  username: string
-  password: string
-}
-
+// TODO: create validation utils to use them in the frontend validations
 const userValidationSchema = Joi.object<CreateUserData>({
   email: Joi.string().email().required(),
   username: Joi.string().alphanum().min(5).max(30).required(),
@@ -39,10 +35,6 @@ async function createUser(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
-type activateUserData = {
-  activationCode: string
-}
-
 const activationCodeSchema = Joi.object<activateUserData>({
   activationCode: Joi.string()
 })
@@ -61,11 +53,6 @@ async function activateUser(request: FastifyRequest, response: FastifyReply) {
 
     return response.code(code).send(body)
   }
-}
-
-type loginData = {
-  email: string
-  password: string
 }
 
 const loginSchema = Joi.object<loginData>({

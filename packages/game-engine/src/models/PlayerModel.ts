@@ -1,8 +1,10 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
-import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
+
+import { BonusType, IResearchDocument } from './ResearchModel'
 import { IRaceDocument } from './RaceModel'
 import { IUniverseDocument } from './UniverseModel'
 import { IPlanetDocument } from './PlanetModel'
+import { IBonus } from '../types/bonus'
 
 interface IPlayerUser {
   username: string
@@ -21,6 +23,7 @@ export interface IPlayerBonus {
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
+// TODO: refactor points to remove them from the player Model (create points collection)
 export interface IPlayerPoints {
   points: number
   source: mongoose.Types.ObjectId
@@ -34,12 +37,14 @@ interface IPlayerResearch {
     level: number
   }[]
   activeResearch?: IPlayerActiveResearch
+  queue: mongoose.Types.ObjectId[]
 }
 
 interface IPlayerActiveResearch {
   research: IResearchDocument
   level: number
   executeTaskAt: number
+  taskId: mongoose.Types.ObjectId
 }
 
 interface IPlayerUnits {
@@ -69,7 +74,8 @@ const ActiveResearchSchema = new Schema(
   {
     research: { type: Schema.Types.ObjectId, ref: 'Research' },
     level: { type: Number },
-    executeTaskAt: { type: Number }
+    executeTaskAt: { type: Number },
+    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
   },
   { _id: false }
 )
@@ -121,7 +127,8 @@ const PlayerSchema: Schema = new Schema({
       type: ActiveResearchSchema,
       required: false,
       default: undefined
-    }
+    },
+    queue: [{ type: Schema.Types.ObjectId, ref: 'Research' }]
   },
 
   units: {

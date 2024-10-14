@@ -1,18 +1,6 @@
 import mongoose, { Schema } from 'mongoose'
 
-export interface IUser {
-  username: string
-  email: string
-  password: string
-  activationCode: string
-  isActivated: boolean
-  isAdmin: boolean
-  isBanned: boolean
-  createdAt?: Date
-  activatedAt?: Date
-  bannedAt?: Date
-  lastLoginDate?: Date
-}
+import { IUser } from '../types/User'
 
 const UserSchema: Schema = new Schema(
   {

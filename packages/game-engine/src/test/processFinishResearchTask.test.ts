@@ -35,14 +35,6 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
       const finishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -72,6 +64,15 @@ describe('process finish research task', () => {
 
       const taskModel = getTaskModel<FinishResearchTaskType>()
       const task = await taskModel.create(finishResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -121,14 +122,6 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
       const finishLevel1ResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -159,16 +152,17 @@ describe('process finish research task', () => {
       const taskModel = getTaskModel<FinishResearchTaskType>()
       const level1ResearchTask = await taskModel.create(finishLevel1ResearchTask)
 
-      // we process the task here
-      await processTasks([level1ResearchTask!], universe!)
-
       player!.researches.activeResearch = {
         research: research!._id,
-        level: 2,
-        executeTaskAt: new Date().getTime() + researchDuration
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: level1ResearchTask._id
       }
 
       await player?.save()
+
+      // we process the task here
+      await processTasks([level1ResearchTask!], universe!)
 
       const finishLevel2ResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
@@ -198,6 +192,15 @@ describe('process finish research task', () => {
       }
 
       const task = await taskModel.create(finishLevel2ResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 2,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -254,16 +257,6 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
-      expect(player?.units.fleets.energy).toBe(0)
-
       const finishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -293,6 +286,17 @@ describe('process finish research task', () => {
 
       const taskModel = getTaskModel<FinishResearchTaskType>()
       const task = await taskModel.create(finishResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
+
+      expect(player?.units.fleets.energy).toBe(0)
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -336,14 +340,6 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
       const level1FinishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -374,16 +370,17 @@ describe('process finish research task', () => {
       const taskModel = getTaskModel<FinishResearchTaskType>()
       const firstTask = await taskModel.create(level1FinishResearchTask)
 
-      // we process the task here
-      await processTasks([firstTask!], universe!)
-
       player!.researches.activeResearch = {
         research: research!._id,
         level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: firstTask._id
       }
 
       await player?.save()
+
+      // we process the task here
+      await processTasks([firstTask!], universe!)
 
       const level2FinishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
@@ -413,6 +410,15 @@ describe('process finish research task', () => {
       }
 
       const task = await taskModel.create(level2FinishResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -462,16 +468,6 @@ describe('process finish research task', () => {
       const researchDuration = 1_000
       const researchResourceCost = 1_000
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
-      expect(player?.units.troops.population).toBe(0)
-
       const finishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -501,6 +497,17 @@ describe('process finish research task', () => {
 
       const taskModel = getTaskModel<FinishResearchTaskType>()
       const task = await taskModel.create(finishResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
+
+      expect(player?.units.troops.population).toBe(0)
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -579,14 +586,6 @@ describe('process finish research task', () => {
       // we process the task here
       await processTasks([firstTask!], universe!)
 
-      player!.researches.activeResearch = {
-        research: research!._id,
-        level: 1,
-        executeTaskAt: new Date().getTime() + researchDuration
-      }
-
-      await player?.save()
-
       const level2FinishResearchTask: ITask<FinishResearchTaskType> = {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
@@ -615,6 +614,15 @@ describe('process finish research task', () => {
       }
 
       const task = await taskModel.create(level2FinishResearchTask)
+
+      player!.researches.activeResearch = {
+        research: research!._id,
+        level: 1,
+        executeTaskAt: new Date().getTime() + researchDuration,
+        taskId: task._id
+      }
+
+      await player?.save()
 
       // we process the task here
       await processTasks([task!], universe!)
