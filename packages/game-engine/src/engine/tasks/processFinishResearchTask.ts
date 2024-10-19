@@ -70,6 +70,10 @@ async function processFinishResearchTask(
     player.units.troops.population = calculateTroopsPopulation(player.race, newLevel)
   }
 
+  // TODO: intergalacticTravel check?
+
+  // TODO: fix this issue with bonus maxFleetsAllowedBonus
+
   const points = task.data.researchResourceCost
   const pointsSource = task.data.research._id
   player.points = addPoints(player.points, points, pointsSource, 'Research', second)

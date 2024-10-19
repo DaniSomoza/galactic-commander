@@ -76,7 +76,7 @@ function PlayerProvider({ children }: PlayerProviderProps) {
     setCreatePlayerTaskId(taskId)
   }, [])
 
-  usePolling(loadPlayer, 6_000) // polling player each 6 seconds
+  usePolling(loadPlayer, 10_000) // polling player each 10 seconds
 
   const value = {
     player,

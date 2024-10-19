@@ -11,8 +11,8 @@ const CYBORGS_INTERGALACTIC_TRAVEL_THRESHOLD = 14
 const CYBORGS_MAX_FLEETS_ALLOWED_BONUS = 3
 
 const cyborgs: IRace = {
-  name: 'cyborgs',
-  description: 'cyborgs race description',
+  name: 'CYBORGS_RACE_NAME',
+  description: 'CYBORGS_RACE_DESCRIPTION',
   image: 'image_url',
   tags: ['Aggressive', 'Colonizer', 'Explorer'],
   maxPlanetsAllowed: CYBORGS_ALLOWED_PLANETS,

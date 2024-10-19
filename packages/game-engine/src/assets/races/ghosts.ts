@@ -11,8 +11,8 @@ const GHOSTS_FLEET_ENERGY = 150
 const GHOSTS_TROOPS_POPULATION = 50
 
 const ghosts: IRace = {
-  name: 'ghosts',
-  description: 'ghosts race description',
+  name: 'GHOSTS_RACE_NAME',
+  description: 'GHOSTS_RACE_DESCRIPTION',
   image: 'image_url',
   tags: ['Aggressive', 'Stealth'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,

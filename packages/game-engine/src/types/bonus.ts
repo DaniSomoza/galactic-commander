@@ -4,6 +4,7 @@ export type IBonus = {
   resourceProductionBonus?: number
   stealthFleetsMode?: boolean
   stealthFleetsDetection?: boolean
+  // TODO: fix this issue with bonus extraPlanetsBonus
   extraPlanetsBonus?: number
   intergalacticTravelBonus?: boolean
 
@@ -17,6 +18,7 @@ export type IBonus = {
   fleetSpeedBonus?: number
   fleetCargoBonus?: number
   fleetBuildingBonus?: number
+  // TODO: fix this issue with bonus maxFleetsAllowedBonus
   maxFleetsAllowedBonus?: number
 
   // Troops Bonus

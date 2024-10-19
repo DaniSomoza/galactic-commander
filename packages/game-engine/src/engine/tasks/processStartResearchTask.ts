@@ -10,8 +10,10 @@ import getTaskModel, {
   StartResearchTaskType
 } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
+import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
+import createStartResearchTask from './utils/createStartResearchTask'
 
 // TODO: only taskData required
 async function processStartResearchTask(
@@ -48,6 +50,22 @@ async function processStartResearchTask(
   const hasEnoughResources = player.planets.principal.resources >= researchResourceCost
 
   if (!hasEnoughResources) {
+    // we try to execute next research present in the player research queue
+    const nextResearchId = player.researches.queue.shift()
+
+    if (nextResearchId) {
+      const startResearchTask = createStartResearchTask(
+        task.universe._id,
+        player._id,
+        nextResearchId
+      )
+
+      await Promise.all([
+        player.save(),
+        await taskRepository.createStartResearchTask(startResearchTask)
+      ])
+    }
+
     throw new GameEngineError('no resources available')
   }
 

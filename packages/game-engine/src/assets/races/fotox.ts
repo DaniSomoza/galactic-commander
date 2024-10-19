@@ -11,8 +11,8 @@ const FOTOX_INTERGALACTIC_TRAVEL_THRESHOLD = 12
 const FOTOX_ALLOWED_PLANETS = 5
 
 const fotox: IRace = {
-  name: 'fotox',
-  description: 'fotox race description',
+  name: 'FOTOX_RACE_NAME',
+  description: 'FOTOX_RACE_DESCRIPTION',
   image: 'image_url',
   tags: ['Aggressive', 'Colonizer'],
   maxPlanetsAllowed: FOTOX_ALLOWED_PLANETS,

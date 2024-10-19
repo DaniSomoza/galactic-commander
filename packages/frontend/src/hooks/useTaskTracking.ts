@@ -38,10 +38,20 @@ function useTaskTracking<T extends TaskTypesTypes>(taskId?: string, customInterv
   const isTaskCancelled = task?.status === CANCELLED_TASK_STATUS
 
   useEffect(() => {
-    if (task && !isTaskPending) {
-      stopTaskPolling()
+    async function checkStopTaskPolling() {
+      if (taskId) {
+        const task = await getTask(taskId)
+        const isTaskPending = task?.status === PENDING_TASK_STATUS
+        if (!isTaskPending) {
+          stopTaskPolling()
+        }
+      }
     }
-  }, [task, isTaskPending, stopTaskPolling, trackTask])
+
+    if (!isTaskPending) {
+      checkStopTaskPolling()
+    }
+  }, [taskId, getTask, stopTaskPolling, isTaskPending])
 
   return {
     task,

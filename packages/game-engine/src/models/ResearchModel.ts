@@ -4,6 +4,7 @@ import { IBonus } from '../types/bonus'
 
 export interface IResearch {
   name: string
+  description: string
   raceName: string
   bonus: IBonus
   // TODO: ADD A ENUM initialTime 15_000 20_000 23_000 & 25_000
@@ -13,6 +14,7 @@ export interface IResearch {
 
   isTroopsPopulationResearch: boolean
   isFleetEnergyResearch: boolean
+  // TODO: number of fleets ???
 }
 
 export const BonusType = {
@@ -71,7 +73,9 @@ export const ResearchSchema = new Schema({
     required: true,
     unique: true
   },
+  description: { type: String, required: true },
   raceName: { type: String, required: true },
+
   // TODO: add enums!
   initialTime: { type: Number, required: true },
   resourceCost: { type: Number, required: true },

@@ -10,8 +10,8 @@ const SAURIANS_TROOPS_POPULATION = 15
 const SAURIANS_INTERGALACTIC_TRAVEL_THRESHOLD = 13
 
 const saurians: IRace = {
-  name: 'saurians',
-  description: 'saurians race description',
+  name: 'SAURIANS_RACE_NAME',
+  description: 'SAURIANS_RACE_DESCRIPTION',
   image: 'image_url',
   tags: ['Aggressive', 'Stealth'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,

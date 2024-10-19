@@ -17,7 +17,8 @@ import {
   GAME_MESSAGES_PATH,
   GAME_RANKING_PATH,
   GAME_SETTINGS_PATH,
-  GAME_BATTLE_CALCULATOR_PATH
+  GAME_BATTLE_CALCULATOR_PATH,
+  GAME_TASKS_PATH
 } from './routes/routes'
 import Header from './components/header/Header'
 import { ThemeProvider } from './store/ThemeContext'
@@ -40,6 +41,7 @@ import GameMessagesPage from './pages/game/GameMessagesPage'
 import GameRankingPage from './pages/game/GameRankingPage'
 import GameSettingsPage from './pages/settings/GameSettingsPage'
 import BattleCalculator from './pages/tools/BattleCalculatorPage'
+import GameTasksPage from './pages/game/GameTasksPage'
 
 function App() {
   return (
@@ -112,6 +114,10 @@ const AppRoutes = createBrowserRouter([
       {
         path: GAME_BATTLE_CALCULATOR_PATH,
         element: <BattleCalculator />
+      },
+      {
+        path: GAME_TASKS_PATH,
+        element: <GameTasksPage />
       }
     ]
   },

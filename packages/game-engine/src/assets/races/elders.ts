@@ -11,8 +11,8 @@ const ELDERS_INTERGALACTIC_TRAVEL_THRESHOLD = 6
 const ELDERS_RESEARCH_BONUS = 20 // 20 %
 
 const elders: IRace = {
-  name: 'elders',
-  description: 'elders race description',
+  name: 'ELDERS_RACE_NAME',
+  description: 'ELDERS_RACE_DESCRIPTION',
   image: 'image_url',
   tags: ['Aggressive', 'Scientist'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,

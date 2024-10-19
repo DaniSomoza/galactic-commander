@@ -22,6 +22,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
 import CalculateRoundedIcon from '@mui/icons-material/CalculateRounded'
+import TerminalIcon from '@mui/icons-material/Terminal'
 
 import {
   GAME_ALLIANCE_PATH,
@@ -36,7 +37,8 @@ import {
   GAME_SPECIALS_PATH,
   GAME_TROOPS_PATH,
   GAME_SETTINGS_PATH,
-  GAME_BATTLE_CALCULATOR_PATH
+  GAME_BATTLE_CALCULATOR_PATH,
+  GAME_TASKS_PATH
 } from '../../routes/routes'
 
 type GameNavigationBarProps = {
@@ -182,6 +184,15 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
                 v0.0.1
               </Typography>
             </Paper>
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate(GAME_TASKS_PATH)}>
+            <ListItemIcon>
+              <TerminalIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Game log'} />
           </ListItemButton>
         </ListItem>
 

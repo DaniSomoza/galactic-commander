@@ -55,7 +55,7 @@ async function startResearch({
   return { task: newTask }
 }
 
-type ADdResearchToQueueData = {
+type AddResearchToQueueData = {
   username: string
   researchName: string
   universeName: string
@@ -65,7 +65,7 @@ async function addResearchToQueue({
   username,
   researchName,
   universeName
-}: ADdResearchToQueueData): Promise<{ player: PlayerType }> {
+}: AddResearchToQueueData): Promise<{ player: PlayerType }> {
   const universe = await universeRepository.findUniverseByName(universeName)
   const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
@@ -81,6 +81,9 @@ async function addResearchToQueue({
 
   // update player research queue
   player.researches.queue.push(research._id)
+
+  // TODO: if research queue is empty, just start research
+  // TODO: just create a single endpoint that updates the research queue
 
   await player.save()
 

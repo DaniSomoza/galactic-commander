@@ -18,5 +18,8 @@ export const GAME_MESSAGES_PATH = 'messages'
 export const GAME_RANKING_PATH = 'ranking'
 export const GAME_SETTINGS_PATH = 'settings'
 
+// game logs
+export const GAME_TASKS_PATH = 'tasks'
+
 // tools
 export const GAME_BATTLE_CALCULATOR_PATH = 'battle-calculator'

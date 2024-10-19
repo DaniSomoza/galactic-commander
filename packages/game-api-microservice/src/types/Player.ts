@@ -40,6 +40,7 @@ export type PlayerType = {
       executeTaskAt: number
       taskId: string
     }
+    queue: string[]
   }
   units: {
     troops: {

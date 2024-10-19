@@ -19,15 +19,13 @@ function EnergyLabel() {
   return (
     <Paper>
       <Tooltip title={tooltipLabel} arrow>
-        <Stack direction={'row'} padding={0.5}>
-          <BoltRoundedIcon />
+        <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+          <BoltRoundedIcon fontSize="small" />
 
           <Typography
             variant="body1"
             fontSize={12}
             padding={0.4}
-            paddingLeft={0.8}
-            paddingRight={0.8}
             overflow={'hidden'}
             textOverflow="ellipsis"
             textAlign="center"

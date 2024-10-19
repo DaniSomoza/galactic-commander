@@ -3,24 +3,23 @@ import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
-import GroupIcon from '@mui/icons-material/Group'
+import FlightTakeoffRoundedIcon from '@mui/icons-material/FlightTakeoffRounded'
 
-import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
 
-function PopulationLabel() {
+function FleetsLabel() {
   const { player } = usePlayer()
 
-  // TODO: Add current population
-  const currentPopulation = 0
-  const tooltipLabel = `${currentPopulation} / ${formatNumber(player?.units.troops.population || 0, true)}`
-  const populationLabel = `${currentPopulation} / ${formatNumber(player?.units.troops.population || 0)}`
+  // TODO: Add current fleets
+  const currentFleets = 0
+  const tooltipLabel = `Current fleets ${currentFleets}`
+  const fleetsLabel = `${currentFleets} / 2`
 
   return (
     <Paper>
       <Tooltip title={tooltipLabel} arrow>
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-          <GroupIcon fontSize="small" />
+          <FlightTakeoffRoundedIcon fontSize="small" />
 
           <Typography
             variant="body1"
@@ -30,7 +29,7 @@ function PopulationLabel() {
             textOverflow="ellipsis"
             textAlign="center"
           >
-            {player ? populationLabel : <Skeleton variant="text" width={32} />}
+            {player ? fleetsLabel : <Skeleton variant="text" width={32} />}
           </Typography>
         </Stack>
       </Tooltip>
@@ -38,4 +37,4 @@ function PopulationLabel() {
   )
 }
 
-export default PopulationLabel
+export default FleetsLabel

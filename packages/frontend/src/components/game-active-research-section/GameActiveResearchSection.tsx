@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
 import { green, orange } from '@mui/material/colors'
 
-import { PlayerType } from 'game-api-microservice/src/types/Player'
+import getSecond from 'game-engine/src/helpers/getSecond'
 
 import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import usePolling from '../../hooks/usePolling'
@@ -21,43 +21,72 @@ import useTaskTracking from '../../hooks/useTaskTracking'
 import { usePlayer } from '../../store/PlayerContext'
 import { GAME_RESEARCHES_PATH } from '../../routes/routes'
 
-type GameActiveResearchSectionType = {
-  activeResearch: PlayerType['researches']['activeResearch']
-}
+function GameActiveResearchSection() {
+  const [researchCountdown, setResearchCountdown] = useState(0)
 
-function GameActiveResearchSection({ activeResearch }: GameActiveResearchSectionType) {
-  const [researchTimer, setResearchTimer] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-
-  const { isTaskPending, task } = useTaskTracking(activeResearch?.taskId)
-  const { loadPlayer } = usePlayer()
+  const { loadPlayer, player } = usePlayer()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!isTaskPending && task) {
-      setIsLoading(true)
-      loadPlayer().then(() => setIsLoading(false))
-    }
-  }, [isTaskPending, task, loadPlayer])
-
+  const activeResearch = player?.researches.activeResearch
   const executeTaskAt = activeResearch?.executeTaskAt || 0
+  const queue = player?.researches.queue || []
+  const hasPendingResearches = queue.length > 0
 
-  const updateResearchTimer = useCallback(() => {
+  const { isTaskPending } = useTaskTracking(activeResearch?.taskId)
+
+  useEffect(() => {
+    if (!isTaskPending) {
+      setTimeout(loadPlayer, 2_000)
+    }
+  }, [loadPlayer, isTaskPending])
+
+  const updateResearchCountdown = useCallback(() => {
     if (executeTaskAt) {
-      setResearchTimer(formatTimer(executeTaskAt))
+      const researchCountDown = (executeTaskAt - getSecond(Date.now())) / 1_000
+      setResearchCountdown(researchCountDown)
     }
   }, [executeTaskAt])
 
-  usePolling(updateResearchTimer)
+  usePolling(updateResearchCountdown)
 
+  // TODO: FIX ISSUE WITH the research queue if no resources are present
+  //    solution: Retry task after X minutes? just fail and go next in the queue?
+  // TODO: create task section in the frontend to review the player tasks in the game...
+  //    solution: a table and a acordeon each row
+  // TODO: Add a social media footer links?
+
+  // TODO: handle 3 states:
+  //   - Active research
+  //   - Loading State
+  //   - No Active research
+
+  const isLoading = researchCountdown <= 0 && hasPendingResearches
+  const showNoResearchActiveLabel = !activeResearch && !isLoading
+
+  // TODO: update no active research!!! JSX
   return (
     <Paper variant="outlined">
-      {isLoading ? (
-        <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
-      ) : (
-        <Box sx={{ position: 'relative' }}>
-          {activeResearch ? (
-            <Stack justifyContent="center" alignItems="center">
+      <Box sx={{ position: 'relative' }}>
+        {showNoResearchActiveLabel ? (
+          <Stack
+            padding={1}
+            sx={{ width: '200px', height: '200px' }}
+            direction="column"
+            justifyContent="center"
+            spacing={1}
+            alignItems="center"
+            alignContent="center"
+          >
+            <Typography>No active research</Typography>
+            <Button variant="outlined" onClick={() => navigate(GAME_RESEARCHES_PATH)}>
+              Research
+            </Button>
+          </Stack>
+        ) : (
+          <Stack justifyContent="center" alignItems="center">
+            {isLoading ? (
+              <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
+            ) : (
               <img
                 src={researchPlaceholder}
                 // TODO: create proper alt image
@@ -66,124 +95,130 @@ function GameActiveResearchSection({ activeResearch }: GameActiveResearchSection
                 width={'200px'}
                 style={{ borderRadius: '4px' }}
               />
+            )}
+            <Box
+              position={'absolute'}
+              top={24}
+              padding={1}
+              maxWidth={'192px'}
+              sx={{ transform: 'translate(0, -50%)' }}
+            >
+              <Paper variant="outlined">
+                <Typography
+                  variant="body1"
+                  fontSize={12}
+                  padding={0.4}
+                  paddingLeft={0.8}
+                  paddingRight={0.8}
+                  overflow={'hidden'}
+                  textOverflow="ellipsis"
+                >
+                  {isLoading ? (
+                    <Skeleton variant="text" width={'120px'} />
+                  ) : (
+                    activeResearch?.research.name
+                  )}
+                </Typography>
+              </Paper>
+            </Box>
 
-              <Box
-                position={'absolute'}
-                top={24}
-                padding={1}
-                maxWidth={'192px'}
-                sx={{ transform: 'translate(0, -50%)' }}
-              >
-                <Paper variant="outlined">
+            <Box position={'absolute'} left={0} bottom={0} padding={1}>
+              <Paper variant="outlined">
+                <Tooltip title={formatTimestamp(executeTaskAt)} arrow>
                   <Typography
                     variant="body1"
                     fontSize={12}
+                    fontWeight={500}
                     padding={0.4}
                     paddingLeft={0.8}
                     paddingRight={0.8}
-                    overflow={'hidden'}
-                    textOverflow="ellipsis"
                   >
-                    {activeResearch.research.name}
+                    {isLoading ? (
+                      <Skeleton variant="text" width={'48px'} />
+                    ) : (
+                      formatTimer(researchCountdown)
+                    )}
                   </Typography>
-                </Paper>
-              </Box>
+                </Tooltip>
+              </Paper>
+            </Box>
 
-              <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                <Paper variant="outlined">
-                  <Tooltip title={formatTimestamp(executeTaskAt)} arrow>
-                    <Typography
-                      variant="body1"
-                      fontSize={12}
-                      fontWeight={500}
-                      padding={0.4}
-                      paddingLeft={0.8}
-                      paddingRight={0.8}
-                    >
-                      {researchTimer ? researchTimer : <Skeleton variant="text" width={'48px'} />}
-                    </Typography>
-                  </Tooltip>
-                </Paper>
-              </Box>
+            <Box position={'absolute'} right={0} bottom={0} padding={1}>
+              <Stack spacing={0.5} alignItems="center">
+                {/* TODO: create activeResearch.research.bonus section because is optional */}
 
-              <Box position={'absolute'} right={0} bottom={0} padding={1}>
                 <Stack spacing={0.5} alignItems="center">
-                  {/* TODO: create activeResearch.research.bonus section because is optional */}
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
+                  ) : (
+                    <>
+                      {activeResearch?.research.bonus &&
+                        Object.keys(activeResearch.research.bonus).map((bono) => (
+                          <BonusCard
+                            key={bono}
+                            bonus={{
+                              bonus: activeResearch.research.bonus,
+                              source: activeResearch.research.name,
+                              type: 'Research'
+                            }}
+                          />
+                        ))}
 
-                  <Stack spacing={0.5} alignItems="center">
-                    {activeResearch.research.bonus &&
-                      Object.keys(activeResearch.research.bonus).map((bono) => (
-                        <BonusCard
-                          key={bono}
-                          bonus={{
-                            bonus: activeResearch.research.bonus,
-                            source: activeResearch.research.name,
-                            type: 'Research'
-                          }}
-                        />
-                      ))}
+                      {/* TODO: adapt BonusCard to isFleetEnergyResearch */}
+                      {activeResearch?.research.isFleetEnergyResearch && (
+                        <Paper variant="outlined">
+                          <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
+                        </Paper>
+                      )}
 
-                    {/* TODO: adapt BonusCard to isFleetEnergyResearch */}
-                    {activeResearch.research.isFleetEnergyResearch && (
-                      <Paper variant="outlined">
-                        <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-                      </Paper>
-                    )}
+                      {/* TODO: adapt BonusCard to isTroopsPopulationResearch */}
+                      {activeResearch?.research.isTroopsPopulationResearch && (
+                        <Paper variant="outlined">
+                          <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
+                        </Paper>
+                      )}
+                    </>
+                  )}
+                </Stack>
 
-                    {/* TODO: adapt BonusCard to isTroopsPopulationResearch */}
-                    {activeResearch.research.isTroopsPopulationResearch && (
-                      <Paper variant="outlined">
-                        <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-                      </Paper>
-                    )}
-                  </Stack>
-
-                  <Paper variant="outlined">
-                    <Stack
-                      padding={0.4}
-                      paddingLeft={0.8}
-                      paddingRight={0.8}
-                      direction={'row'}
-                      justifyContent="center"
-                      alignItems="center"
-                    >
+                <Paper variant="outlined">
+                  <Stack
+                    padding={0.4}
+                    paddingLeft={0.8}
+                    paddingRight={0.8}
+                    direction={'row'}
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    {isLoading ? (
+                      <Skeleton variant="text" width={'8px'} />
+                    ) : (
                       <Typography
                         variant="body1"
                         fontSize={12}
                         fontWeight={500}
                         color={orange[600]}
                       >
-                        {activeResearch.level - 1}
+                        {activeResearch!.level - 1}
                       </Typography>
+                    )}
 
-                      <ArrowRightAltRoundedIcon fontSize="inherit" />
+                    <ArrowRightAltRoundedIcon fontSize="inherit" />
 
+                    {isLoading ? (
+                      <Skeleton variant="text" width={'8px'} />
+                    ) : (
                       <Typography variant="body1" fontSize={12} fontWeight={500} color={green[600]}>
-                        {activeResearch.level}
+                        {activeResearch?.level}
                       </Typography>
-                    </Stack>
-                  </Paper>
-                </Stack>
-              </Box>
-            </Stack>
-          ) : (
-            <Stack
-              padding={1}
-              sx={{ width: '200px', height: '200px' }}
-              direction="column"
-              justifyContent="center"
-              spacing={1}
-              alignItems="center"
-              alignContent="center"
-            >
-              <Typography>No active research</Typography>
-              <Button variant="outlined" onClick={() => navigate(GAME_RESEARCHES_PATH)}>
-                Research
-              </Button>
-            </Stack>
-          )}
-        </Box>
-      )}
+                    )}
+                  </Stack>
+                </Paper>
+              </Stack>
+            </Box>
+          </Stack>
+        )}
+      </Box>
     </Paper>
   )
 }

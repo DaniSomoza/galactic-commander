@@ -1,8 +1,4 @@
-import getSecond from 'game-engine/src/helpers/getSecond'
-
-function formatTimer(executeTaskAt: number): string {
-  const seconds = (executeTaskAt - getSecond(Date.now())) / 1_000
-
+function formatTimer(seconds: number): string {
   if (seconds < 0) {
     return `00:00:00`
   }

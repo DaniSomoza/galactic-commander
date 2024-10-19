@@ -7,8 +7,6 @@ import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import { green } from '@mui/material/colors'
 
-import { PlanetType } from 'game-api-microservice/src/types/Planet'
-import { PlayerType } from 'game-api-microservice/src/types/Player'
 import calculateResourceProductionBonus from 'game-engine/src/engine/resources/calculateResourceProduction'
 import getSecond from 'game-engine/src/helpers/getSecond'
 import applyBonus from 'game-engine/src/helpers/applyBonus'
@@ -16,14 +14,17 @@ import applyBonus from 'game-engine/src/helpers/applyBonus'
 import planetPlaceholder from '../../assets/planet_placeholder.jpg'
 import formatNumber from '../../utils/formatNumber'
 import usePolling from '../../hooks/usePolling'
+import { usePlayer } from '../../store/PlayerContext'
+import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 
-type GamePlanetSectionProps = {
-  planet?: PlanetType
-  owner?: PlayerType
-}
-
-function GamePlanetSection({ planet, owner }: GamePlanetSectionProps) {
+// TODO: rename this to PlanetSelectorCard
+function GamePlanetSection() {
   const [resources, setResources] = useState(0)
+
+  const { player } = usePlayer()
+
+  const planet = player?.planets.principal
+  const owner = player
 
   const {
     resources: actualPlanetResources,
@@ -70,7 +71,7 @@ function GamePlanetSection({ planet, owner }: GamePlanetSectionProps) {
           position={'absolute'}
           top={24}
           padding={1}
-          maxWidth={'192px'}
+          maxWidth={'164px'}
           sx={{ transform: 'translate(0, -50%)' }}
         >
           <Paper variant="outlined">
@@ -149,13 +150,3 @@ function GamePlanetSection({ planet, owner }: GamePlanetSectionProps) {
 }
 
 export default GamePlanetSection
-
-type CoordinatesLabelType = `${string}:${string}:${string}:${string}`
-
-function formatCoordinatesLabel(coordinates: PlanetType['coordinates']): CoordinatesLabelType {
-  const { galaxy, sector, system, planet } = coordinates
-
-  const coordinatesLabel: CoordinatesLabelType = `${galaxy}:${sector}:${system}:${planet}`
-
-  return coordinatesLabel
-}
