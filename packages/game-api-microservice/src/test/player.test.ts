@@ -41,7 +41,7 @@ describe('players task', () => {
       body: newPlayerData
     })
 
-    const taskCreated = JSON.parse(response.body)
+    const { task: taskCreated } = JSON.parse(response.body)
 
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
     expect(taskCreated.type).toEqual(NEW_PLAYER_TASK_TYPE)

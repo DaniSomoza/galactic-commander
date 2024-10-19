@@ -12,17 +12,18 @@
   "scripts": {
     "build": "yarn workspace game-engine build && yarn workspace auth-microservice build && yarn workspace game-api-microservice build && yarn workspace frontend build",
     "start": "yarn workspaces run start",
+    "start:frontend": "yarn workspace frontend dev",
     "test": "yarn workspaces run test",
-    "precoverage": "yarn workspaces run test:coverage && nyc merge packages/auth-microservice/coverage coverage-temp/auth-microservice.json && nyc merge packages/game-engine/coverage coverage-temp/game-engine.json && nyc merge packages/game-api-microservice/coverage coverage-temp/game-api-microservice.json",
+    "precoverage": "yarn workspaces run test:coverage && nyc merge packages/auth-microservice/coverage coverage-temp/auth-microservice.json && nyc merge packages/game-engine/coverage coverage-temp/game-engine.json && nyc merge packages/game-api-microservice/coverage coverage-temp/game-api-microservice.json && nyc merge packages/frontend/coverage coverage-temp/frontend.json",
     "coverage": "nyc report --temp-directory coverage-temp",
     "lint:check": "eslint ./packages/**/*.ts && prettier --check packages/**/*.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.9.4",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
-    "@types/jsonwebtoken": "^9.0.7",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -31,6 +32,7 @@
     "mongodb-memory-server": "^10.0.0",
     "nyc": "^17.1.0",
     "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29.2.5",
     "typescript": "^5.3.2"
   },
@@ -47,8 +49,6 @@
     ]
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2",
-    "dotenv": "^16.4.5",
-    "migrate-mongo": "^11.0.0"
+    "dotenv": "^16.4.5"
   }
 }

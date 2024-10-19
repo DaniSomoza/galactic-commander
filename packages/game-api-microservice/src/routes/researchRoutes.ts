@@ -1,7 +1,6 @@
 import { Route } from '../configuration/Server'
 import researchController from '../controllers/researchController'
-
-export const RESEARCH_PATH = '/research'
+import { RESEARCH_PATH, RESEARCH_QUEUE_PATH } from './constants'
 
 const startResearchRoute: Route = {
   url: RESEARCH_PATH,
@@ -9,8 +8,15 @@ const startResearchRoute: Route = {
   handler: researchController.startResearch
 }
 
-// TODO: implement cancel research task
+const updateResearchQueue: Route = {
+  url: RESEARCH_QUEUE_PATH,
+  method: 'POST',
+  handler: researchController.updateResearchQueue
+}
 
-const researchRoutes = [startResearchRoute]
+// TODO: implement cancel research task
+// TODO: implement update/re-schedule research task
+
+const researchRoutes = [startResearchRoute, updateResearchQueue]
 
 export default researchRoutes

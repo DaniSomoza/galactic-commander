@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer'
 
 const { EMAIL_USERNAME, EMAIL_PASSWORD } = process.env
 
+// TODO: createActivationUserEmail()
+
 async function sendEmail(userEmail: string, username: string, activationLink: string) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',

@@ -16,10 +16,10 @@ type IBaseRace = {
 } & Omit<IRace, 'researches'>
 
 const pirates: IBaseRace = {
-  name: 'pirates',
-  description: 'pirate race description',
+  name: 'PIRATES_RACE_NAME',
+  description: 'PIRATES_RACE_DESCRIPTION',
   image: 'image_url',
-  type: ['Aggressive', 'Raiders'],
+  tags: ['Aggressive', 'Raiders'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,

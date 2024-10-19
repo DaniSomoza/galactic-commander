@@ -1,7 +1,8 @@
 import { IResearch } from '../../../models/ResearchModel'
 const PIRATE_COMPUTING_RESEARCH: IResearch = {
-  name: 'PIRATE_COMPUTING_RESEARCH',
-  raceName: 'pirates',
+  name: 'PIRATE_COMPUTING_RESEARCH_NAME',
+  description: 'PIRATE_COMPUTING_RESEARCH_DESCRIPTION',
+  raceName: 'PIRATES_RACE_NAME',
   bonus: {
     maxFleetsAllowedBonus: 1
   },

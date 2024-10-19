@@ -10,7 +10,8 @@ export const PLAYER_TEST_1_PIRATE: IBasePlayer = {
   bonus: [],
   points: [],
   researches: {
-    researched: []
+    researched: [],
+    queue: []
   },
   units: {
     troops: {

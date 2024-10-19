@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
+
 import AppError, { errorDetails } from './AppError'
 
 class ConflictError extends AppError {

@@ -4,7 +4,9 @@ import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
 import upgradeBonus from '../bonus/upgradeBonus'
-import { IBonus } from '../../models/ResearchModel'
+import { IBonus } from '../../types/bonus'
+import createStartResearchTask from './utils/createStartResearchTask'
+import taskRepository from '../../repositories/taskRepository'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -68,11 +70,29 @@ async function processFinishResearchTask(
     player.units.troops.population = calculateTroopsPopulation(player.race, newLevel)
   }
 
+  // TODO: intergalacticTravel check?
+
+  // TODO: fix this issue with bonus maxFleetsAllowedBonus
+
   const points = task.data.researchResourceCost
   const pointsSource = task.data.research._id
   player.points = addPoints(player.points, points, pointsSource, 'Research', second)
 
   player.researches.activeResearch = undefined
+
+  // check player research queue
+  const nextResearchName = player.researches.queue.shift()
+  const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
+
+  if (nextResearch) {
+    const startResearchTask = createStartResearchTask(
+      task.universe._id,
+      player._id,
+      nextResearch._id
+    )
+
+    await taskRepository.createStartResearchTask(startResearchTask)
+  }
 
   return Promise.all([player.save()])
 }

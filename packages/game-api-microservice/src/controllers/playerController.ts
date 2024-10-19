@@ -28,7 +28,7 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
 
     const { username, email, isActivated } = checkSessionToken(jwtToken)
 
-    const userCreated = await playerService.createPlayer({
+    const newPlayerTask = await playerService.createPlayer({
       email,
       username,
       isActivated,
@@ -36,7 +36,25 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
       universeName
     })
 
-    response.code(StatusCodes.CREATED).send(userCreated)
+    response.code(StatusCodes.CREATED).send(newPlayerTask)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
+async function getPlayer(request: FastifyRequest, response: FastifyReply) {
+  try {
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
+
+    const { username } = checkSessionToken(jwtToken)
+
+    const { universeName } = request.query as { universeName: string }
+
+    const player = await playerService.getPlayer(username, universeName)
+
+    response.code(StatusCodes.OK).send(player)
   } catch (error) {
     const { code, body } = handleErrorResponse(error)
 
@@ -45,7 +63,8 @@ async function createPlayer(request: FastifyRequest, response: FastifyReply) {
 }
 
 const playerController = {
-  createPlayer
+  createPlayer,
+  getPlayer
 }
 
 export default playerController

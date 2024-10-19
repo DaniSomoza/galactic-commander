@@ -7,7 +7,7 @@ import { testServer } from './testSetup'
 import { ACTIVE_USER, BANNED_USER, UNCONFIRMED_USER } from './mocks/userMocks'
 import { validateHash } from '../lib/encrypt'
 import { createJWT } from '../lib/jwt'
-import { CleanUserData } from '../utils/cleanUserFields'
+import { UserType } from '../types/User'
 
 describe('users', () => {
   beforeEach(() => {
@@ -332,7 +332,8 @@ describe('users', () => {
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
 
-      const { username, email } = JSON.parse(response.body)
+      const { user } = JSON.parse(response.body)
+      const { username, email } = user
 
       expect(username).toEqual(ACTIVE_USER.username)
       expect(email).toEqual(ACTIVE_USER.email)
@@ -361,7 +362,7 @@ describe('users', () => {
       const jwtToken = createJWT({
         username: 'invalid user',
         email: 'invalid_email@example.com'
-      } as CleanUserData)
+      } as UserType)
 
       const response = await testServer.server.inject({
         method: 'GET',

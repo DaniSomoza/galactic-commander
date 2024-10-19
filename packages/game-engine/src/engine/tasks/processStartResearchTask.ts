@@ -10,8 +10,10 @@ import getTaskModel, {
   StartResearchTaskType
 } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
+import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
+import createStartResearchTask from './utils/createStartResearchTask'
 
 // TODO: only taskData required
 async function processStartResearchTask(
@@ -48,6 +50,25 @@ async function processStartResearchTask(
   const hasEnoughResources = player.planets.principal.resources >= researchResourceCost
 
   if (!hasEnoughResources) {
+    // we try to execute next research present in the player research queue
+    const nextResearchName = player.researches.queue.shift()
+    const nextResearch = player.race.researches.find(
+      (research) => research.name === nextResearchName
+    )
+
+    if (nextResearch) {
+      const startResearchTask = createStartResearchTask(
+        task.universe._id,
+        player._id,
+        nextResearch._id
+      )
+
+      await Promise.all([
+        player.save(),
+        await taskRepository.createStartResearchTask(startResearchTask)
+      ])
+    }
+
     throw new GameEngineError('no resources available')
   }
 
@@ -60,14 +81,6 @@ async function processStartResearchTask(
   const principalPlanet = player.planets.principal
 
   principalPlanet.resources -= researchResourceCost
-
-  const activeResearch = {
-    research: research._id,
-    level: level + 1,
-    executeTaskAt
-  }
-
-  player.researches.activeResearch = activeResearch
 
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
@@ -101,6 +114,15 @@ async function processStartResearchTask(
 
   const taskModel = getTaskModel<FinishResearchTaskType>()
   const newTask = new taskModel(finishResearchTask)
+
+  const activeResearch = {
+    research: research._id,
+    level: level + 1,
+    executeTaskAt,
+    taskId: newTask._id
+  }
+
+  player.researches.activeResearch = activeResearch
 
   return Promise.all([newTask.save(), principalPlanet.save(), player.save()])
 }

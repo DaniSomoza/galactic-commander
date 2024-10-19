@@ -1,4 +1,5 @@
-import UserModel, { IUser } from '../models/UserModel'
+import UserModel from '../models/UserModel'
+import { IUser } from '../types/User'
 
 // TODO: Add JSdoc for each function
 
