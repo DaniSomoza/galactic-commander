@@ -24,7 +24,7 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
     })),
     researches: {
       researched: researches.researched,
-      queue: researches.queue.map((researchId) => researchId.toString()),
+      queue: researches.queue,
       activeResearch: researches.activeResearch
         ? {
             research: researches.activeResearch.research,

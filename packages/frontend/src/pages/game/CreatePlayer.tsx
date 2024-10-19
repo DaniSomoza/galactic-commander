@@ -14,10 +14,10 @@ import { UniverseType } from 'game-api-microservice/src/types/Universe'
 import { RaceType } from 'game-api-microservice/src/types/Race'
 
 import { GAME_DASHBOARD_PATH } from '../../routes/routes'
-import { useGameInfo } from '../../store/GameInfoContext'
+import { GameInfoProvider, useGameInfo } from '../../store/GameInfoContext'
 import Stepper from '../../components/stepper/Stepper'
 import Loader from '../../components/loader/Loader'
-import { usePlayer } from '../../store/PlayerContext'
+import { PlayerProvider, usePlayer } from '../../store/PlayerContext'
 import useTaskTracking from '../../hooks/useTaskTracking'
 
 function CreatePlayerPage() {
@@ -84,7 +84,17 @@ function CreatePlayerPage() {
   )
 }
 
-export default CreatePlayerPage
+function CreatePlayerPageWithGameProviders() {
+  return (
+    <GameInfoProvider>
+      <PlayerProvider>
+        <CreatePlayerPage />
+      </PlayerProvider>
+    </GameInfoProvider>
+  )
+}
+
+export default CreatePlayerPageWithGameProviders
 
 function SelectUniverseStep() {
   const { selectedUniverse, universes, setSelectedUniverse } = useGameInfo()

@@ -81,10 +81,15 @@ async function processFinishResearchTask(
   player.researches.activeResearch = undefined
 
   // check player research queue
-  const nextResearchId = player.researches.queue.shift()
+  const nextResearchName = player.researches.queue.shift()
+  const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
 
-  if (nextResearchId) {
-    const startResearchTask = createStartResearchTask(task.universe._id, player._id, nextResearchId)
+  if (nextResearch) {
+    const startResearchTask = createStartResearchTask(
+      task.universe._id,
+      player._id,
+      nextResearch._id
+    )
 
     await taskRepository.createStartResearchTask(startResearchTask)
   }

@@ -51,13 +51,16 @@ async function processStartResearchTask(
 
   if (!hasEnoughResources) {
     // we try to execute next research present in the player research queue
-    const nextResearchId = player.researches.queue.shift()
+    const nextResearchName = player.researches.queue.shift()
+    const nextResearch = player.race.researches.find(
+      (research) => research.name === nextResearchName
+    )
 
-    if (nextResearchId) {
+    if (nextResearch) {
       const startResearchTask = createStartResearchTask(
         task.universe._id,
         player._id,
-        nextResearchId
+        nextResearch._id
       )
 
       await Promise.all([

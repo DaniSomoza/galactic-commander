@@ -1,4 +1,3 @@
-import { ITask, StartResearchTaskType } from 'game-engine/dist/models/TaskModel'
 import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
@@ -6,8 +5,9 @@ import createStartResearchTask from 'game-engine/dist/engine/tasks/utils/createS
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import BadRequestError from 'auth-microservice/dist/errors/BadRequestError'
 
-import { PlayerType } from '../types/Player'
 import cleanPlayerFields from '../utils/cleanPlayerFields'
+import { startResearchResponseType, updateResearchQueueResponseType } from '../types/Research'
+import cleanTaskFields from '../utils/cleanTaskFields'
 
 type ResearchData = {
   username: string
@@ -16,14 +16,12 @@ type ResearchData = {
   executeTaskAt?: number
 }
 
-// TODO: create Types file
-
 async function startResearch({
   username,
   researchName,
   universeName,
   executeTaskAt
-}: ResearchData): Promise<{ task: ITask<StartResearchTaskType> }> {
+}: ResearchData): Promise<startResearchResponseType> {
   const universe = await universeRepository.findUniverseByName(universeName)
   const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
@@ -50,22 +48,20 @@ async function startResearch({
 
   const newTask = await taskRepository.createStartResearchTask(startResearchTask)
 
-  // TODO: clean task DATA????
-
-  return { task: newTask }
+  return { task: cleanTaskFields(newTask) }
 }
 
 type AddResearchToQueueData = {
   username: string
-  researchName: string
+  researchQueue: string[]
   universeName: string
 }
 
-async function addResearchToQueue({
+async function updateResearchQueue({
   username,
-  researchName,
+  researchQueue,
   universeName
-}: AddResearchToQueueData): Promise<{ player: PlayerType }> {
+}: AddResearchToQueueData): Promise<updateResearchQueueResponseType> {
   const universe = await universeRepository.findUniverseByName(universeName)
   const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
@@ -73,17 +69,18 @@ async function addResearchToQueue({
     throw new NotFoundError('invalid player', { username, universeName })
   }
 
-  const research = player.race.researches.find((research) => research.name === researchName)
+  const isValidQueue = researchQueue.every((researchName) =>
+    player.race.researches.some((research) => research.name === researchName)
+  )
 
-  if (!research) {
-    throw new NotFoundError('invalid research', { researchName })
+  if (!isValidQueue) {
+    throw new NotFoundError('invalid research queue', { researchQueue })
   }
 
   // update player research queue
-  player.researches.queue.push(research._id)
+  player.researches.queue = researchQueue
 
   // TODO: if research queue is empty, just start research
-  // TODO: just create a single endpoint that updates the research queue
 
   await player.save()
 
@@ -92,7 +89,7 @@ async function addResearchToQueue({
 
 const researchService = {
   startResearch,
-  addResearchToQueue
+  updateResearchQueue
 }
 
 export default researchService

@@ -7,13 +7,7 @@ import handleErrorResponse from 'auth-microservice/dist/errors/handleErrorRespon
 import { checkSessionToken, getJWTFromAuthHeader } from 'auth-microservice/dist/lib/jwt'
 
 import researchService from '../services/researchService'
-
-type StartResearchData = {
-  researchName: string
-  universeName: string
-
-  executeTaskAt?: number
-}
+import { StartResearchData, updateResearchQueueData } from '../types/Research'
 
 const researchValidationSchema = Joi.object<StartResearchData>({
   researchName: Joi.string().required(),
@@ -46,29 +40,24 @@ async function startResearch(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
-type AddResearchToQueueData = {
-  researchName: string
-  universeName: string
-}
-
-const addResearchToQueueValidationSchema = Joi.object<AddResearchToQueueData>({
-  researchName: Joi.string().required(),
+const updateResearchQueueValidationSchema = Joi.object<updateResearchQueueData>({
+  researchQueue: Joi.array().items(Joi.string()).required(),
   universeName: Joi.string().required()
 })
 
-async function addResearchToQueue(request: FastifyRequest, response: FastifyReply) {
+async function updateResearchQueue(request: FastifyRequest, response: FastifyReply) {
   try {
-    await validateInputData(request.body, addResearchToQueueValidationSchema)
+    await validateInputData(request.body, updateResearchQueueValidationSchema)
 
-    const { researchName, universeName } = request.body as AddResearchToQueueData
+    const { researchQueue, universeName } = request.body as updateResearchQueueData
 
     const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
 
     const { username } = checkSessionToken(jwtToken)
 
-    const player = await researchService.addResearchToQueue({
+    const player = await researchService.updateResearchQueue({
       username,
-      researchName,
+      researchQueue,
       universeName
     })
 
@@ -82,7 +71,7 @@ async function addResearchToQueue(request: FastifyRequest, response: FastifyRepl
 
 const researchController = {
   startResearch,
-  addResearchToQueue
+  updateResearchQueue
 }
 
 export default researchController

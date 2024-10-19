@@ -3,15 +3,18 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
+import Button from '@mui/material/Button'
 
+import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import { usePlayer } from '../../store/PlayerContext'
 import Loader from '../../components/loader/Loader'
-import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import formatTimer from '../../utils/formatTimer'
-import { Button } from '@mui/material'
+import { startResearch, updateResearchQueue } from '../../endpoints/game/researchEndpoint'
+import { useGameInfo } from '../../store/GameInfoContext'
 
 function GameResearchPage() {
   const { player, isPlayerLoading } = usePlayer()
+  const { selectedUniverse } = useGameInfo()
 
   if (!player || isPlayerLoading) {
     return <Loader isLoading />
@@ -96,9 +99,31 @@ function GameResearchPage() {
                 <Button variant="outlined" size="small">
                   {'Schedule'}
                 </Button>
-                <Button variant="contained" size="small">
-                  {activeResearch ? 'Add to Queue' : 'Research'}
-                </Button>
+                {activeResearch ? (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={
+                      () =>
+                        updateResearchQueue(
+                          [...researchQueue, research.name],
+                          selectedUniverse!.name
+                        )
+                      // TODO: ADD LOADING STATE!
+                    }
+                  >
+                    {'Add to Queue'}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    // TODO: ADD LOADING STATE!
+                    onClick={() => startResearch(research.name, selectedUniverse!.name)}
+                  >
+                    {'Research'}
+                  </Button>
+                )}
               </Stack>
             </Stack>
           </Stack>

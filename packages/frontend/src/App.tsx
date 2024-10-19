@@ -56,16 +56,16 @@ function App() {
 
 const AppRoutes = createBrowserRouter([
   {
+    path: GAME_CREATE_PLAYER_PATH,
+    element: <CreatePlayerPage />
+  },
+  {
     path: GAME_DASHBOARD_PATH,
     element: <GamePage />,
     children: [
       {
         path: GAME_DASHBOARD_PATH,
         element: <GameDashboardPage />
-      },
-      {
-        path: GAME_CREATE_PLAYER_PATH,
-        element: <CreatePlayerPage />
       },
       {
         path: GAME_RESEARCHES_PATH,

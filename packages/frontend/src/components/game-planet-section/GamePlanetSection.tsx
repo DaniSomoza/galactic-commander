@@ -85,7 +85,7 @@ function GamePlanetSection() {
               overflow={'hidden'}
               textOverflow="ellipsis"
             >
-              {planet ? planet.name : <Skeleton variant="text" width={210} />}
+              {planet ? planet.name : <Skeleton variant="text" width={130} />}
             </Typography>
           </Paper>
         </Box>

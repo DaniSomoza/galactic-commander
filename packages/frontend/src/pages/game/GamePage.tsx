@@ -16,13 +16,12 @@ import PopulationLabel from '../../components/population-label/PopulationLabel'
 import EnergyLabel from '../../components/energy-label/EnergyLabel'
 import GamePlanetSection from '../../components/game-planet-section/GamePlanetSection'
 import GameActiveResearchSection from '../../components/game-active-research-section/GameActiveResearchSection'
-import Loader from '../../components/loader/Loader'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
   const navigate = useNavigate()
 
-  const { player, loadPlayer, isPlayerLoading } = usePlayer()
+  const { loadPlayer } = usePlayer()
   const { selectedUniverse } = useGameInfo()
 
   useEffect(() => {
@@ -45,10 +44,6 @@ function GamePage() {
       checkPlayer()
     }
   }, [loadPlayer, selectedUniverse, sessionToken, navigate])
-
-  if (!player || isPlayerLoading) {
-    return <Loader isLoading />
-  }
 
   const drawerWidth = 210
 

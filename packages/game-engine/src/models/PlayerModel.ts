@@ -37,7 +37,7 @@ interface IPlayerResearch {
     level: number
   }[]
   activeResearch?: IPlayerActiveResearch
-  queue: mongoose.Types.ObjectId[]
+  queue: string[]
 }
 
 interface IPlayerActiveResearch {
@@ -128,7 +128,7 @@ const PlayerSchema: Schema = new Schema({
       required: false,
       default: undefined
     },
-    queue: [{ type: Schema.Types.ObjectId, ref: 'Research' }]
+    queue: [{ type: String }]
   },
 
   units: {
