@@ -1,17 +1,26 @@
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { PlayerType } from 'game-api-microservice/src/types/Player'
 import getSecond from 'game-engine/src/helpers/getSecond'
 
 import { usePlayer } from './PlayerContext'
+import {
+  startResearch as startResearchEndpoint,
+  updateResearchQueue as updateResearchQueueEndpoint
+} from '../endpoints/game/researchEndpoint'
 import usePolling from '../hooks/usePolling'
+import { useGameInfo } from './GameInfoContext'
+import waitTaskToStart from '../utils/waitTaskToStart'
+import waitTaskToFinish from '../utils/waitTaskToFinish'
 
 const initialContext = {
   activeResearch: undefined,
   activeResearchCountdown: 0,
   researchQueue: [],
   researched: [],
-  isResearchLoading: true
+  isResearchLoading: true,
+  startResearch: () => Promise.resolve(),
+  updateResearchQueue: () => Promise.resolve()
 }
 
 type researchContextValue = {
@@ -20,6 +29,8 @@ type researchContextValue = {
   researchQueue: PlayerType['researches']['queue']
   researched: PlayerType['researches']['researched']
   isResearchLoading: boolean
+  startResearch: (researchName: string) => Promise<void>
+  updateResearchQueue: (researchName: string) => Promise<void>
 }
 
 const researchContext = createContext<researchContextValue>(initialContext)
@@ -41,42 +52,68 @@ type ResearchProviderProps = {
 function ResearchProvider({ children }: ResearchProviderProps) {
   const [activeResearchCountdown, setActiveResearchCountdown] = useState(0)
 
+  const { selectedUniverse } = useGameInfo()
   const { player, loadPlayer } = usePlayer()
 
   const activeResearch = player?.researches.activeResearch
   const executeTaskAt = activeResearch?.executeTaskAt || 0
-  // TODO: useMemo here!!
-  const researchQueue = player?.researches.queue || []
-  const researched = player?.researches.researched || []
-  // TODO: isResearchLoading = activeResearch && activeResearchCountdown === 0 && researchQueue.length > 0
-  const isResearchLoading = !activeResearch && researchQueue.length > 0
 
-  const updateResearchCountdown = useCallback(() => {
+  const researchQueue = useMemo(() => player?.researches.queue || [], [player])
+  const researched = useMemo(() => player?.researches.researched || [], [player])
+
+  const isResearchLoading = activeResearch
+    ? activeResearchCountdown === 0 && researchQueue.length > 0
+    : researchQueue.length > 0
+
+  // TODO: fix all recalls to the endpoint
+  const updateResearchCountdown = useCallback(async () => {
     if (executeTaskAt) {
-      const researchCountDown = (executeTaskAt - getSecond(Date.now())) / 1_000
-      setActiveResearchCountdown(researchCountDown)
+      const countdown = (executeTaskAt - getSecond(Date.now())) / 1_000
+      const activeResearchCountdown = countdown < 0 ? 0 : countdown
+      setActiveResearchCountdown(activeResearchCountdown)
+
+      const isResearchFinished = activeResearchCountdown === 0
+      if (isResearchFinished && activeResearch) {
+        await waitTaskToFinish(activeResearch.taskId)
+        await loadPlayer()
+      }
     }
-  }, [executeTaskAt])
+  }, [executeTaskAt, loadPlayer, activeResearch])
 
   usePolling(updateResearchCountdown)
 
-  const checkNextResearchTask = useCallback(() => {
-    const isResearchFinished = activeResearchCountdown === 0
-    if (activeResearch && isResearchFinished && researchQueue.length > 0) {
-      // setTimeout(loadPlayer, 1_000)
-      // llama al de player
-      // llama al endpoint de checktask, cuando este finish
-    }
-  }, [activeResearchCountdown, activeResearch, researchQueue])
+  const startResearch = useCallback(
+    async (researchName: string) => {
+      const {
+        data: { task }
+      } = await startResearchEndpoint(researchName, selectedUniverse!.name)
 
-  console.log('activeResearchCountdown: ', activeResearchCountdown)
+      await waitTaskToStart(task.taskId)
+
+      await loadPlayer()
+    },
+    [selectedUniverse, loadPlayer]
+  )
+
+  const updateResearchQueue = useCallback(
+    async (researchName: string) => {
+      const newPlayerQueue = [...researchQueue, researchName]
+      await updateResearchQueueEndpoint(newPlayerQueue, selectedUniverse!.name)
+      await loadPlayer()
+    },
+    [researchQueue, selectedUniverse, loadPlayer]
+  )
+
+  // TODO: create scheduleResearch
 
   const value = {
     activeResearch,
     activeResearchCountdown,
     researchQueue,
     researched,
-    isResearchLoading
+    isResearchLoading,
+    startResearch,
+    updateResearchQueue
   }
 
   return <researchContext.Provider value={value}>{children}</researchContext.Provider>

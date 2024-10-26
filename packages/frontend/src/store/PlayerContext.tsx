@@ -5,7 +5,6 @@ import { PlayerType } from 'game-api-microservice/src/types/Player'
 import { useAuthorization } from './AuthorizationContext'
 import { createPlayer, getPlayer } from '../endpoints/game/playerEndpoints'
 import { useGameInfo } from './GameInfoContext'
-import usePolling from '../hooks/usePolling'
 
 const initialContext = {
   player: undefined,
@@ -75,8 +74,6 @@ function PlayerProvider({ children }: PlayerProviderProps) {
 
     setCreatePlayerTaskId(taskId)
   }, [])
-
-  usePolling(loadPlayer, 10_000) // polling player each 10 seconds
 
   const value = {
     player,

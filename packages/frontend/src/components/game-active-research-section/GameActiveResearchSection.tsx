@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
@@ -10,47 +9,20 @@ import Button from '@mui/material/Button'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
 import { green, orange } from '@mui/material/colors'
 
-import getSecond from 'game-engine/src/helpers/getSecond'
-
 import researchPlaceholder from '../../assets/research_placeholder.jpg'
-import usePolling from '../../hooks/usePolling'
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
 import BonusCard from '../bonus-card/BonusCard'
-import useTaskTracking from '../../hooks/useTaskTracking'
-import { usePlayer } from '../../store/PlayerContext'
 import { GAME_RESEARCHES_PATH } from '../../routes/routes'
+import { useResearch } from '../../store/ResearchContext'
 
 function GameActiveResearchSection() {
-  const [researchCountdown, setResearchCountdown] = useState(0)
-
-  const { loadPlayer, player } = usePlayer()
   const navigate = useNavigate()
 
-  const activeResearch = player?.researches.activeResearch
-  const executeTaskAt = activeResearch?.executeTaskAt || 0
-  const queue = player?.researches.queue || []
-  const hasPendingResearches = queue.length > 0
-
-  const { isTaskPending } = useTaskTracking(activeResearch?.taskId)
-
-  useEffect(() => {
-    if (!isTaskPending) {
-      setTimeout(loadPlayer, 2_000)
-    }
-  }, [loadPlayer, isTaskPending])
-
-  const updateResearchCountdown = useCallback(() => {
-    if (executeTaskAt) {
-      const researchCountDown = (executeTaskAt - getSecond(Date.now())) / 1_000
-      setResearchCountdown(researchCountDown)
-    }
-  }, [executeTaskAt])
+  const { activeResearch, activeResearchCountdown, isResearchLoading } = useResearch()
 
   // TODO: use the new getPlayer endpoint only!
   // TODO: create the 3,2,1... card with the next research
-
-  usePolling(updateResearchCountdown)
 
   // TODO: FIX ISSUE WITH the research queue if no resources are present
   //    solution: Retry task after X minutes? just fail and go next in the queue?
@@ -63,8 +35,9 @@ function GameActiveResearchSection() {
   //   - Loading State
   //   - No Active research
 
-  const isLoading = researchCountdown <= 0 && hasPendingResearches
-  const showNoResearchActiveLabel = !activeResearch && !isLoading
+  const showNoResearchActiveLabel = !activeResearch && !isResearchLoading
+
+  // TODO: FIX ISSUE WITH THE LAS RESEARCH IN THE QUEUE x2
 
   // TODO: update no active research!!! JSX
   return (
@@ -87,7 +60,7 @@ function GameActiveResearchSection() {
           </Stack>
         ) : (
           <Stack justifyContent="center" alignItems="center">
-            {isLoading ? (
+            {isResearchLoading ? (
               <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
             ) : (
               <img
@@ -116,7 +89,7 @@ function GameActiveResearchSection() {
                   overflow={'hidden'}
                   textOverflow="ellipsis"
                 >
-                  {isLoading ? (
+                  {isResearchLoading ? (
                     <Skeleton variant="text" width={'120px'} />
                   ) : (
                     activeResearch?.research.name
@@ -127,7 +100,7 @@ function GameActiveResearchSection() {
 
             <Box position={'absolute'} left={0} bottom={0} padding={1}>
               <Paper variant="outlined">
-                <Tooltip title={formatTimestamp(executeTaskAt)} arrow>
+                <Tooltip title={formatTimestamp(activeResearch?.executeTaskAt || 0)} arrow>
                   <Typography
                     variant="body1"
                     fontSize={12}
@@ -136,10 +109,10 @@ function GameActiveResearchSection() {
                     paddingLeft={0.8}
                     paddingRight={0.8}
                   >
-                    {isLoading ? (
+                    {isResearchLoading ? (
                       <Skeleton variant="text" width={'48px'} />
                     ) : (
-                      formatTimer(researchCountdown)
+                      formatTimer(activeResearchCountdown)
                     )}
                   </Typography>
                 </Tooltip>
@@ -151,7 +124,7 @@ function GameActiveResearchSection() {
                 {/* TODO: create activeResearch.research.bonus section because is optional */}
 
                 <Stack spacing={0.5} alignItems="center">
-                  {isLoading ? (
+                  {isResearchLoading ? (
                     <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
                   ) : (
                     <>
@@ -193,7 +166,7 @@ function GameActiveResearchSection() {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    {isLoading ? (
+                    {isResearchLoading ? (
                       <Skeleton variant="text" width={'8px'} />
                     ) : (
                       <Typography
@@ -208,7 +181,7 @@ function GameActiveResearchSection() {
 
                     <ArrowRightAltRoundedIcon fontSize="inherit" />
 
-                    {isLoading ? (
+                    {isResearchLoading ? (
                       <Skeleton variant="text" width={'8px'} />
                     ) : (
                       <Typography variant="body1" fontSize={12} fontWeight={500} color={green[600]}>

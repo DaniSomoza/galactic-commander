@@ -15,41 +15,35 @@ import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import { usePlayer } from '../../store/PlayerContext'
 import Loader from '../../components/loader/Loader'
 import formatTimer from '../../utils/formatTimer'
-import { startResearch, updateResearchQueue } from '../../endpoints/game/researchEndpoint'
-import { useGameInfo } from '../../store/GameInfoContext'
+import { useResearch } from '../../store/ResearchContext'
 
 const NUMBER_OF_RESEARCH_SHOWED_IN_THE_QUEUE = 6
 
 function GameResearchPage() {
-  const { player, isPlayerLoading, loadPlayer } = usePlayer()
-  const { selectedUniverse } = useGameInfo()
+  const { player, isPlayerLoading } = usePlayer()
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const { activeResearch, researchQueue, researched, startResearch, updateResearchQueue } =
+    useResearch()
 
   if (!player || isPlayerLoading) {
     return <Loader isLoading />
   }
 
   const { researches: raceResearches } = player.race
-  const { queue: researchQueue, activeResearch, researched: playerResearches } = player.researches
 
   async function performStartResearch(researchName: string) {
     setIsLoading(true)
-    await startResearch(researchName, selectedUniverse!.name)
-    await loadPlayer()
+    await startResearch(researchName)
     setIsLoading(false)
   }
 
   async function performUpdateResearchQueue(researchName: string) {
     setIsLoading(true)
-    const newPlayerQueue = [...researchQueue, researchName]
-    await updateResearchQueue(newPlayerQueue, selectedUniverse!.name)
-    await loadPlayer()
+    await updateResearchQueue(researchName)
     setIsLoading(false)
   }
-
-  console.log('raceResearches: ', raceResearches)
-  console.log('researchQueue: ', researchQueue)
 
   return (
     <Stack direction={'column'} gap={2}>
@@ -60,7 +54,7 @@ function GameResearchPage() {
             {researchQueue
               .slice(0, NUMBER_OF_RESEARCH_SHOWED_IN_THE_QUEUE)
               .map((researchName, index) => {
-                const playerResearch = playerResearches.find(
+                const playerResearch = researched.find(
                   (playerResearch) => playerResearch.research.name === researchName
                 )
                 // TODO: check previous items in the research queue
@@ -150,7 +144,7 @@ function GameResearchPage() {
 
       {/* Researches list */}
       {raceResearches.map((raceResearch) => {
-        const playerResearch = playerResearches.find(
+        const playerResearch = researched.find(
           (playerResearch) => playerResearch.research.name === raceResearch.name
         )
 
@@ -162,9 +156,6 @@ function GameResearchPage() {
         const resourceCost = playerResearch
           ? calculateResearchResourceCost(playerResearch.research, currentLevel)
           : raceResearch.resourceCost
-
-        console.log('researchDuration: ', researchDuration)
-        console.log('resourceCost: ', resourceCost)
 
         // TODO: show bonus
 
