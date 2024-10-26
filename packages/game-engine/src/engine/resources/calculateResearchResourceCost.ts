@@ -3,6 +3,7 @@ import { IResearch } from '../../models/ResearchModel'
 const RESEARCH_COST_FACTOR = 3
 
 // TODO: implement this properly
+// TODO: Remove IResearch
 function calculateResearchResourceCost(research: IResearch, level: number): number {
   const isFirstLevel = level === 0
 

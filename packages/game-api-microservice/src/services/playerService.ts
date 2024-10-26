@@ -84,7 +84,12 @@ async function getPlayer(username: string, universeName: string): Promise<getPla
 
   const player = await playerRepository.findPlayerByUsername(username, universeData._id)
 
+  // TODO: refine the data player, include there all the data required by the frontend
+  // TODO: include the researchData related with the player
+  // the executeTaskAt ???
+
   if (!player) {
+    // TODO: create enum for the errors NO_PLAYER_FOUND_ERROR
     throw new NotFoundError('no player present in this universe', { username, universeName })
   }
 

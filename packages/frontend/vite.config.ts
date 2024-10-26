@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
+// TODO: change to node 22.10 and remove dotenv
 import dotenv from 'dotenv'
 import { configDefaults } from 'vitest/config'
 

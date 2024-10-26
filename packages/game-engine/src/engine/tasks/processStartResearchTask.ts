@@ -1,6 +1,5 @@
 import applyBonus from '../../helpers/applyBonus'
 import getSecond from '../../helpers/getSecond'
-import { IResearch } from '../../models/ResearchModel'
 import getTaskModel, {
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskType,
@@ -12,6 +11,7 @@ import getTaskModel, {
 import playerRepository from '../../repositories/playerRepository'
 import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
+import calculateResearchDuration from '../research/calculateResearchDuration'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
 import createStartResearchTask from './utils/createStartResearchTask'
 
@@ -73,7 +73,7 @@ async function processStartResearchTask(
   }
 
   const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
-  const baseResearchDuration = calculateResearchDuration(research, level)
+  const baseResearchDuration = calculateResearchDuration(research.initialTime, level)
 
   const researchDuration = baseResearchDuration * (100 / researchBonus)
   const executeTaskAt = getSecond(second + researchDuration)
@@ -128,19 +128,3 @@ async function processStartResearchTask(
 }
 
 export default processStartResearchTask
-
-const RESEARCH_FACTOR = 4.5
-
-// TODO: move this to another file ???
-function calculateResearchDuration(research: IResearch, level: number): number {
-  const isFirstLevel = level === 0
-
-  if (isFirstLevel) {
-    return research.initialTime
-  }
-
-  const previousLevel = level - 1
-  const previousTime = calculateResearchDuration(research, previousLevel)
-
-  return previousTime + (previousTime * RESEARCH_FACTOR) / 2
-}

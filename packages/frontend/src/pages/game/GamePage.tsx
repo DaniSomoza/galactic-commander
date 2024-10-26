@@ -3,10 +3,12 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Container from '@mui/material/Container'
+import Skeleton from '@mui/material/Skeleton'
 
 import { useAuthorization } from '../../store/AuthorizationContext'
 import { GameInfoProvider, useGameInfo } from '../../store/GameInfoContext'
 import { PlayerProvider, usePlayer } from '../../store/PlayerContext'
+import { ResearchProvider } from '../../store/ResearchContext'
 import { GAME_CREATE_PLAYER_PATH, LOGIN_PATH } from '../../routes/routes'
 import GameNavigationBar from '../../components/game-navigation-bar/GameNavigationBar'
 import PlanetSelector from '../../components/planet-selector/PlanetSelector'
@@ -86,6 +88,10 @@ function GamePage() {
               <Box component="section">
                 <GameActiveResearchSection />
               </Box>
+
+              <Box component="section">
+                <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
+              </Box>
             </Stack>
           </Stack>
 
@@ -103,7 +109,9 @@ function GamePageWithGameProviders() {
   return (
     <GameInfoProvider>
       <PlayerProvider>
-        <GamePage />
+        <ResearchProvider>
+          <GamePage />
+        </ResearchProvider>
       </PlayerProvider>
     </GameInfoProvider>
   )

@@ -47,6 +47,9 @@ function GameActiveResearchSection() {
     }
   }, [executeTaskAt])
 
+  // TODO: use the new getPlayer endpoint only!
+  // TODO: create the 3,2,1... card with the next research
+
   usePolling(updateResearchCountdown)
 
   // TODO: FIX ISSUE WITH the research queue if no resources are present
