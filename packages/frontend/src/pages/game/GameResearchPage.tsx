@@ -10,14 +10,16 @@ import { green, orange } from '@mui/material/colors'
 
 import calculateResearchResourceCost from 'game-engine/src/engine/resources/calculateResearchResourceCost'
 import calculateResearchDuration from 'game-engine/src/engine/research/calculateResearchDuration'
+import { PlayerType } from 'game-api-microservice/src/types/Player'
+import applyBonus from 'game-engine/src/helpers/applyBonus'
 
-import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import { usePlayer } from '../../store/PlayerContext'
+import { useResearch } from '../../store/ResearchContext'
 import Loader from '../../components/loader/Loader'
 import formatTimer from '../../utils/formatTimer'
-import { useResearch } from '../../store/ResearchContext'
-
-const NUMBER_OF_RESEARCH_SHOWED_IN_THE_QUEUE = 6
+import millisToSeconds from '../../utils/millisToSeconds'
+import formatTimestamp from '../../utils/formatTimestamp'
+import researchPlaceholder from '../../assets/research_placeholder.jpg'
 
 function GameResearchPage() {
   const { player, isPlayerLoading } = usePlayer()
@@ -50,32 +52,51 @@ function GameResearchPage() {
       {/* Research Queue */}
       {researchQueue.length > 0 && (
         <Paper variant="outlined">
-          <Stack direction={'row'} spacing={0.6} padding={1}>
-            {researchQueue
-              .slice(0, NUMBER_OF_RESEARCH_SHOWED_IN_THE_QUEUE)
-              .map((researchName, index) => {
-                const playerResearch = researched.find(
-                  (playerResearch) => playerResearch.research.name === researchName
-                )
-                // TODO: check previous items in the research queue
-                const currentLevel = playerResearch ? playerResearch.level : 0
-                const nextLevel = currentLevel + 1
+          <Stack direction={'row'} spacing={0.6} padding={1} maxWidth="100%" overflow="auto">
+            {researchQueue.map((researchName, index) => {
+              const playerResearch = researched.find(
+                (playerResearch) => playerResearch.research.name === researchName
+              )
+              const currentLevel = calculateResearchLevelInTheQueue(
+                researchName,
+                playerResearch?.level || 0, // player level
+                researchQueue,
+                index,
+                activeResearch
+              )
+              const nextLevel = currentLevel + 1
 
-                const showNextArrow =
-                  index + 1 < NUMBER_OF_RESEARCH_SHOWED_IN_THE_QUEUE &&
-                  index < researchQueue.length - 1
+              const startResearchTime = calculateStartResearchTimestamp(
+                player,
+                researchQueue,
+                index
+              )
+              const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+              const raceResearch = raceResearches.find(
+                (raceResearch) => raceResearch.name === researchName
+              )
+              const researchDuration = calculateResearchDuration(
+                raceResearch!.initialTime,
+                currentLevel,
+                researchBonus
+              )
+              const endResearchTime = startResearchTime + researchDuration
 
-                return (
+              const showNextArrow = index < researchQueue.length - 1
+
+              // TODO: ADD REMOVE FROM THE QUEUE BUTTON AND MODAL
+              return (
+                <Stack key={index} alignItems={'flex-start'} direction={'column'} spacing={1}>
                   <Stack key={index} alignItems={'center'} direction={'row'} spacing={1}>
                     <Box sx={{ position: 'relative' }}>
-                      <Stack justifyContent="center" alignItems="center">
+                      <Stack justifyContent="center" alignItems="center" gap={1}>
                         <Tooltip title={researchName}>
                           <img
                             src={researchPlaceholder}
                             // TODO: create proper alt image
                             alt="player active research image"
-                            height={'72px'}
-                            width={'72px'}
+                            height={'80px'}
+                            width={'80px'}
                             style={{ borderRadius: '4px' }}
                           />
                         </Tooltip>
@@ -136,8 +157,32 @@ function GameResearchPage() {
                       <ArrowRightAltRoundedIcon sx={{ transform: 'rotate(180deg)' }} />
                     )}
                   </Stack>
-                )
-              })}
+
+                  {/* Start date */}
+                  <Tooltip
+                    title={
+                      <div>
+                        <div>Start research Time: {formatTimestamp(startResearchTime)}</div>
+                        <div>End researchTime: {formatTimestamp(endResearchTime)}</div>
+                      </div>
+                    }
+                  >
+                    <Paper variant="outlined">
+                      <Box maxWidth={'80px'} padding={0.3} paddingLeft={0.6} paddingRight={0.6}>
+                        <Typography
+                          variant="body1"
+                          fontSize={10}
+                          fontWeight={500}
+                          textAlign={'center'}
+                        >
+                          {formatTimestamp(startResearchTime)}
+                        </Typography>
+                      </Box>
+                    </Paper>
+                  </Tooltip>
+                </Stack>
+              )
+            })}
           </Stack>
         </Paper>
       )}
@@ -148,13 +193,22 @@ function GameResearchPage() {
           (playerResearch) => playerResearch.research.name === raceResearch.name
         )
 
-        // TODO: FIX review the current Research queue to update properly the level, resources and duration
+        const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+
         const currentLevel = playerResearch?.level || 0
-        const researchDuration = Math.floor(
-          calculateResearchDuration(raceResearch.initialTime, currentLevel) / 1_000
+        const nextLevel = calculateResearchLevelInTheQueue(
+          raceResearch.name,
+          playerResearch?.level || 0,
+          researchQueue,
+          researchQueue.length,
+          activeResearch
         )
+        const researchDuration = millisToSeconds(
+          calculateResearchDuration(raceResearch.initialTime, nextLevel, researchBonus)
+        )
+
         const resourceCost = playerResearch
-          ? calculateResearchResourceCost(playerResearch.research, currentLevel)
+          ? calculateResearchResourceCost(playerResearch.research, nextLevel)
           : raceResearch.resourceCost
 
         // TODO: show bonus
@@ -202,11 +256,30 @@ function GameResearchPage() {
                         direction={'row'}
                         justifyContent="center"
                         alignItems="center"
-                        color={green[600]}
                       >
-                        <Typography variant="body1" fontSize={12} fontWeight={500}>
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          color={currentLevel !== nextLevel ? orange[600] : green[600]}
+                        >
                           {currentLevel}
                         </Typography>
+
+                        {currentLevel !== nextLevel && (
+                          <>
+                            <ArrowRightAltRoundedIcon fontSize="inherit" />
+
+                            <Typography
+                              variant="body1"
+                              fontSize={12}
+                              fontWeight={500}
+                              color={green[600]}
+                            >
+                              {nextLevel}
+                            </Typography>
+                          </>
+                        )}
                       </Stack>
                     </Paper>
                   </Box>
@@ -261,3 +334,55 @@ function GameResearchPage() {
 }
 
 export default GameResearchPage
+
+function calculateResearchLevelInTheQueue(
+  researchName: string,
+  initialLevel: number,
+  researchQueue: string[],
+  positionInTheQueue: number,
+  activeResearch?: PlayerType['researches']['activeResearch']
+): number {
+  let level = initialLevel
+
+  if (activeResearch?.research.name === researchName) {
+    level++
+  }
+
+  for (let i = 0; i < positionInTheQueue; i++) {
+    if (researchQueue[i] === researchName) {
+      level++
+    }
+  }
+
+  return level
+}
+
+function calculateStartResearchTimestamp(
+  player: PlayerType,
+  researchQueue: string[],
+  positionInTheQueue: number
+): number {
+  let startResearchTime = player.researches.activeResearch?.executeTaskAt || 0
+
+  // TODO: include this in each iteration!
+  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+
+  for (let i = 0; i < positionInTheQueue; i++) {
+    const playerResearch = player.researches.researched.find(
+      (playerResearch) => playerResearch.research.name === researchQueue[i]
+    )
+    const raceResearch = player.race.researches.find(
+      (raceResearch) => raceResearch.name === researchQueue[i]
+    )
+
+    const researchDuration = calculateResearchDuration(
+      raceResearch!.initialTime,
+      playerResearch?.level || 0,
+      researchBonus
+    )
+
+    startResearchTime = startResearchTime + researchDuration
+  }
+
+  return startResearchTime
+}

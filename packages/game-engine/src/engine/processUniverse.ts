@@ -9,7 +9,7 @@ async function processUniverse(universe: IUniverseDocument) {
   const universeId = universe._id
 
   if (!universe.isProcessingInProgress) {
-    const tasks = await taskRepository.getPendingTasksByUniverse(universeId, currentSecond)
+    const tasks = await taskRepository.getPendingTasks(universeId, currentSecond)
     const hasTasksToProcess = tasks.length > 0
 
     console.log(`[${currentSecond}] [${formatDate(currentSecond)}] --- tasks: ${tasks.length}`)

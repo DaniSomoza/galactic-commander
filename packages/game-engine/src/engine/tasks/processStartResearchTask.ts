@@ -73,9 +73,8 @@ async function processStartResearchTask(
   }
 
   const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
-  const baseResearchDuration = calculateResearchDuration(research.initialTime, level)
+  const researchDuration = calculateResearchDuration(research.initialTime, level, researchBonus)
 
-  const researchDuration = baseResearchDuration * (100 / researchBonus)
   const executeTaskAt = getSecond(second + researchDuration)
 
   const principalPlanet = player.planets.principal

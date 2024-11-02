@@ -1,7 +1,21 @@
+// TODO: document this
+function calculateResearchDuration(
+  initialTime: number,
+  level: number,
+  researchBonus: number
+): number {
+  const baseResearchDuration = getBaseResearchDuration(initialTime, level)
+
+  const researchDuration = baseResearchDuration * (100 / researchBonus)
+
+  return Math.floor(researchDuration)
+}
+
+export default calculateResearchDuration
+
 const RESEARCH_FACTOR = 4.5
 
-// TODO: document this
-function calculateResearchDuration(initialTime: number, level: number): number {
+function getBaseResearchDuration(initialTime: number, level: number): number {
   const isFirstLevel = level === 0
 
   if (isFirstLevel) {
@@ -9,11 +23,9 @@ function calculateResearchDuration(initialTime: number, level: number): number {
   }
 
   const previousLevel = level - 1
-  const previousTime = calculateResearchDuration(initialTime, previousLevel)
+  const previousTime = getBaseResearchDuration(initialTime, previousLevel)
 
-  const duration = previousTime + (previousTime * RESEARCH_FACTOR) / 2
+  const baseResearchDuration = previousTime + (previousTime * RESEARCH_FACTOR) / 2
 
-  return Math.floor(duration)
+  return baseResearchDuration
 }
-
-export default calculateResearchDuration

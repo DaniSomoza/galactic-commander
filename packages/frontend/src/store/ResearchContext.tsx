@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 
 import { PlayerType } from 'game-api-microservice/src/types/Player'
 import getSecond from 'game-engine/src/helpers/getSecond'
@@ -65,7 +65,6 @@ function ResearchProvider({ children }: ResearchProviderProps) {
     ? activeResearchCountdown === 0 && researchQueue.length > 0
     : researchQueue.length > 0
 
-  // TODO: fix all recalls to the endpoint
   const updateResearchCountdown = useCallback(async () => {
     if (executeTaskAt) {
       const countdown = (executeTaskAt - getSecond(Date.now())) / 1_000
@@ -105,6 +104,7 @@ function ResearchProvider({ children }: ResearchProviderProps) {
   )
 
   // TODO: create scheduleResearch
+  // TODO: create cancelResearch
 
   const value = {
     activeResearch,

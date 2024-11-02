@@ -21,15 +21,6 @@ function GameActiveResearchSection() {
 
   const { activeResearch, activeResearchCountdown, isResearchLoading } = useResearch()
 
-  // TODO: use the new getPlayer endpoint only!
-  // TODO: create the 3,2,1... card with the next research
-
-  // TODO: FIX ISSUE WITH the research queue if no resources are present
-  //    solution: Retry task after X minutes? just fail and go next in the queue?
-  // TODO: create task section in the frontend to review the player tasks in the game...
-  //    solution: a table and a acordeon each row
-  // TODO: Add a social media footer links?
-
   // TODO: handle 3 states:
   //   - Active research
   //   - Loading State
@@ -37,9 +28,6 @@ function GameActiveResearchSection() {
 
   const showNoResearchActiveLabel = !activeResearch && !isResearchLoading
 
-  // TODO: FIX ISSUE WITH THE LAS RESEARCH IN THE QUEUE x2
-
-  // TODO: update no active research!!! JSX
   return (
     <Paper variant="outlined">
       <Box sx={{ position: 'relative' }}>

@@ -91,7 +91,7 @@ async function processFinishResearchTask(
       nextResearch._id
     )
 
-    await taskRepository.createStartResearchTask(startResearchTask)
+    return Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
   }
 
   return Promise.all([player.save()])
@@ -106,7 +106,7 @@ function hasBonus(bonus: IBonus): boolean {
 
 const TROOP_POPULATION_FACTOR = 2.55
 
-// create file
+// TODO: create file in engine/troops
 function calculateTroopsPopulation(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 
@@ -122,7 +122,7 @@ function calculateTroopsPopulation(race: IRace, level: number): number {
 
 const FLEET_ENERGY_FACTOR = 4
 
-// create file
+// TODO: create file in engine/fleets
 function calculateFleetEnergy(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 

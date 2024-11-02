@@ -62,7 +62,7 @@ describe('process start research task', () => {
     // we process the task here
     await processTasks([task!], universe!)
 
-    const [finishResearchTasks] = await taskRepository.getPendingTasksByUniverse(
+    const [finishResearchTasks] = await taskRepository.getPendingTasks(
       universe!._id,
       new Date().getTime()
     )

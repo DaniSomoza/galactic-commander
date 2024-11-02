@@ -59,7 +59,7 @@ describe('game-engine', () => {
     const timestamp = new Date().getTime()
     const currentSecond = getSecond(timestamp)
 
-    const tasks = await taskRepository.getPendingTasksByUniverse(testUniverse!._id, currentSecond)
+    const tasks = await taskRepository.getPendingTasks(testUniverse!._id, currentSecond)
 
     const testTask = tasks[0]
 
@@ -98,7 +98,7 @@ describe('game-engine', () => {
     const timestamp = new Date().getTime()
     const currentSecond = getSecond(timestamp)
 
-    const tasks = await taskRepository.getPendingTasksByUniverse(testUniverse!._id, currentSecond)
+    const tasks = await taskRepository.getPendingTasks(testUniverse!._id, currentSecond)
 
     const testTask = tasks[0]
 
