@@ -11,11 +11,11 @@ import calculateResourceProductionBonus from 'game-engine/src/engine/resources/c
 import getSecond from 'game-engine/src/helpers/getSecond'
 import applyBonus from 'game-engine/src/helpers/applyBonus'
 
-import planetPlaceholder from '../../assets/planet_placeholder.jpg'
 import formatNumber from '../../utils/formatNumber'
 import usePolling from '../../hooks/usePolling'
 import { usePlayer } from '../../store/PlayerContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
+import Image from '../image/Image'
 
 // TODO: rename this to PlanetSelectorCard
 function GamePlanetSection() {
@@ -56,13 +56,13 @@ function GamePlanetSection() {
     <Paper variant="outlined" sx={{ position: 'relative' }}>
       <Stack justifyContent="center" alignItems="center">
         {planet ? (
-          <img
-            src={planetPlaceholder}
+          <Image
+            src={planet.imgUrl}
             // TODO: create proper alt image
             alt="player planet image"
             height={'200px'}
             width={'200px'}
-            style={{ borderRadius: '4px' }}
+            border
           />
         ) : (
           <Skeleton variant="rounded" width={200} height={200} />

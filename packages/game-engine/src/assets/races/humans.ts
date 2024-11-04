@@ -12,7 +12,7 @@ const HUMANS_INTERGALACTIC_TRAVEL_THRESHOLD = 10
 const humans: IRace = {
   name: 'HUMANS_RACE_NAME',
   description: 'HUMANS_RACE_DESCRIPTION',
-  image: 'image_url',
+  imgUrl: '/races/humans_race.jpg',
   tags: ['Colonizer'], // TODO: get proper types
   maxPlanetsAllowed: HUMANS_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,

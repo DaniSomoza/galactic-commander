@@ -7,9 +7,9 @@ import Skeleton from '@mui/material/Skeleton'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 
-import planetPlaceholder from '../../assets/planet_placeholder.jpg'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 import { usePlayer } from '../../store/PlayerContext'
+import Image from '../image/Image'
 
 const SelectorInput = styled(OutlinedInput)(() => ({
   '& .MuiInputBase-input': {
@@ -41,13 +41,13 @@ function PlanetSelector() {
         input={<SelectorInput id="select-planet-input" />}
         renderValue={() => (
           <Stack direction={'row'} spacing={1} alignItems="center">
-            <img
-              src={planetPlaceholder}
+            <Image
+              src={player.planets.principal.imgUrl}
               // TODO: create proper alt image
               alt="player planet image"
               height={'32px'}
               width={'32px'}
-              style={{ borderRadius: '4px 0px 0px 4px' }}
+              border
             />
             <Paper variant="outlined" style={{ marginRight: '4px' }}>
               <Typography
@@ -58,8 +58,8 @@ function PlanetSelector() {
                 paddingLeft={0.8}
                 paddingRight={0.8}
               >
-                {player.planets.principal?.coordinates ? (
-                  formatCoordinatesLabel(player.planets.principal?.coordinates)
+                {player.planets.principal.coordinates ? (
+                  formatCoordinatesLabel(player.planets.principal.coordinates)
                 ) : (
                   <Skeleton variant="text" width={24} />
                 )}

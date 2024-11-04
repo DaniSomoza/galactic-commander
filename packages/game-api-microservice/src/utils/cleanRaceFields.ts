@@ -6,7 +6,7 @@ function cleanRaceFields(race: IRaceDocument): RaceType {
   const {
     name,
     description,
-    image,
+    imgUrl,
     tags,
     maxPlanetsAllowed,
     baseFleetEnergy,
@@ -21,7 +21,7 @@ function cleanRaceFields(race: IRaceDocument): RaceType {
   return {
     name,
     description,
-    image,
+    imgUrl,
     tags,
     maxPlanetsAllowed,
     baseFleetEnergy,

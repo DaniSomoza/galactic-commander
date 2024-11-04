@@ -5,6 +5,7 @@ import { PlanetType } from '../types/Planet'
 function cleanPlanetFields(planet: IPlanetDocument): PlanetType {
   const {
     name,
+    imgUrl,
     owner,
     colonizedAt,
     resources,
@@ -24,6 +25,7 @@ function cleanPlanetFields(planet: IPlanetDocument): PlanetType {
 
   return {
     name,
+    imgUrl,
     owner: owner?.toString() || null,
     colonizedAt,
     resources,

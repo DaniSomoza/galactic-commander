@@ -17,7 +17,7 @@ function Header() {
   const { sessionToken, user } = useAuthorization()
 
   return (
-    <AppBar position="static" component="header">
+    <AppBar position="fixed" component="header">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Galactic Commander

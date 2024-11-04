@@ -5,6 +5,7 @@ import { IBonus } from '../types/bonus'
 export interface IResearch {
   name: string
   description: string
+  imgUrl: string
   raceName: string
   bonus: IBonus
   // TODO: ADD A ENUM initialTime 15_000 20_000 23_000 & 25_000
@@ -74,6 +75,8 @@ export const ResearchSchema = new Schema({
     unique: true
   },
   description: { type: String, required: true },
+  imgUrl: { type: String, required: true },
+
   raceName: { type: String, required: true },
 
   // TODO: add enums!

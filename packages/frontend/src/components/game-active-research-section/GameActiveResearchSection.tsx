@@ -9,12 +9,12 @@ import Button from '@mui/material/Button'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
 import { green, orange } from '@mui/material/colors'
 
-import researchPlaceholder from '../../assets/research_placeholder.jpg'
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
 import BonusCard from '../bonus-card/BonusCard'
 import { GAME_RESEARCHES_PATH } from '../../routes/routes'
 import { useResearch } from '../../store/ResearchContext'
+import Image from '../image/Image'
 
 function GameActiveResearchSection() {
   const navigate = useNavigate()
@@ -51,13 +51,13 @@ function GameActiveResearchSection() {
             {isResearchLoading ? (
               <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
             ) : (
-              <img
-                src={researchPlaceholder}
+              <Image
+                src={activeResearch?.research.imgUrl || ''}
                 // TODO: create proper alt image
                 alt="player active research image"
                 height={'200px'}
                 width={'200px'}
-                style={{ borderRadius: '4px' }}
+                border
               />
             )}
             <Box

@@ -13,7 +13,7 @@ const FOTOX_ALLOWED_PLANETS = 5
 const fotox: IRace = {
   name: 'FOTOX_RACE_NAME',
   description: 'FOTOX_RACE_DESCRIPTION',
-  image: 'image_url',
+  imgUrl: '/races/fotox_race.jpg',
   tags: ['Aggressive', 'Colonizer'],
   maxPlanetsAllowed: FOTOX_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,

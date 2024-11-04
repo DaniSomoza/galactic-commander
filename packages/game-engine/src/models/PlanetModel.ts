@@ -18,14 +18,16 @@ export type PlanetCoordinates = {
 
 export interface IPlanet {
   name: string
+  universe: mongoose.Types.ObjectId
+
+  imgUrl: string
+
   owner: mongoose.Types.ObjectId | null
   colonizedAt: number
 
   resources: number
   resourceQuality: number
   lastResourceProductionTime: number
-
-  universe: mongoose.Types.ObjectId
 
   coordinates: PlanetCoordinates
 
@@ -51,15 +53,16 @@ export interface IPlanet {
 const PlanetSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
+    imgUrl: { type: String, required: true },
+
+    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'Player',
       required: false,
       default: null
     },
-
-    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
-
     colonizedAt: { type: Number },
 
     resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },

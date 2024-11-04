@@ -3,6 +3,7 @@ import { IResearch } from '../../../models/ResearchModel'
 const PIRATE_FLEET_ENERGY_RESEARCH: IResearch = {
   name: 'PIRATE_FLEET_ENERGY_RESEARCH_NAME',
   description: 'PIRATE_FLEET_ENERGY_RESEARCH_DESCRIPTION',
+  imgUrl: '/researches/pirate_fleet_energy_research.jpg',
   raceName: 'PIRATES_RACE_NAME',
   initialTime: 25_000,
   resourceCost: 200,

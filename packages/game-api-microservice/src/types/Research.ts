@@ -4,6 +4,7 @@ import { StartResearchTaskType, TaskType } from './Task'
 export type ResearchType = {
   name: string
   description: string
+  imgUrl: string
   raceName: string
   // TODO: unificar objetos bonus
   bonus: BonusType

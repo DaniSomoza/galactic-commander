@@ -48,7 +48,10 @@ function App() {
     <ThemeProvider>
       <AuthorizationProvider>
         <Header />
-        <RouterProvider router={AppRoutes} />
+
+        <div style={{ marginTop: '64px' }}>
+          <RouterProvider router={AppRoutes} />
+        </div>
       </AuthorizationProvider>
     </ThemeProvider>
   )

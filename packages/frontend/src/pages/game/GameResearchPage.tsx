@@ -19,7 +19,7 @@ import Loader from '../../components/loader/Loader'
 import formatTimer from '../../utils/formatTimer'
 import millisToSeconds from '../../utils/millisToSeconds'
 import formatTimestamp from '../../utils/formatTimestamp'
-import researchPlaceholder from '../../assets/research_placeholder.jpg'
+import Image from '../../components/image/Image'
 
 function GameResearchPage() {
   const { player, isPlayerLoading } = usePlayer()
@@ -91,13 +91,13 @@ function GameResearchPage() {
                     <Box sx={{ position: 'relative' }}>
                       <Stack justifyContent="center" alignItems="center" gap={1}>
                         <Tooltip title={researchName}>
-                          <img
-                            src={researchPlaceholder}
+                          <Image
+                            src={raceResearch!.imgUrl}
                             // TODO: create proper alt image
                             alt="player active research image"
                             height={'80px'}
                             width={'80px'}
-                            style={{ borderRadius: '4px' }}
+                            border
                           />
                         </Tooltip>
 
@@ -219,14 +219,13 @@ function GameResearchPage() {
               {/* Image Part */}
               <Box sx={{ position: 'relative' }}>
                 <Stack justifyContent="center" alignItems="center">
-                  <img
-                    // TODO: create proper images for each research
-                    src={researchPlaceholder}
+                  <Image
+                    src={raceResearch.imgUrl}
                     // TODO: create proper alt image
                     alt="player active research image"
                     height={'200px'}
                     width={'200px'}
-                    style={{ borderRadius: '4px 0px 0px 4px' }}
+                    border
                   />
                   {/* Research time */}
                   <Box position={'absolute'} left={0} bottom={0} padding={1}>
@@ -375,9 +374,17 @@ function calculateStartResearchTimestamp(
       (raceResearch) => raceResearch.name === researchQueue[i]
     )
 
+    const researchLevelInTheQueue = calculateResearchLevelInTheQueue(
+      researchQueue[i],
+      playerResearch?.level || 0,
+      researchQueue,
+      i,
+      player.researches.activeResearch
+    )
+
     const researchDuration = calculateResearchDuration(
       raceResearch!.initialTime,
-      playerResearch?.level || 0,
+      researchLevelInTheQueue,
       researchBonus
     )
 

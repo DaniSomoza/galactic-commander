@@ -10,6 +10,8 @@ export type PlanetType = {
   owner: string | null
   colonizedAt: number
 
+  imgUrl: string
+
   resources: number
   resourceQuality: number
   lastResourceProductionTime: number
