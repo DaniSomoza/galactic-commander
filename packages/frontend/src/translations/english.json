@@ -5,6 +5,17 @@
   "HEADER_SELECT_LANGUAGE_TOOLTIP": "Change Language",
 
   "GAME_PLAYER_STATS_FLEETS_TOOLTIP": "Current fleets {0}",
+  "GAME_PLAYER_STATS_PLANETS_TOOLTIP": "{0}/{1} planets",
+  "GAME_PLAYER_STATS_POPULATION_TOOLTIP": "{0}/{1} troops",
+  "GAME_PLAYER_STATS_ENERGY_TOOLTIP": "{0}/{1} energy",
+
+  "GAME_PLAYER_PLANET_RESOURCES_TOOLTIP": "{0} resources available on this planet",
+  "GAME_PLAYER_PLANET_COORDINATES_TOOLTIP": "Go to the galaxy page",
+  "GAME_PLAYER_PLANET_RESOURCE_QUALITY_TOOLTIP": "{0}% resource production on this planet",
+
+  "GAME_PLAYER_ACTIVE_RESEARCH_NO_RESEARCH_LABEL": "No active research",
+  "GAME_PLAYER_ACTIVE_RESEARCH_GO_TO_RESEARCH_BUTTON": "Research",
+  "GAME_PLAYER_ACTIVE_RESEARCH_END_DATE": "Research complete at {0}",
 
   "NAV_BAR_DASHBOARD": "Dashboard",
   "NAV_BAR_RESEARCHES": "Researches",
@@ -25,5 +36,6 @@
   "PIRATES_RACE_NAME": "pirates",
   "PIRATES_RACE_DESCRIPTION": "pirates description",
 
-  "PIRATE_COMPUTING_RESEARCH_NAME": "pirate computing"
+  "PIRATE_COMPUTING_RESEARCH_NAME": "pirate computing",
+  "PIRATE_FLEET_ATTACK_RESEARCH_NAME": "Pirate fleet attack"
 }

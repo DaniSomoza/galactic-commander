@@ -4,7 +4,18 @@
   "HEADER_MESSAGES_TOOLTIP": "Mostar mensajes",
   "HEADER_SELECT_LANGUAGE_TOOLTIP": "Cambiar Idioma",
 
-  "GAME_PLAYER_STATS_FLEETS_TOOLTIP": "Flotas activas: {0}",
+  "GAME_PLAYER_STATS_FLEETS_TOOLTIP": "{0}/{1} flotas activas",
+  "GAME_PLAYER_STATS_PLANETS_TOOLTIP": "{0}/{1} planetas colonizados",
+  "GAME_PLAYER_STATS_POPULATION_TOOLTIP": "{0}/{1} tropas",
+  "GAME_PLAYER_STATS_ENERGY_TOOLTIP": "{0}/{1} energía",
+
+  "GAME_PLAYER_PLANET_RESOURCES_TOOLTIP": "{0} recursos disponibles en este planeta",
+  "GAME_PLAYER_PLANET_COORDINATES_TOOLTIP": "ir a la sección de galaxia",
+  "GAME_PLAYER_PLANET_RESOURCE_QUALITY_TOOLTIP": "{0}% de producción de recursos en este planeta",
+
+  "GAME_PLAYER_ACTIVE_RESEARCH_NO_RESEARCH_LABEL": "No hay Investigaciones activas",
+  "GAME_PLAYER_ACTIVE_RESEARCH_GO_TO_RESEARCH_BUTTON": "Investigar",
+  "GAME_PLAYER_ACTIVE_RESEARCH_END_DATE": "Investigación completada el {0}",
 
   "NAV_BAR_DASHBOARD": "Dashboard",
   "NAV_BAR_RESEARCHES": "Investigaciones",
@@ -25,5 +36,6 @@
   "PIRATES_RACE_NAME": "piratas",
   "PIRATES_RACE_DESCRIPTION": "descripción de los piratas",
 
-  "PIRATE_COMPUTING_RESEARCH_NAME": "computación pirata"
+  "PIRATE_COMPUTING_RESEARCH_NAME": "computación pirata",
+  "PIRATE_FLEET_ATTACK_RESEARCH_NAME": "Ataque de flotas pirata"
 }

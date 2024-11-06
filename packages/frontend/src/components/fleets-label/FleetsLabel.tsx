@@ -13,12 +13,16 @@ function FleetsLabel() {
   const { player } = usePlayer()
 
   // TODO: Add current fleets
+  const maxFleets = 2
   const currentFleets = 0
-  const fleetsLabel = `${currentFleets} / 2`
+  const fleetsLabel = `${currentFleets} / ${maxFleets}`
 
   return (
     <Paper>
-      <Tooltip title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets)} arrow>
+      <Tooltip
+        title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets, maxFleets)}
+        arrow
+      >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
           <FlightTakeoffRoundedIcon fontSize="small" />
 

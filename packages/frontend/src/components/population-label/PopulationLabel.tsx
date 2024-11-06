@@ -7,18 +7,26 @@ import GroupIcon from '@mui/icons-material/Group'
 
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
+import { useTranslations } from '../../store/TranslationContext'
 
 function PopulationLabel() {
+  const { translate } = useTranslations()
   const { player } = usePlayer()
 
   // TODO: Add current population
   const currentPopulation = 0
-  const tooltipLabel = `${currentPopulation} / ${formatNumber(player?.units.troops.population || 0, true)}`
   const populationLabel = `${currentPopulation} / ${formatNumber(player?.units.troops.population || 0)}`
 
   return (
     <Paper>
-      <Tooltip title={tooltipLabel} arrow>
+      <Tooltip
+        title={translate(
+          'GAME_PLAYER_STATS_POPULATION_TOOLTIP',
+          currentPopulation,
+          formatNumber(player?.units.troops.population || 0, true)
+        )}
+        arrow
+      >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
           <GroupIcon fontSize="small" />
 

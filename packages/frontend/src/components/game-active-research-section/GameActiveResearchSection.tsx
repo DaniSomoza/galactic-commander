@@ -14,9 +14,11 @@ import formatTimer from '../../utils/formatTimer'
 import BonusCard from '../bonus-card/BonusCard'
 import { GAME_RESEARCHES_PATH } from '../../routes/routes'
 import { useResearch } from '../../store/ResearchContext'
+import { useTranslations } from '../../store/TranslationContext'
 import Image from '../image/Image'
 
 function GameActiveResearchSection() {
+  const { translate } = useTranslations()
   const navigate = useNavigate()
 
   const { activeResearch, activeResearchCountdown, isResearchLoading } = useResearch()
@@ -41,9 +43,11 @@ function GameActiveResearchSection() {
             alignItems="center"
             alignContent="center"
           >
-            <Typography>No active research</Typography>
+            <Typography textAlign={'center'}>
+              {translate('GAME_PLAYER_ACTIVE_RESEARCH_NO_RESEARCH_LABEL')}
+            </Typography>
             <Button variant="outlined" onClick={() => navigate(GAME_RESEARCHES_PATH)}>
-              Research
+              {translate('GAME_PLAYER_ACTIVE_RESEARCH_GO_TO_RESEARCH_BUTTON')}
             </Button>
           </Stack>
         ) : (
@@ -80,7 +84,7 @@ function GameActiveResearchSection() {
                   {isResearchLoading ? (
                     <Skeleton variant="text" width={'120px'} />
                   ) : (
-                    activeResearch?.research.name
+                    translate(activeResearch?.research.name || '')
                   )}
                 </Typography>
               </Paper>
@@ -88,7 +92,13 @@ function GameActiveResearchSection() {
 
             <Box position={'absolute'} left={0} bottom={0} padding={1}>
               <Paper variant="outlined">
-                <Tooltip title={formatTimestamp(activeResearch?.executeTaskAt || 0)} arrow>
+                <Tooltip
+                  title={translate(
+                    'GAME_PLAYER_ACTIVE_RESEARCH_END_DATE',
+                    formatTimestamp(activeResearch?.executeTaskAt || 0)
+                  )}
+                  arrow
+                >
                   <Typography
                     variant="body1"
                     fontSize={12}

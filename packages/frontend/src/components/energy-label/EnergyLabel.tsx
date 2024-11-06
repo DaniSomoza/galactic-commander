@@ -7,18 +7,26 @@ import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
+import { useTranslations } from '../../store/TranslationContext'
 
 function EnergyLabel() {
+  const { translate } = useTranslations()
   const { player } = usePlayer()
 
   // TODO: Add current energy
   const currentEnergy = 0
-  const tooltipLabel = `${currentEnergy} / ${formatNumber(player?.units.fleets.energy || 0, true)}`
   const energyLabel = `${currentEnergy} / ${formatNumber(player?.units.fleets.energy || 0)}`
 
   return (
     <Paper>
-      <Tooltip title={tooltipLabel} arrow>
+      <Tooltip
+        title={translate(
+          'GAME_PLAYER_STATS_ENERGY_TOOLTIP',
+          currentEnergy,
+          formatNumber(player?.units.fleets.energy || 0, true)
+        )}
+        arrow
+      >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
           <BoltRoundedIcon fontSize="small" />
 

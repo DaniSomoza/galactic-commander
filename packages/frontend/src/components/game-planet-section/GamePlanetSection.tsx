@@ -11,16 +11,18 @@ import calculateResourceProductionBonus from 'game-engine/src/engine/resources/c
 import getSecond from 'game-engine/src/helpers/getSecond'
 import applyBonus from 'game-engine/src/helpers/applyBonus'
 
+import Image from '../image/Image'
 import formatNumber from '../../utils/formatNumber'
 import usePolling from '../../hooks/usePolling'
 import { usePlayer } from '../../store/PlayerContext'
+import { useTranslations } from '../../store/TranslationContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
-import Image from '../image/Image'
 
 // TODO: rename this to PlanetSelectorCard
 function GamePlanetSection() {
   const [resources, setResources] = useState(0)
 
+  const { translate } = useTranslations()
   const { player } = usePlayer()
 
   const planet = player?.planets.principal
@@ -85,6 +87,7 @@ function GamePlanetSection() {
               overflow={'hidden'}
               textOverflow="ellipsis"
             >
+            {/* TODO: implement change planet name endpoint */}
               {planet ? planet.name : <Skeleton variant="text" width={130} />}
             </Typography>
           </Paper>
@@ -93,7 +96,13 @@ function GamePlanetSection() {
         <Box position={'absolute'} left={0} bottom={0} padding={1}>
           <Stack spacing={0.5} alignItems="center">
             <Paper variant="outlined">
-              <Tooltip title={`Resources in this planet: ${formatNumber(resources, true)}`} arrow>
+              <Tooltip
+                title={translate(
+                  'GAME_PLAYER_PLANET_RESOURCES_TOOLTIP',
+                  formatNumber(resources, true)
+                )}
+                arrow
+              >
                 <Typography
                   variant="body1"
                   fontSize={12}
@@ -110,7 +119,7 @@ function GamePlanetSection() {
 
         <Box position={'absolute'} bottom={0} padding={1}>
           <Paper variant="outlined">
-            <Tooltip title={'go to Galaxies'} arrow>
+            <Tooltip title={translate('GAME_PLAYER_PLANET_COORDINATES_TOOLTIP')} arrow>
               <Typography
                 variant="body1"
                 fontSize={12}
@@ -131,7 +140,13 @@ function GamePlanetSection() {
 
         <Box position={'absolute'} right={0} bottom={0} padding={1}>
           <Paper variant="outlined">
-            <Tooltip title={'planet resource quality'} arrow>
+            <Tooltip
+              title={translate(
+                'GAME_PLAYER_PLANET_RESOURCE_QUALITY_TOOLTIP',
+                planet?.resourceQuality || 0
+              )}
+              arrow
+            >
               <Typography
                 variant="body1"
                 fontSize={12}

@@ -6,16 +6,24 @@ import Skeleton from '@mui/material/Skeleton'
 import PublicIcon from '@mui/icons-material/Public'
 
 import { usePlayer } from '../../store/PlayerContext'
+import { useTranslations } from '../../store/TranslationContext'
 
 function PlanetsLabel() {
+  const { translate } = useTranslations()
   const { player } = usePlayer()
 
-  const tooltipLabel = `${player?.planets.colonies.length} / ${player?.race.maxPlanetsAllowed} planets`
   const planetsLabel = `${player?.planets.colonies.length} / ${player?.race.maxPlanetsAllowed}`
 
   return (
     <Paper>
-      <Tooltip title={tooltipLabel} arrow>
+      <Tooltip
+        title={translate(
+          'GAME_PLAYER_STATS_PLANETS_TOOLTIP',
+          player?.planets.colonies.length || 0,
+          player?.race.maxPlanetsAllowed || 0
+        )}
+        arrow
+      >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
           <PublicIcon fontSize="small" />
 
