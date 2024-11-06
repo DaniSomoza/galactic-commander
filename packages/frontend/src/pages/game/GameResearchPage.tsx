@@ -12,6 +12,7 @@ import calculateResearchResourceCost from 'game-engine/src/engine/resources/calc
 import calculateResearchDuration from 'game-engine/src/engine/research/calculateResearchDuration'
 import { PlayerType } from 'game-api-microservice/src/types/Player'
 import applyBonus from 'game-engine/src/helpers/applyBonus'
+import getSecond from 'game-engine/src/helpers/getSecond'
 
 import { usePlayer } from '../../store/PlayerContext'
 import { useResearch } from '../../store/ResearchContext'
@@ -52,7 +53,7 @@ function GameResearchPage() {
       {/* Research Queue */}
       {researchQueue.length > 0 && (
         <Paper variant="outlined">
-          <Stack direction={'row'} spacing={0.6} padding={1} maxWidth="100%" overflow="auto">
+          <Stack direction={'row'} gap={1} padding={1} maxWidth="100%" overflow="auto">
             {researchQueue.map((researchName, index) => {
               const playerResearch = researched.find(
                 (playerResearch) => playerResearch.research.name === researchName
@@ -84,22 +85,54 @@ function GameResearchPage() {
 
               const showNextArrow = index < researchQueue.length - 1
 
+              const countdown = Math.floor((endResearchTime - getSecond(Date.now())) / 1_000)
+
               // TODO: ADD REMOVE FROM THE QUEUE BUTTON AND MODAL
               return (
-                <Stack key={index} alignItems={'flex-start'} direction={'column'} spacing={1}>
-                  <Stack key={index} alignItems={'center'} direction={'row'} spacing={1}>
-                    <Box sx={{ position: 'relative' }}>
+                <Stack key={index} alignItems={'center'} direction={'row'} gap={1}>
+                  <Box sx={{ position: 'relative' }}>
+                    <Tooltip title={researchName} arrow>
                       <Stack justifyContent="center" alignItems="center" gap={1}>
-                        <Tooltip title={researchName}>
-                          <Image
-                            src={raceResearch!.imgUrl}
-                            // TODO: create proper alt image
-                            alt="player active research image"
-                            height={'80px'}
-                            width={'80px'}
-                            border
-                          />
-                        </Tooltip>
+                        <Image
+                          src={raceResearch!.imgUrl}
+                          // TODO: create proper alt image
+                          alt="player active research image"
+                          height={'120px'}
+                          width={'120px'}
+                          border
+                        />
+
+                        {/* Countdown */}
+                        <Box
+                          position={'absolute'}
+                          top={16}
+                          sx={{ transform: 'translate(0, -50%)' }}
+                        >
+                          <Tooltip
+                            // TODO: improve this
+                            title={
+                              <div>
+                                <div>Start research Time: {formatTimestamp(startResearchTime)}</div>
+                                <div>End researchTime: {formatTimestamp(endResearchTime)}</div>
+                              </div>
+                            }
+                            arrow
+                            placement="top"
+                          >
+                            <Paper variant="outlined">
+                              <Typography
+                                variant="body1"
+                                fontSize={12}
+                                padding={0.2}
+                                paddingLeft={0.6}
+                                paddingRight={0.6}
+                                textAlign={'center'}
+                              >
+                                {formatTimer(countdown)}
+                              </Typography>
+                            </Paper>
+                          </Tooltip>
+                        </Box>
 
                         {/* position in the queue */}
                         <Box position={'absolute'} left={0} bottom={0} padding={0.3}>
@@ -130,7 +163,7 @@ function GameResearchPage() {
                             >
                               <Typography
                                 variant="body1"
-                                fontSize={10}
+                                fontSize={12}
                                 fontWeight={500}
                                 color={orange[600]}
                               >
@@ -141,7 +174,7 @@ function GameResearchPage() {
 
                               <Typography
                                 variant="body1"
-                                fontSize={10}
+                                fontSize={12}
                                 fontWeight={500}
                                 color={green[600]}
                               >
@@ -151,35 +184,12 @@ function GameResearchPage() {
                           </Paper>
                         </Box>
                       </Stack>
-                    </Box>
+                    </Tooltip>
+                  </Box>
 
-                    {showNextArrow && (
-                      <ArrowRightAltRoundedIcon sx={{ transform: 'rotate(180deg)' }} />
-                    )}
-                  </Stack>
-
-                  {/* Start date */}
-                  <Tooltip
-                    title={
-                      <div>
-                        <div>Start research Time: {formatTimestamp(startResearchTime)}</div>
-                        <div>End researchTime: {formatTimestamp(endResearchTime)}</div>
-                      </div>
-                    }
-                  >
-                    <Paper variant="outlined">
-                      <Box maxWidth={'80px'} padding={0.3} paddingLeft={0.6} paddingRight={0.6}>
-                        <Typography
-                          variant="body1"
-                          fontSize={10}
-                          fontWeight={500}
-                          textAlign={'center'}
-                        >
-                          {formatTimestamp(startResearchTime)}
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  </Tooltip>
+                  {showNextArrow && (
+                    <ArrowRightAltRoundedIcon sx={{ transform: 'rotate(180deg)' }} />
+                  )}
                 </Stack>
               )
             })}
