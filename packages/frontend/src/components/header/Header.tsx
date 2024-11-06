@@ -12,8 +12,10 @@ import MailIcon from '@mui/icons-material/Mail'
 
 import ServerTimeLabel from '../server-time-label/ServerTimeLabel'
 import { useAuthorization } from '../../store/AuthorizationContext'
+import { useTranslations } from '../../store/TranslationContext'
 
 function Header() {
+  const { translate, language, setLanguage } = useTranslations()
   const { sessionToken, user } = useAuthorization()
 
   return (
@@ -27,22 +29,58 @@ function Header() {
 
         {sessionToken && (
           <Stack spacing={1} direction="row" alignItems={'center'}>
-            <Tooltip title={'show notifications'} arrow>
-              <IconButton size="medium" aria-label="show notifications" color="inherit">
+            <Tooltip title={translate('HEADER_NOTIFICATIONS_TOOLTIP')} arrow>
+              <IconButton
+                size="medium"
+                aria-label={translate('HEADER_NOTIFICATIONS_TOOLTIP')}
+                color="inherit"
+              >
                 <Badge badgeContent={2} color="info">
                   <NotificationsIcon fontSize="small" />
                 </Badge>
               </IconButton>
             </Tooltip>
 
-            <Tooltip title={'show messages'} arrow>
-              <IconButton size="medium" aria-label="show messages" color="inherit">
+            <Tooltip title={translate('HEADER_MESSAGES_TOOLTIP')} arrow>
+              <IconButton
+                size="medium"
+                aria-label={translate('HEADER_MESSAGES_TOOLTIP')}
+                color="inherit"
+              >
                 <Badge badgeContent={4} color="info">
                   <MailIcon fontSize="small" />
                 </Badge>
               </IconButton>
             </Tooltip>
 
+            <Tooltip title={translate('HEADER_SELECT_LANGUAGE_TOOLTIP')} arrow>
+              <IconButton
+                onClick={() =>
+                  setLanguage((language) => (language === 'spanish' ? 'english' : 'spanish'))
+                }
+                size="medium"
+                aria-label={translate('HEADER_SELECT_LANGUAGE_TOOLTIP')}
+                color="inherit"
+              >
+                {language === 'spanish' ? (
+                  <img
+                    height={'24px'}
+                    width={'24px'}
+                    src="/languages/es.svg"
+                    alt="Icono del idioma español"
+                  />
+                ) : (
+                  <img
+                    height={'24px'}
+                    width={'24px'}
+                    src="/languages/en.svg"
+                    alt="English language icon"
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            {/* TODO: IMPLEMENT REFRESH TOKEN */}
             {sessionToken && (
               <Stack flexGrow={1} direction={'row'} spacing={2} paddingLeft={2}>
                 {user ? (

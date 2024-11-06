@@ -6,18 +6,19 @@ import Skeleton from '@mui/material/Skeleton'
 import FlightTakeoffRoundedIcon from '@mui/icons-material/FlightTakeoffRounded'
 
 import { usePlayer } from '../../store/PlayerContext'
+import { useTranslations } from '../../store/TranslationContext'
 
 function FleetsLabel() {
+  const { translate } = useTranslations()
   const { player } = usePlayer()
 
   // TODO: Add current fleets
   const currentFleets = 0
-  const tooltipLabel = `Current fleets ${currentFleets}`
   const fleetsLabel = `${currentFleets} / 2`
 
   return (
     <Paper>
-      <Tooltip title={tooltipLabel} arrow>
+      <Tooltip title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets)} arrow>
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
           <FlightTakeoffRoundedIcon fontSize="small" />
 

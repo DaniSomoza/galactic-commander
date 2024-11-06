@@ -40,12 +40,14 @@ import {
   GAME_BATTLE_CALCULATOR_PATH,
   GAME_TASKS_PATH
 } from '../../routes/routes'
+import { useTranslations } from '../../store/TranslationContext'
 
 type GameNavigationBarProps = {
   drawerWidth: number
 }
 
 function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
+  const { translate } = useTranslations()
   const navigate = useNavigate()
 
   return (
@@ -63,7 +65,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
-            <ListItemText primary={'Dashboard'} />
+            <ListItemText primary={translate('NAV_BAR_DASHBOARD')} />
           </ListItemButton>
         </ListItem>
 
@@ -72,7 +74,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <ScienceRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary={'Researches'} />
+            <ListItemText primary={translate('NAV_BAR_RESEARCHES')} />
           </ListItemButton>
         </ListItem>
 
@@ -81,7 +83,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <DiamondIcon />
             </ListItemIcon>
-            <ListItemText primary={'Resources'} />
+            <ListItemText primary={translate('NAV_BAR_RESOURCES')} />
           </ListItemButton>
         </ListItem>
 
@@ -90,7 +92,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <MilitaryTechIcon />
             </ListItemIcon>
-            <ListItemText primary={'Specials'} />
+            <ListItemText primary={translate('NAV_BAR_SPECIALS')} />
           </ListItemButton>
         </ListItem>
 
@@ -101,7 +103,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <GroupIcon />
             </ListItemIcon>
-            <ListItemText primary={'Troops'} />
+            <ListItemText primary={translate('NAV_BAR_TROOPS')} />
           </ListItemButton>
         </ListItem>
 
@@ -110,7 +112,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <RocketIcon />
             </ListItemIcon>
-            <ListItemText primary={'Ships'} />
+            <ListItemText primary={translate('NAV_BAR_SHIPS')} />
           </ListItemButton>
         </ListItem>
 
@@ -119,7 +121,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <SecurityIcon />
             </ListItemIcon>
-            <ListItemText primary={'Defenses'} />
+            <ListItemText primary={translate('NAV_BAR_DEFENSES')} />
           </ListItemButton>
         </ListItem>
 
@@ -130,7 +132,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <CorporateFareIcon />
             </ListItemIcon>
-            <ListItemText primary={'Alliance'} />
+            <ListItemText primary={translate('NAV_BAR_ALLIANCE')} />
           </ListItemButton>
         </ListItem>
 
@@ -139,7 +141,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <PublicIcon />
             </ListItemIcon>
-            <ListItemText primary={'Galaxy'} />
+            <ListItemText primary={translate('NAV_BAR_GALAXY')} />
           </ListItemButton>
         </ListItem>
 
@@ -148,7 +150,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <EmailIcon />
             </ListItemIcon>
-            <ListItemText primary={'Messages'} />
+            <ListItemText primary={translate('NAV_BAR_MESSAGES')} />
           </ListItemButton>
         </ListItem>
 
@@ -157,7 +159,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <EmojiEventsIcon />
             </ListItemIcon>
-            <ListItemText primary={'Ranking'} />
+            <ListItemText primary={translate('NAV_BAR_RANKING')} />
           </ListItemButton>
         </ListItem>
 
@@ -172,7 +174,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <GitHubIcon />
             </ListItemIcon>
-            <ListItemText primary={'Code'} />
+            <ListItemText primary={translate('NAV_BAR_CODE')} />
             <Paper variant="outlined">
               <Typography
                 variant="caption"
@@ -192,7 +194,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <TerminalIcon />
             </ListItemIcon>
-            <ListItemText primary={'Game log'} />
+            <ListItemText primary={translate('NAV_BAR_GAME_LOG')} />
           </ListItemButton>
         </ListItem>
 
@@ -203,7 +205,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <SettingsRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary={'Settings'} />
+            <ListItemText primary={translate('NAV_BAR_SETTINGS')} />
           </ListItemButton>
         </ListItem>
 
@@ -212,7 +214,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
             <ListItemIcon>
               <CalculateRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary={'Battle simulator'} />
+            <ListItemText primary={translate('NAV_BAR_BATTLE_SIMULATOR')} />
           </ListItemButton>
         </ListItem>
       </List>

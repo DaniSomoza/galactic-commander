@@ -21,8 +21,11 @@ import formatTimer from '../../utils/formatTimer'
 import millisToSeconds from '../../utils/millisToSeconds'
 import formatTimestamp from '../../utils/formatTimestamp'
 import Image from '../../components/image/Image'
+import { useTranslations } from '../../store/TranslationContext'
 
 function GameResearchPage() {
+  const { translate } = useTranslations()
+
   const { player, isPlayerLoading } = usePlayer()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -298,7 +301,7 @@ function GameResearchPage() {
               {/* Text Part */}
               <Stack padding={1.5} flexGrow={1}>
                 <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis">
-                  {raceResearch.name}
+                  {translate(raceResearch.name)}
                 </Typography>
 
                 <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis" flexGrow={1}>

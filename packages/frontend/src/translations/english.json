@@ -1,0 +1,29 @@
+{
+  "HEADER_SERVER_TIME_TOOLTIP": "Game Server time",
+  "HEADER_NOTIFICATIONS_TOOLTIP": "Show Game notifications",
+  "HEADER_MESSAGES_TOOLTIP": "Show player messages",
+  "HEADER_SELECT_LANGUAGE_TOOLTIP": "Change Language",
+
+  "GAME_PLAYER_STATS_FLEETS_TOOLTIP": "Current fleets {0}",
+
+  "NAV_BAR_DASHBOARD": "Dashboard",
+  "NAV_BAR_RESEARCHES": "Researches",
+  "NAV_BAR_RESOURCES": "Resources",
+  "NAV_BAR_SPECIALS": "Specials",
+  "NAV_BAR_TROOPS": "Troops",
+  "NAV_BAR_SHIPS": "Ships",
+  "NAV_BAR_DEFENSES": "Defenses",
+  "NAV_BAR_ALLIANCE": "Alliance",
+  "NAV_BAR_GALAXY": "Galaxy",
+  "NAV_BAR_MESSAGES": "Messages",
+  "NAV_BAR_RANKING": "Ranking",
+  "NAV_BAR_CODE": "Code",
+  "NAV_BAR_GAME_LOG": "Game Logs",
+  "NAV_BAR_SETTINGS": "settings",
+  "NAV_BAR_BATTLE_SIMULATOR": "Battle Simulator",
+
+  "PIRATES_RACE_NAME": "pirates",
+  "PIRATES_RACE_DESCRIPTION": "pirates description",
+
+  "PIRATE_COMPUTING_RESEARCH_NAME": "pirate computing"
+}

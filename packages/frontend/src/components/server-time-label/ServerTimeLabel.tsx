@@ -5,14 +5,16 @@ import Tooltip from '@mui/material/Tooltip'
 
 import usePolling from '../../hooks/usePolling'
 import formatTimestamp from '../../utils/formatTimestamp'
+import { useTranslations } from '../../store/TranslationContext'
 
-// TODO: crate getServerTime util
 function getServerTime(): number {
   return new Date().getTime() - 1
 }
 
 function ServerTimeLabel() {
   const [serverTime, setServerTime] = useState(getServerTime)
+
+  const { translate } = useTranslations()
 
   const updateServerTime = useCallback(() => {
     setServerTime(getServerTime)
@@ -22,7 +24,7 @@ function ServerTimeLabel() {
 
   return (
     <Paper variant="outlined" sx={{ marginRight: '8px' }}>
-      <Tooltip title={'Server time'} arrow>
+      <Tooltip title={translate('HEADER_SERVER_TIME_TOOLTIP')} arrow>
         <Typography
           variant="body1"
           fontSize={12}

@@ -22,6 +22,7 @@ import {
 } from './routes/routes'
 import Header from './components/header/Header'
 import { ThemeProvider } from './store/ThemeContext'
+import { TranslationsProvider } from './store/TranslationContext'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import ActivateUserPage from './pages/auth/ActivateUserPage'
@@ -45,15 +46,17 @@ import GameTasksPage from './pages/game/GameTasksPage'
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthorizationProvider>
-        <Header />
+    <TranslationsProvider>
+      <ThemeProvider>
+        <AuthorizationProvider>
+          <Header />
 
-        <div style={{ marginTop: '64px' }}>
-          <RouterProvider router={AppRoutes} />
-        </div>
-      </AuthorizationProvider>
-    </ThemeProvider>
+          <div style={{ marginTop: '64px' }}>
+            <RouterProvider router={AppRoutes} />
+          </div>
+        </AuthorizationProvider>
+      </ThemeProvider>
+    </TranslationsProvider>
   )
 }
 
