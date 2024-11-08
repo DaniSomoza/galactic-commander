@@ -94,14 +94,14 @@ function GameResearchPage() {
               return (
                 <Stack key={index} alignItems={'center'} direction={'row'} gap={1}>
                   <Box sx={{ position: 'relative' }}>
-                    <Tooltip title={researchName} arrow>
+                    <Tooltip title={translate(researchName)} arrow>
                       <Stack justifyContent="center" alignItems="center" gap={1}>
                         <Image
                           src={raceResearch!.imgUrl}
                           // TODO: create proper alt image
                           alt="player active research image"
-                          height={'120px'}
-                          width={'120px'}
+                          height={'128px'}
+                          width={'128px'}
                           border
                         />
 
@@ -112,11 +112,20 @@ function GameResearchPage() {
                           sx={{ transform: 'translate(0, -50%)' }}
                         >
                           <Tooltip
-                            // TODO: improve this
                             title={
                               <div>
-                                <div>Start research Time: {formatTimestamp(startResearchTime)}</div>
-                                <div>End researchTime: {formatTimestamp(endResearchTime)}</div>
+                                <div>
+                                  {translate(
+                                    'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_START_DATE',
+                                    formatTimestamp(startResearchTime)
+                                  )}
+                                </div>
+                                <div>
+                                  {translate(
+                                    'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_END_DATE',
+                                    formatTimestamp(endResearchTime)
+                                  )}
+                                </div>
                               </div>
                             }
                             arrow
@@ -305,7 +314,7 @@ function GameResearchPage() {
                 </Typography>
 
                 <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis" flexGrow={1}>
-                  Description: {raceResearch.description}
+                  {translate(raceResearch.description)}
                 </Typography>
 
                 <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis" flexGrow={1}>

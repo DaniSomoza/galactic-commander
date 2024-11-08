@@ -9,14 +9,14 @@ function getPlanetImgUrl(resourceQuality: number): string {
 
 function getPlanetImgVariant(resourceQuality: number): number {
   if (resourceQuality < 50) {
-    return getRandomNumber(1, 3)
+    return getRandomNumber(1, 10)
   }
 
   if (resourceQuality < 100) {
-    return getRandomNumber(1, 5)
+    return getRandomNumber(1, 15)
   }
 
-  return getRandomNumber(1, 10)
+  return getRandomNumber(1, 20)
 }
 
 export default getPlanetImgUrl

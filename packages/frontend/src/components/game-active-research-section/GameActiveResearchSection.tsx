@@ -78,6 +78,7 @@ function GameActiveResearchSection() {
                   padding={0.4}
                   paddingLeft={0.8}
                   paddingRight={0.8}
+                  textAlign="center"
                   overflow={'hidden'}
                   textOverflow="ellipsis"
                 >
@@ -156,37 +157,51 @@ function GameActiveResearchSection() {
                 </Stack>
 
                 <Paper variant="outlined">
-                  <Stack
-                    padding={0.4}
-                    paddingLeft={0.8}
-                    paddingRight={0.8}
-                    direction={'row'}
-                    justifyContent="center"
-                    alignItems="center"
+                  <Tooltip
+                    title={translate(
+                      'GAME_PLAYER_ACTIVE_RESEARCH_LEVEL',
+                      activeResearch?.level ? activeResearch?.level - 1 : 0,
+                      activeResearch?.level || 0
+                    )}
+                    arrow
                   >
-                    {isResearchLoading ? (
-                      <Skeleton variant="text" width={'8px'} />
-                    ) : (
-                      <Typography
-                        variant="body1"
-                        fontSize={12}
-                        fontWeight={500}
-                        color={orange[600]}
-                      >
-                        {activeResearch!.level - 1}
-                      </Typography>
-                    )}
+                    <Stack
+                      padding={0.4}
+                      paddingLeft={0.8}
+                      paddingRight={0.8}
+                      direction={'row'}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      {isResearchLoading ? (
+                        <Skeleton variant="text" width={'8px'} />
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          color={orange[600]}
+                        >
+                          {activeResearch!.level - 1}
+                        </Typography>
+                      )}
 
-                    <ArrowRightAltRoundedIcon fontSize="inherit" />
+                      <ArrowRightAltRoundedIcon fontSize="inherit" />
 
-                    {isResearchLoading ? (
-                      <Skeleton variant="text" width={'8px'} />
-                    ) : (
-                      <Typography variant="body1" fontSize={12} fontWeight={500} color={green[600]}>
-                        {activeResearch?.level}
-                      </Typography>
-                    )}
-                  </Stack>
+                      {isResearchLoading ? (
+                        <Skeleton variant="text" width={'8px'} />
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          color={green[600]}
+                        >
+                          {activeResearch?.level}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Tooltip>
                 </Paper>
               </Stack>
             </Box>
