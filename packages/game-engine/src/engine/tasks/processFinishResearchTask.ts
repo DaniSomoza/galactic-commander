@@ -3,7 +3,7 @@ import playerRepository from '../../repositories/playerRepository'
 import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
-import upgradeBonus from '../bonus/upgradeBonus'
+import upgradeResearchBonus from '../bonus/upgradeResearchBonus'
 import { IBonus } from '../../types/bonus'
 import createStartResearchTask from './utils/createStartResearchTask'
 import taskRepository from '../../repositories/taskRepository'
@@ -49,12 +49,12 @@ async function processFinishResearchTask(
   const hasBonusToUpdate = hasBonus(research.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.bonus.find((bonus) => bonus.source.equals(task.data.research))
+    const PlayerBonus = player.perks.find((perk) => perk.source.equals(task.data.research))
 
     if (PlayerBonus) {
-      PlayerBonus.bonus = upgradeBonus(research.bonus, newLevel)
+      PlayerBonus.bonus = upgradeResearchBonus(research.bonus, newLevel)
     } else {
-      player.bonus.push({
+      player.perks.push({
         bonus: research.bonus,
         source: task.data.research,
         type: 'Research'
@@ -71,8 +71,6 @@ async function processFinishResearchTask(
   }
 
   // TODO: intergalacticTravel check?
-
-  // TODO: fix this issue with bonus maxFleetsAllowedBonus
 
   const points = task.data.researchResourceCost
   const pointsSource = task.data.research._id
@@ -106,7 +104,7 @@ function hasBonus(bonus: IBonus): boolean {
 
 const TROOP_POPULATION_FACTOR = 2.55
 
-// TODO: create file in engine/troops
+// TODO: create file in engine/troops ???
 function calculateTroopsPopulation(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 
@@ -122,7 +120,7 @@ function calculateTroopsPopulation(race: IRace, level: number): number {
 
 const FLEET_ENERGY_FACTOR = 4
 
-// TODO: create file in engine/fleets
+// TODO: create file in engine/fleets ???
 function calculateFleetEnergy(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 

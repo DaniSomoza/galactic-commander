@@ -11,7 +11,7 @@ import { green, orange } from '@mui/material/colors'
 
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
-import BonusCard from '../bonus-card/BonusCard'
+import BonusCards from '../bonus-cards/BonusCards'
 import { GAME_RESEARCHES_PATH } from '../../routes/routes'
 import { useResearch } from '../../store/ResearchContext'
 import { useTranslations } from '../../store/TranslationContext'
@@ -115,37 +115,12 @@ function GameActiveResearchSection() {
             <Box position={'absolute'} right={0} bottom={0} padding={1}>
               <Stack spacing={0.5} alignItems="center">
                 <Stack spacing={0.5} alignItems="center">
-                  {isResearchLoading ? (
-                    <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-                  ) : (
-                    <>
-                      {activeResearch?.research.bonus &&
-                        Object.keys(activeResearch.research.bonus).map((bono) => (
-                          <BonusCard
-                            key={bono}
-                            bonus={{
-                              bonus: activeResearch.research.bonus,
-                              source: activeResearch.research.name,
-                              type: 'Research'
-                            }}
-                          />
-                        ))}
-
-                      {/* TODO: adapt BonusCard to isFleetEnergyResearch */}
-                      {activeResearch?.research.isFleetEnergyResearch && (
-                        <Paper variant="outlined">
-                          <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-                        </Paper>
-                      )}
-
-                      {/* TODO: adapt BonusCard to isTroopsPopulationResearch */}
-                      {activeResearch?.research.isTroopsPopulationResearch && (
-                        <Paper variant="outlined">
-                          <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-                        </Paper>
-                      )}
-                    </>
-                  )}
+                  <BonusCards
+                    isLoading={isResearchLoading}
+                    bonus={activeResearch?.research.bonus}
+                    isFleetEnergyResearch={activeResearch?.research.isFleetEnergyResearch}
+                    isTroopsPopulationResearch={activeResearch?.research.isTroopsPopulationResearch}
+                  />
                 </Stack>
 
                 <Paper variant="outlined">

@@ -7,7 +7,7 @@ export const PLAYER_TEST_1_PIRATE: IBasePlayer = {
     username: 'username_test_1',
     email: 'username_1@test.com'
   },
-  bonus: [],
+  perks: [],
   points: [],
   researches: {
     researched: [],

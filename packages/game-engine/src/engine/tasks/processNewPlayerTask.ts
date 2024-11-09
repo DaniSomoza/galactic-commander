@@ -57,7 +57,7 @@ async function processNewPlayerTask(
       explored: [principalPlanet._id]
     },
 
-    bonus: [
+    perks: [
       {
         bonus: race.bonus,
         source: race._id,

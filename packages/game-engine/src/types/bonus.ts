@@ -1,50 +1,55 @@
+type PercentageBonus = number
+type NumericBonus = number
+type ActivatableBonus = boolean
+
+export type BonusType = 'PERCENTAGE_BONUS_TYPE' | 'NUMERIC_BONUS_TYPE' | 'ACTIVATABLE_BONUS_TYPE'
+
 export type IBonus = {
   // General Bonus
-  researchBonus?: number
-  resourceProductionBonus?: number
-  stealthFleetsMode?: boolean
-  stealthFleetsDetection?: boolean
-  // TODO: fix this issue with bonus extraPlanetsBonus
-  extraPlanetsBonus?: number
-  intergalacticTravelBonus?: boolean
+  RESEARCH_BONUS?: PercentageBonus
+  resourceProductionBonus?: PercentageBonus
+  stealthFleetsMode?: ActivatableBonus
+  stealthFleetsDetection?: ActivatableBonus
+  extraPlanetsBonus?: NumericBonus
+  intergalacticTravelBonus?: ActivatableBonus
 
   // Fleet Bonus
-  fleetAttackBonus?: number
-  fleetHullBonus?: number
-  fleetHullRegenerationBonus?: number // only relevant for organic ships
-  fleetShieldBonus?: number
-  fleetShieldPiercingBonus?: boolean
-  fleetShieldRegenerationBonus?: number
-  fleetSpeedBonus?: number
-  fleetCargoBonus?: number
-  fleetBuildingBonus?: number
-  // TODO: fix this issue with bonus maxFleetsAllowedBonus
-  maxFleetsAllowedBonus?: number
+  fleetAttackBonus?: PercentageBonus
+  fleetHullBonus?: PercentageBonus
+  fleetHullRegenerationBonus?: PercentageBonus // only relevant for organic ships
+  fleetShieldBonus?: PercentageBonus
+  fleetShieldPiercingBonus?: ActivatableBonus
+  fleetShieldRegenerationBonus?: PercentageBonus
+  fleetSpeedBonus?: PercentageBonus
+  fleetCargoBonus?: PercentageBonus
+  fleetBuildingBonus?: PercentageBonus
+  maxFleetsAllowedBonus?: NumericBonus
 
   // Troops Bonus
-  troopsAttackBonus?: number
-  troopsHealthBonus?: number
-  troopsHealthRegenerationBonus?: number // medics ???
-  troopsShieldBonus?: number
-  troopsShieldPiercingBonus?: boolean
-  troopsShieldRegenerationBonus?: number
-  troopsTrainingBonus?: number
+  troopsAttackBonus?: PercentageBonus
+  troopsHealthBonus?: PercentageBonus
+  troopsHealthRegenerationBonus?: PercentageBonus
+  troopsShieldBonus?: PercentageBonus
+  troopsShieldPiercingBonus?: ActivatableBonus
+  troopsShieldRegenerationBonus?: PercentageBonus
+  troopsTrainingBonus?: PercentageBonus
 
   // Defenses Bonus
-  defensesAttackBonus?: number
-  defensesHullBonus?: number
-  defensesShieldBonus?: number
-  defensesShieldRegenerationBonus?: number
-  defensesBuildingBonus?: number
+  defensesAttackBonus?: PercentageBonus
+  defensesHullBonus?: PercentageBonus
+  defensesShieldBonus?: PercentageBonus
+  defensesShieldPiercingBonus?: ActivatableBonus
+  defensesShieldRegenerationBonus?: PercentageBonus
+  defensesBuildingBonus?: PercentageBonus
 
   // Capture Units Bonus
-  fleetCaptureBonus?: number
-  spaceFighterCaptureBonus?: number
-  spaceCarrierCaptureBonus?: number
-  spaceCruiserCaptureBonus?: number
-  spaceDestroyerCaptureBonus?: number
-  spaceCargoCaptureBonus?: number
-  spaceFrigateCaptureBonus?: number
-  spacePlanetaryBomberCaptureBonus?: number
-  spaceBattleStationCaptureBonus?: number
+  fleetCaptureBonus?: PercentageBonus
+  spaceFighterCaptureBonus?: PercentageBonus
+  spaceCarrierCaptureBonus?: PercentageBonus
+  spaceCruiserCaptureBonus?: PercentageBonus
+  spaceDestroyerCaptureBonus?: PercentageBonus
+  spaceCargoCaptureBonus?: PercentageBonus
+  spaceFrigateCaptureBonus?: PercentageBonus
+  spacePlanetaryBomberCaptureBonus?: PercentageBonus
+  spaceBattleStationCaptureBonus?: PercentageBonus
 }

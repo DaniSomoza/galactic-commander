@@ -9,7 +9,7 @@ import { green } from '@mui/material/colors'
 
 import calculateResourceProductionBonus from 'game-engine/src/engine/resources/calculateResourceProduction'
 import getSecond from 'game-engine/src/helpers/getSecond'
-import applyBonus from 'game-engine/src/helpers/applyBonus'
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 
 import Image from '../image/Image'
 import formatNumber from '../../utils/formatNumber'
@@ -33,9 +33,8 @@ function GamePlanetSection() {
     resourceQuality
   } = planet || {}
 
-  // TODO: improve this
-  const productionBonus = owner?.bonus
-    ? applyBonus(owner.bonus, 'resourceProductionBonus', true)
+  const productionBonus = owner?.perks
+    ? computedBonus(owner.perks, 'resourceProductionBonus')
     : undefined
 
   const updatePlanetResources = useCallback(() => {

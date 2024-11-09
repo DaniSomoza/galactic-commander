@@ -13,7 +13,7 @@ import { green, orange } from '@mui/material/colors'
 import calculateResearchResourceCost from 'game-engine/src/engine/resources/calculateResearchResourceCost'
 import calculateResearchDuration from 'game-engine/src/engine/research/calculateResearchDuration'
 import { PlayerType } from 'game-api-microservice/src/types/Player'
-import applyBonus from 'game-engine/src/helpers/applyBonus'
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import getSecond from 'game-engine/src/helpers/getSecond'
 
 import { usePlayer } from '../../store/PlayerContext'
@@ -25,6 +25,7 @@ import formatTimestamp from '../../utils/formatTimestamp'
 import Image from '../../components/image/Image'
 import { useTranslations } from '../../store/TranslationContext'
 import formatNumber from '../../utils/formatNumber'
+import BonusCards from '../../components/bonus-cards/BonusCards'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
@@ -93,7 +94,7 @@ function GameResearchPage() {
                 researchQueue,
                 index
               )
-              const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+              const researchBonus = computedBonus(player.perks, 'RESEARCH_BONUS')
               const raceResearch = raceResearches.find(
                 (raceResearch) => raceResearch.name === researchName
               )
@@ -257,7 +258,7 @@ function GameResearchPage() {
           (playerResearch) => playerResearch.research.name === raceResearch.name
         )
 
-        const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+        const researchBonus = computedBonus(player.perks, 'RESEARCH_BONUS')
 
         const currentLevel = playerResearch?.level || 0
         const nextLevel = calculateResearchLevelInTheQueue(
@@ -381,7 +382,14 @@ function GameResearchPage() {
                   alignItems={'flex-end'}
                   gap={1}
                 >
-                  {/* TODO: ADD HERE RESEARCH BONUS */}
+                  {/* Research bonus */}
+                  <Stack flexGrow={1} direction={'row'} gap={1}>
+                    <BonusCards
+                      bonus={raceResearch?.bonus}
+                      isFleetEnergyResearch={raceResearch?.isFleetEnergyResearch}
+                      isTroopsPopulationResearch={raceResearch?.isTroopsPopulationResearch}
+                    />
+                  </Stack>
 
                   <Button variant="outlined" disabled={isLoading} size="small">
                     {translate('GAME_RESEARCH_PAGE_RESEARCH_SCHEDULE_BUTTON')}
@@ -448,7 +456,7 @@ function calculateStartResearchTimestamp(
   let startResearchTime = player.researches.activeResearch?.executeTaskAt || 0
 
   // TODO: include this in each iteration!
-  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+  const researchBonus = computedBonus(player.perks, 'RESEARCH_BONUS')
 
   for (let i = 0; i < positionInTheQueue; i++) {
     const playerResearch = player.researches.researched.find(

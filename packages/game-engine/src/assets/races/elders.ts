@@ -24,7 +24,7 @@ const elders: IRace = {
   researches: [],
 
   bonus: {
-    researchBonus: ELDERS_RESEARCH_BONUS
+    RESEARCH_BONUS: ELDERS_RESEARCH_BONUS
   }
 }
 

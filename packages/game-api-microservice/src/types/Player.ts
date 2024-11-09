@@ -1,8 +1,16 @@
+import { IBonus } from 'game-engine/dist/types/bonus'
+
 import { PlanetType } from './Planet'
 import { RaceType } from './Race'
-import { BonusType, ResearchType } from './Research'
+import { ResearchType } from './Research'
 import { NewPlayerTaskType, TaskType } from './Task'
 import { UniverseType } from './Universe'
+
+export type PlayerPerkType = {
+  bonus: IBonus
+  source: string
+  type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
+}
 
 export type PlayerType = {
   user: {
@@ -16,12 +24,7 @@ export type PlayerType = {
     colonies: PlanetType[]
     explored: string[]
   }
-  // TODO: unificar objetos bonus
-  bonus: {
-    bonus: BonusType
-    source: string
-    type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
-  }[]
+  perks: PlayerPerkType[]
   // TODO: CREATE A NEW COLLECTION FOR THIS!!!! points collection
   points: {
     points: number

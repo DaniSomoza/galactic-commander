@@ -1,4 +1,4 @@
-import { BASE_BONUS } from '../../helpers/applyBonus'
+import { BASE_PERCENTAGE_BONUS } from '../bonus/computedBonus'
 
 // one resource per second as base production per planet
 const RESOURCE_PRODUCTION_PER_SECOND = 1
@@ -8,7 +8,7 @@ export default function calculateResourceProduction(
   actualPlanetResources: number,
   lastResourceProductionTime: number,
   planetResourceQuality: number,
-  ownerResourceProductionBonus: number = BASE_BONUS
+  ownerResourceProductionBonus: number = BASE_PERCENTAGE_BONUS
 ): number {
   const timeInSeconds = (actualSecond - lastResourceProductionTime) / 1_000
 

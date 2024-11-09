@@ -61,7 +61,7 @@ function TranslationsProvider({ children }: TranslationsProviderProps) {
       const translation = selectedLanguage[tag as tagType] || tag
 
       if (args.length > 0) {
-        return translation.replace(/{(\d+)}/g, (match, number) => {
+        return translation.replace(/{(\d+)}/g, (_, number) => {
           const index = parseInt(number, 10)
           return String(args[index])
         })

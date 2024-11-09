@@ -22,7 +22,7 @@ import { IPlanetDocument } from '../models/PlanetModel'
 import { IPlayerDocument } from '../models/PlayerModel'
 import calculateResourceProduction from './resources/calculateResourceProduction'
 import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
-import applyBonus from '../helpers/applyBonus'
+import computedBonus from './bonus/computedBonus'
 
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
@@ -147,7 +147,7 @@ async function processResourceProduction(
 
   return Promise.all(
     planets.map(({ planet, owner }) => {
-      const ownerResourceProductionBonus = applyBonus(owner.bonus, 'resourceProductionBonus', true)
+      const ownerResourceProductionBonus = computedBonus(owner.perks, 'resourceProductionBonus')
 
       planet.resources = calculateResourceProduction(
         second,

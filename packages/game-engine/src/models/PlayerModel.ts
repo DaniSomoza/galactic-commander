@@ -17,7 +17,7 @@ interface IPlayerPlanet {
   explored: mongoose.Types.ObjectId[]
 }
 
-export interface IPlayerBonus {
+export interface IPlayerPerk {
   bonus: IBonus
   source: mongoose.Types.ObjectId
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
@@ -31,20 +31,22 @@ export interface IPlayerPoints {
   second: number
 }
 
-interface IPlayerResearch {
-  researched: {
-    research: IResearchDocument
-    level: number
-  }[]
-  activeResearch?: IPlayerActiveResearch
-  queue: string[]
+export interface IPlayerResearch {
+  research: IResearchDocument
+  level: number
 }
 
-interface IPlayerActiveResearch {
+export interface IPlayerActiveResearch {
   research: IResearchDocument
   level: number
   executeTaskAt: number
   taskId: mongoose.Types.ObjectId
+}
+
+export interface IPlayerResearches {
+  researched: IPlayerResearch[]
+  activeResearch?: IPlayerActiveResearch
+  queue: string[]
 }
 
 interface IPlayerUnits {
@@ -64,9 +66,9 @@ export interface IPlayer {
   race: IRaceDocument
   universe: IUniverseDocument
   planets: IPlayerPlanet
-  bonus: IPlayerBonus[]
+  perks: IPlayerPerk[]
   points: IPlayerPoints[]
-  researches: IPlayerResearch
+  researches: IPlayerResearches
   units: IPlayerUnits
 }
 
@@ -96,7 +98,7 @@ const PlayerSchema: Schema = new Schema({
     explored: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
   },
 
-  bonus: [
+  perks: [
     {
       _id: false,
       bonus: BonusType,

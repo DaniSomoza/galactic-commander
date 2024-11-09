@@ -13,12 +13,11 @@ export interface IResearch {
 
   isTroopsPopulationResearch: boolean
   isFleetEnergyResearch: boolean
-  // TODO: number of fleets ???
 }
 
 export const BonusType = {
   // General Bonus
-  researchBonus: { type: Number, required: false },
+  RESEARCH_BONUS: { type: Number, required: false },
   resourceProductionBonus: { type: Number, required: false },
   stealthFleetsMode: { type: Boolean, required: false },
   stealthFleetsDetection: { type: Boolean, required: false },
@@ -50,6 +49,7 @@ export const BonusType = {
   defensesAttackBonus: { type: Number, required: false },
   defensesHullBonus: { type: Number, required: false },
   defensesShieldBonus: { type: Number, required: false },
+  defensesShieldPiercingBonus: { type: Boolean, required: false },
   defensesShieldRegenerationBonus: { type: Number, required: false },
   defensesBuildingBonus: { type: Number, required: false },
 

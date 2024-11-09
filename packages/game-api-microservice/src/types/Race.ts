@@ -1,4 +1,6 @@
-import { BonusType, ResearchType } from './Research'
+import { IBonus } from 'game-engine/dist/types/bonus'
+
+import { ResearchType } from './Research'
 
 type Aggressive = 'Aggressive'
 type Defensive = 'Defensive'
@@ -31,5 +33,5 @@ export type RaceType = {
   resourceName: string
   intergalacticTravelThreshold: number
   researches: ResearchType[]
-  bonus: BonusType
+  bonus: IBonus
 }

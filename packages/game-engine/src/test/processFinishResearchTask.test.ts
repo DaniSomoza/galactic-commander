@@ -99,13 +99,13 @@ describe('process finish research task', () => {
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       // old player bonus
-      expect(player?.bonus).toEqual([])
+      expect(player?.perks).toEqual([])
 
       // fleetAttackBonus 10%
-      expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(10)
-      expect(researchPlayer?.bonus[0].source).toEqual(research?._id)
-      expect(researchPlayer?.bonus[0].type).toEqual('Research')
-      expect(researchPlayer?.bonus.length).toEqual(1)
+      expect(researchPlayer?.perks[0].bonus.fleetAttackBonus).toEqual(10)
+      expect(researchPlayer?.perks[0].source).toEqual(research?._id)
+      expect(researchPlayer?.perks[0].type).toEqual('Research')
+      expect(researchPlayer?.perks.length).toEqual(1)
     })
 
     it('level 2 bonus research', async () => {
@@ -232,13 +232,13 @@ describe('process finish research task', () => {
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
       // old player bonus
-      expect(player?.bonus).toEqual([])
+      expect(player?.perks).toEqual([])
 
       // fleetAttackBonus 20%
-      expect(researchPlayer?.bonus[0].bonus.fleetAttackBonus).toEqual(20)
-      expect(researchPlayer?.bonus[0].source).toEqual(research?._id)
-      expect(researchPlayer?.bonus[0].type).toEqual('Research')
-      expect(researchPlayer?.bonus.length).toEqual(1)
+      expect(researchPlayer?.perks[0].bonus.fleetAttackBonus).toEqual(20)
+      expect(researchPlayer?.perks[0].source).toEqual(research?._id)
+      expect(researchPlayer?.perks[0].type).toEqual('Research')
+      expect(researchPlayer?.perks.length).toEqual(1)
     })
   })
 

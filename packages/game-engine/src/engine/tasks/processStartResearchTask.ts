@@ -1,4 +1,4 @@
-import applyBonus from '../../helpers/applyBonus'
+import computedBonus from '../bonus/computedBonus'
 import getSecond from '../../helpers/getSecond'
 import getTaskModel, {
   FINISH_RESEARCH_TASK_TYPE,
@@ -72,7 +72,7 @@ async function processStartResearchTask(
     throw new GameEngineError('no resources available')
   }
 
-  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
+  const researchBonus = computedBonus(player.perks, 'RESEARCH_BONUS')
   const researchDuration = calculateResearchDuration(research.initialTime, level, researchBonus)
 
   const executeTaskAt = getSecond(second + researchDuration)
