@@ -6,7 +6,6 @@ import {
   PLANETS_PER_SYSTEM,
   SECTORS_PER_GALAXIES,
   SYSTEM_PER_SECTORS,
-  DEFAULT_PLANET_RESOURCES,
   IPlanet
 } from '../models/PlanetModel'
 import getRandomNumber from './getRandomNumber'
@@ -35,7 +34,7 @@ function generatePlanets(universe: mongoose.Types.ObjectId): IPlanet[] {
 
             universe,
 
-            resources: DEFAULT_PLANET_RESOURCES,
+            resources: getRandomNumber(100, resourceQuality * 100),
             resourceQuality,
             lastResourceProductionTime: getSecond(new Date().getTime()),
 

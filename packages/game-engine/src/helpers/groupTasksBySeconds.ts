@@ -5,11 +5,10 @@ type GroupedTaskItem<Type extends TaskType> = { second: number; tasks: ITaskType
 type GroupOfTasksType = GroupedTaskItem<TaskType>[]
 
 function groupTasksBySeconds(tasks: ITaskDocument[], universe: IUniverse): GroupOfTasksType {
-  // from [tasks]
-  // to { second2: [tasks], second1: [tasks]...}
+  // from [...tasks]
+  // to { second2: [tasks], second1: [tasks], ...}
   const groupedTasksBySeconds = tasks.reduce<Record<number, ITaskDocument[]>>(
     (groupedTasks, task) => {
-      // TODO: check this (use task.createdAt ?? or currentSecond ??)
       const second = task.executeTaskAt || universe.lastProcessedTime
 
       groupedTasks[second] = groupedTasks[second] || []

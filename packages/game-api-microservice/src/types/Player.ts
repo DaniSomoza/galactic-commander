@@ -22,7 +22,7 @@ export type PlayerType = {
     source: string
     type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
   }[]
-  // TODO: CREATE A COLLECTION FOR THIS!!!!
+  // TODO: CREATE A NEW COLLECTION FOR THIS!!!! points collection
   points: {
     points: number
     source: string

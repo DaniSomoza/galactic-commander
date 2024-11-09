@@ -95,6 +95,7 @@ async function processNewPlayerTask(
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
   principalPlanet.resourceQuality = 100 // max value for principal planets by default
+  // TODO: create specific principal planet image ???
   principalPlanet.imgUrl = getPlanetImgUrl(principalPlanet.resourceQuality)
   principalPlanet.lastResourceProductionTime = second
 

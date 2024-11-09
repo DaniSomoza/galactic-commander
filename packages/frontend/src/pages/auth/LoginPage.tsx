@@ -30,6 +30,9 @@ function LoginPage() {
   // TODO: Add form validations
   // TODO: Add unhappy paths (login call fails...)
 
+  // TODO: Add login translations!
+  // TODO: Add refresh token flow?
+
   return (
     <Container component="main" maxWidth="xs" disableGutters>
       <Box component="section" marginTop={4}>

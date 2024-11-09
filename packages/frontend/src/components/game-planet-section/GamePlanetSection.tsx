@@ -18,7 +18,6 @@ import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 
-// TODO: rename this to PlanetSelectorCard
 function GamePlanetSection() {
   const [resources, setResources] = useState(0)
 
@@ -34,6 +33,7 @@ function GamePlanetSection() {
     resourceQuality
   } = planet || {}
 
+  // TODO: improve this
   const productionBonus = owner?.bonus
     ? applyBonus(owner.bonus, 'resourceProductionBonus', true)
     : undefined
@@ -60,7 +60,6 @@ function GamePlanetSection() {
         {planet ? (
           <Image
             src={planet.imgUrl}
-            // TODO: create proper alt image
             alt="player planet image"
             height={'200px'}
             width={'200px'}
@@ -87,7 +86,7 @@ function GamePlanetSection() {
               overflow={'hidden'}
               textOverflow="ellipsis"
             >
-            {/* TODO: implement change planet name endpoint */}
+              {/* TODO: implement change planet name endpoint */}
               {planet ? planet.name : <Skeleton variant="text" width={130} />}
             </Typography>
           </Paper>

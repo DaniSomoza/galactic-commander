@@ -20,7 +20,8 @@ const initialContext = {
   researched: [],
   isResearchLoading: true,
   startResearch: () => Promise.resolve(),
-  updateResearchQueue: () => Promise.resolve()
+  updateResearchQueue: () => Promise.resolve(),
+  removeResearchFromQueue: () => Promise.resolve()
 }
 
 type researchContextValue = {
@@ -31,6 +32,7 @@ type researchContextValue = {
   isResearchLoading: boolean
   startResearch: (researchName: string) => Promise<void>
   updateResearchQueue: (researchName: string) => Promise<void>
+  removeResearchFromQueue: (index: number) => Promise<void>
 }
 
 const researchContext = createContext<researchContextValue>(initialContext)
@@ -103,6 +105,15 @@ function ResearchProvider({ children }: ResearchProviderProps) {
     [researchQueue, selectedUniverse, loadPlayer]
   )
 
+  const removeResearchFromQueue = useCallback(
+    async (index: number) => {
+      const newPlayerQueue = [...researchQueue.slice(0, index), ...researchQueue.slice(index + 1)]
+      await updateResearchQueueEndpoint(newPlayerQueue, selectedUniverse!.name)
+      await loadPlayer()
+    },
+    [researchQueue, selectedUniverse, loadPlayer]
+  )
+
   // TODO: create scheduleResearch
   // TODO: create cancelResearch
 
@@ -113,7 +124,8 @@ function ResearchProvider({ children }: ResearchProviderProps) {
     researched,
     isResearchLoading,
     startResearch,
-    updateResearchQueue
+    updateResearchQueue,
+    removeResearchFromQueue
   }
 
   return <researchContext.Provider value={value}>{children}</researchContext.Provider>

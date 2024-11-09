@@ -11,7 +11,16 @@ function formatTimer(seconds: number): string {
   const formattedMinutes = minutes.toString().padStart(2, '0')
   const formattedSeconds = remainingSeconds.toString().padStart(2, '0')
 
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+  if (hours < 24) {
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
+  }
+
+  const days = Math.floor(seconds / 86_400)
+  const hoursWithoutDays = Math.floor((seconds % 86_400) / 3_600)
+
+  const formattedHoursWithoutDays = hoursWithoutDays.toString().padStart(2, '0')
+
+  return `${days}d ${formattedHoursWithoutDays}:${formattedMinutes}:${formattedSeconds}`
 }
 
 export default formatTimer

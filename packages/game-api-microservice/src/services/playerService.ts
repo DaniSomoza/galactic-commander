@@ -84,10 +84,8 @@ async function getPlayer(username: string, universeName: string): Promise<getPla
 
   const player = await playerRepository.findPlayerByUsername(username, universeData._id)
 
-  // TODO: add next research scheduled task in the research prop
-
   if (!player) {
-    // TODO: create enum for the errors NO_PLAYER_FOUND_ERROR
+    // TODO: create enum or const for the errors NO_PLAYER_FOUND_ERROR
     throw new NotFoundError('no player present in this universe', { username, universeName })
   }
 

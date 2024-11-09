@@ -80,7 +80,17 @@ async function updateResearchQueue({
   // update player research queue
   player.researches.queue = researchQueue
 
-  // TODO: if research queue is empty, just start research
+  if (!player.researches.activeResearch) {
+    // if no research is active, just start the first research in the queue
+    const nextResearchName = player.researches.queue.shift()
+    if (nextResearchName) {
+      await startResearch({
+        username,
+        researchName: nextResearchName,
+        universeName
+      })
+    }
+  }
 
   await player.save()
 

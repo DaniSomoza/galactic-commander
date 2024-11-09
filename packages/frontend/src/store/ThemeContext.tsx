@@ -47,8 +47,10 @@ function ThemeProvider({ children }: ThemeProviderProps) {
   const isLightThemeModeEnabled = themeMode === LIGHT_THEME_MODE
 
   const switchTheme = useCallback(() => {
-    setThemeMode(isDarkThemeModeEnabled ? LIGHT_THEME_MODE : DARK_THEME_MODE)
-  }, [isDarkThemeModeEnabled])
+    setThemeMode((themeMode) => {
+      return themeMode === DARK_THEME_MODE ? LIGHT_THEME_MODE : DARK_THEME_MODE
+    })
+  }, [setThemeMode])
 
   const theme = createTheme({ palette: { mode: themeMode } })
 

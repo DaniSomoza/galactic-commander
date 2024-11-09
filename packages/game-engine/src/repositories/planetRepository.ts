@@ -11,7 +11,6 @@ async function findAvailablePrincipalPlanets() {
     isExplored: false,
     isUnderConquer: false,
     owner: null
-    // TODO: discard planets quality [90, 100] ??
   }).exec()
 }
 

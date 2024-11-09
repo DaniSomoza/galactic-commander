@@ -1,10 +1,8 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
 
-export const DEFAULT_PLANET_RESOURCES = 10_000
-
 export const GALAXIES = 3
-export const SECTORS_PER_GALAXIES = 6
-export const SYSTEM_PER_SECTORS = 15
+export const SECTORS_PER_GALAXIES = 32
+export const SYSTEM_PER_SECTORS = 64
 export const PLANETS_PER_SYSTEM = 12
 
 // TODO: implement moons
@@ -65,7 +63,7 @@ const PlanetSchema: Schema = new Schema(
     },
     colonizedAt: { type: Number },
 
-    resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },
+    resources: { type: Number, required: true },
     resourceQuality: { type: Number, required: true },
     lastResourceProductionTime: { type: Number, required: true },
 

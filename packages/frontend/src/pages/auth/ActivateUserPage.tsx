@@ -12,7 +12,7 @@ function ActivateUserPage() {
   const [queryParams] = useSearchParams()
   const navigate = useNavigate()
 
-  // TODO: show a "Account Activated! and show a button to create player "
+  // TODO: show a "Account Activated!" snackbar and a show it in the notification
 
   useEffect(() => {
     const userActivation = async () => {

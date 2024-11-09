@@ -43,7 +43,6 @@ function PlanetSelector() {
           <Stack direction={'row'} spacing={1} alignItems="center">
             <Image
               src={player.planets.principal.imgUrl}
-              // TODO: create proper alt image
               alt="player planet image"
               height={'32px'}
               width={'32px'}

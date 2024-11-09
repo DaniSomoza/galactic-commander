@@ -1,8 +1,6 @@
 import UserModel from '../models/UserModel'
 import { IUser } from '../types/User'
 
-// TODO: Add JSdoc for each function
-
 async function findUserByEmail(email: string) {
   return UserModel.findOne({ email }).lean().exec()
 }

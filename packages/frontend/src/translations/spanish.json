@@ -36,11 +36,17 @@
 
   "GAME_RESEARCH_PAGE_RESEARCH_QUEUE_START_DATE": "Fecha de comienzo {0}",
   "GAME_RESEARCH_PAGE_RESEARCH_QUEUE_END_DATE": "Fecha de finalización {0}",
+  "GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP": "Quitar investigación de la cola de investiaciones",
+  "GAME_RESEARCH_PAGE_RESEARCH_RESOURCE_COST": "Coste {0} de recursos",
+  "GAME_RESEARCH_PAGE_RESEARCH_DURATION": "Duración de la investigación {0}",
+  "GAME_RESEARCH_PAGE_RESEARCH_SCHEDULE_BUTTON": "Programar",
+  "GAME_RESEARCH_PAGE_RESEARCH_START_RESEARCH_BUTTON": "Investigar",
+  "GAME_RESEARCH_PAGE_RESEARCH_QUEUE_BUTTON": "Encolar nivel {0}",
 
   "PIRATES_RACE_NAME": "piratas",
   "PIRATES_RACE_DESCRIPTION": "descripción de los piratas",
 
-  "PIRATE_COMPUTING_RESEARCH_NAME": "computación pirata",
+  "PIRATE_COMPUTING_RESEARCH_NAME": "Computación pirata",
   "PIRATE_COMPUTING_RESEARCH_DESCRIPTION": "Esta tecnología permite gestionar múltiples flotas simultáneamente mediante sistemas avanzados de computación adaptados al estilo pirata.",
   "PIRATE_DEFENSE_ATTACK_RESEARCH_NAME": "Ataque defensas pirata",
   "PIRATE_DEFENSE_ATTACK_RESEARCH_DESCRIPTION": " Mejora el poder ofensivo de las unidades defensivas, haciendo que sus ataques sean devastadores y temidos por cualquier invasor",

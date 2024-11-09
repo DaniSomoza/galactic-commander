@@ -80,7 +80,6 @@ function Header() {
               </IconButton>
             </Tooltip>
 
-            {/* TODO: IMPLEMENT REFRESH TOKEN */}
             {sessionToken && (
               <Stack flexGrow={1} direction={'row'} spacing={2} paddingLeft={2}>
                 {user ? (

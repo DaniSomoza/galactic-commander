@@ -23,11 +23,6 @@ function GameActiveResearchSection() {
 
   const { activeResearch, activeResearchCountdown, isResearchLoading } = useResearch()
 
-  // TODO: handle 3 states:
-  //   - Active research
-  //   - Loading State
-  //   - No Active research
-
   const showNoResearchActiveLabel = !activeResearch && !isResearchLoading
 
   return (
@@ -57,7 +52,6 @@ function GameActiveResearchSection() {
             ) : (
               <Image
                 src={activeResearch?.research.imgUrl || ''}
-                // TODO: create proper alt image
                 alt="player active research image"
                 height={'200px'}
                 width={'200px'}
@@ -120,8 +114,6 @@ function GameActiveResearchSection() {
 
             <Box position={'absolute'} right={0} bottom={0} padding={1}>
               <Stack spacing={0.5} alignItems="center">
-                {/* TODO: create activeResearch.research.bonus section because is optional */}
-
                 <Stack spacing={0.5} alignItems="center">
                   {isResearchLoading ? (
                     <Skeleton variant="rectangular" height={'40px'} width={'40px'} />

@@ -5,7 +5,9 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded'
 import { green, orange } from '@mui/material/colors'
 
 import calculateResearchResourceCost from 'game-engine/src/engine/resources/calculateResearchResourceCost'
@@ -22,6 +24,7 @@ import millisToSeconds from '../../utils/millisToSeconds'
 import formatTimestamp from '../../utils/formatTimestamp'
 import Image from '../../components/image/Image'
 import { useTranslations } from '../../store/TranslationContext'
+import formatNumber from '../../utils/formatNumber'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
@@ -30,8 +33,17 @@ function GameResearchPage() {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const { activeResearch, researchQueue, researched, startResearch, updateResearchQueue } =
-    useResearch()
+  // TODO: remove from here
+  const [showRemoveButton, setShowRemoveButton] = useState(false)
+
+  const {
+    activeResearch,
+    researchQueue,
+    researched,
+    startResearch,
+    updateResearchQueue,
+    removeResearchFromQueue
+  } = useResearch()
 
   if (!player || isPlayerLoading) {
     return <Loader isLoading />
@@ -48,6 +60,12 @@ function GameResearchPage() {
   async function performUpdateResearchQueue(researchName: string) {
     setIsLoading(true)
     await updateResearchQueue(researchName)
+    setIsLoading(false)
+  }
+
+  async function performRemoveResearchFromQueue(index: number) {
+    setIsLoading(true)
+    await removeResearchFromQueue(index)
     setIsLoading(false)
   }
 
@@ -90,16 +108,18 @@ function GameResearchPage() {
 
               const countdown = Math.floor((endResearchTime - getSecond(Date.now())) / 1_000)
 
-              // TODO: ADD REMOVE FROM THE QUEUE BUTTON AND MODAL
               return (
                 <Stack key={index} alignItems={'center'} direction={'row'} gap={1}>
-                  <Box sx={{ position: 'relative' }}>
+                  <Box
+                    sx={{ position: 'relative' }}
+                    onMouseEnter={() => setShowRemoveButton(true)}
+                    onMouseLeave={() => setShowRemoveButton(false)}
+                  >
                     <Tooltip title={translate(researchName)} arrow>
                       <Stack justifyContent="center" alignItems="center" gap={1}>
                         <Image
                           src={raceResearch!.imgUrl}
-                          // TODO: create proper alt image
-                          alt="player active research image"
+                          alt={translate(researchName)}
                           height={'128px'}
                           width={'128px'}
                           border
@@ -145,6 +165,28 @@ function GameResearchPage() {
                             </Paper>
                           </Tooltip>
                         </Box>
+
+                        {/* remove research from the research queue */}
+                        {showRemoveButton && (
+                          <Box position={'absolute'} top={0} right={0}>
+                            <Tooltip
+                              title={translate('GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP')}
+                              arrow
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={() => performRemoveResearchFromQueue(index)}
+                                aria-label={translate(
+                                  'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP'
+                                )}
+                                color="inherit"
+                                sx={{ fontSize: '14px' }}
+                              >
+                                <CancelRoundedIcon color="error" fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
+                        )}
 
                         {/* position in the queue */}
                         <Box position={'absolute'} left={0} bottom={0} padding={0.3}>
@@ -233,98 +275,118 @@ function GameResearchPage() {
           ? calculateResearchResourceCost(playerResearch.research, nextLevel)
           : raceResearch.resourceCost
 
-        // TODO: show bonus
+        const hasEnoughResources = resourceCost <= player.planets.principal.resources
 
         return (
           <Paper key={raceResearch.name} variant="outlined">
             <Stack direction={'row'}>
               {/* Image Part */}
-              <Box sx={{ position: 'relative' }}>
-                <Stack justifyContent="center" alignItems="center">
-                  <Image
-                    src={raceResearch.imgUrl}
-                    // TODO: create proper alt image
-                    alt="player active research image"
-                    height={'200px'}
-                    width={'200px'}
-                    border
-                  />
-                  {/* Research time */}
-                  <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                    <Paper variant="outlined">
-                      <Tooltip title={`Research duration: ${formatTimer(researchDuration)}`} arrow>
-                        <Typography
-                          variant="body1"
-                          fontSize={12}
-                          fontWeight={500}
+              <Box>
+                <Box sx={{ position: 'relative' }}>
+                  <Stack justifyContent="center" alignItems="center">
+                    <Image
+                      src={raceResearch.imgUrl}
+                      alt={translate(raceResearch.name)}
+                      height={'200px'}
+                      width={'200px'}
+                      border
+                    />
+
+                    {/* Research time */}
+                    <Box position={'absolute'} left={0} bottom={0} padding={1}>
+                      <Paper variant="outlined">
+                        <Tooltip
+                          title={translate(
+                            'GAME_RESEARCH_PAGE_RESEARCH_DURATION',
+                            formatTimer(researchDuration)
+                          )}
+                          arrow
+                        >
+                          <Typography
+                            variant="body1"
+                            fontSize={13}
+                            fontWeight={500}
+                            padding={0.4}
+                            paddingLeft={0.8}
+                            paddingRight={0.8}
+                          >
+                            {formatTimer(researchDuration)}
+                          </Typography>
+                        </Tooltip>
+                      </Paper>
+                    </Box>
+
+                    {/* Current Research level */}
+                    <Box position={'absolute'} right={0} bottom={0} padding={1}>
+                      <Paper variant="outlined">
+                        <Stack
                           padding={0.4}
                           paddingLeft={0.8}
                           paddingRight={0.8}
+                          direction={'row'}
+                          justifyContent="center"
+                          alignItems="center"
                         >
-                          {formatTimer(researchDuration)}
-                        </Typography>
-                      </Tooltip>
-                    </Paper>
-                  </Box>
+                          <Typography
+                            variant="body1"
+                            fontSize={13}
+                            fontWeight={500}
+                            color={currentLevel !== nextLevel ? orange[600] : green[600]}
+                          >
+                            {currentLevel}
+                          </Typography>
 
-                  {/* Research level */}
-                  <Box position={'absolute'} right={0} bottom={0} padding={1}>
-                    <Paper variant="outlined">
-                      <Stack
-                        padding={0.4}
-                        paddingLeft={0.8}
-                        paddingRight={0.8}
-                        direction={'row'}
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <Typography
-                          variant="body1"
-                          fontSize={12}
-                          fontWeight={500}
-                          color={currentLevel !== nextLevel ? orange[600] : green[600]}
-                        >
-                          {currentLevel}
-                        </Typography>
+                          {currentLevel !== nextLevel && (
+                            <>
+                              <ArrowRightAltRoundedIcon fontSize="inherit" />
 
-                        {currentLevel !== nextLevel && (
-                          <>
-                            <ArrowRightAltRoundedIcon fontSize="inherit" />
-
-                            <Typography
-                              variant="body1"
-                              fontSize={12}
-                              fontWeight={500}
-                              color={green[600]}
-                            >
-                              {nextLevel}
-                            </Typography>
-                          </>
-                        )}
-                      </Stack>
-                    </Paper>
-                  </Box>
-                </Stack>
+                              <Typography
+                                variant="body1"
+                                fontSize={13}
+                                fontWeight={500}
+                                color={green[600]}
+                              >
+                                {nextLevel}
+                              </Typography>
+                            </>
+                          )}
+                        </Stack>
+                      </Paper>
+                    </Box>
+                  </Stack>
+                </Box>
               </Box>
 
               {/* Text Part */}
               <Stack padding={1.5} flexGrow={1}>
-                <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis">
+                <Typography component="h2" variant="h6" fontSize={'1rem'} gutterBottom>
                   {translate(raceResearch.name)}
                 </Typography>
 
-                <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis" flexGrow={1}>
+                <Typography variant="body2" gutterBottom>
                   {translate(raceResearch.description)}
                 </Typography>
 
-                <Typography fontSize={14} overflow={'hidden'} textOverflow="ellipsis" flexGrow={1}>
-                  Cost: {resourceCost}
+                <Typography variant="body2" gutterBottom>
+                  {translate(
+                    'GAME_RESEARCH_PAGE_RESEARCH_RESOURCE_COST',
+                    formatNumber(resourceCost, true)
+                  )}
                 </Typography>
 
-                <Stack direction={'row'} justifyContent={'flex-end'} gap={1}>
+                <Stack
+                  flexGrow={1}
+                  direction={'row'}
+                  justifyContent={'flex-end'}
+                  alignItems={'flex-end'}
+                  gap={1}
+                >
+                  {/* TODO: ADD HERE RESEARCH BONUS */}
+
                   <Button variant="outlined" disabled={isLoading} size="small">
-                    Schedule
+                    {translate('GAME_RESEARCH_PAGE_RESEARCH_SCHEDULE_BUTTON')}
                   </Button>
+
                   {activeResearch ? (
                     <Button
                       variant="contained"
@@ -332,16 +394,16 @@ function GameResearchPage() {
                       disabled={isLoading}
                       onClick={() => performUpdateResearchQueue(raceResearch.name)}
                     >
-                      Add to Queue
+                      {translate('GAME_RESEARCH_PAGE_RESEARCH_QUEUE_BUTTON', nextLevel + 1)}
                     </Button>
                   ) : (
                     <Button
                       variant="contained"
                       size="small"
-                      disabled={isLoading}
+                      disabled={isLoading || !hasEnoughResources}
                       onClick={() => performStartResearch(raceResearch.name)}
                     >
-                      Research
+                      {translate('GAME_RESEARCH_PAGE_RESEARCH_START_RESEARCH_BUTTON')}
                     </Button>
                   )}
                 </Stack>

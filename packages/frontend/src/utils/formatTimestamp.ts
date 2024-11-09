@@ -1,5 +1,3 @@
-// TODO: add jsdoc
-
 function formatTimestamp(timestamp: number): string {
   const date = new Date(timestamp)
   const day = date.getDate().toString().padStart(2, '0')

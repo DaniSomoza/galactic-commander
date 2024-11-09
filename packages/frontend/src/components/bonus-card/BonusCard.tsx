@@ -13,6 +13,8 @@ type BonusCardProps = {
 // TODO: Computed Player Bonus => compute and reduce all bonus from different sources into one bonus component
 // TODO: PlayerBonusCard => show all player bonus and their sources
 
+// get directly the bonus ???
+
 // TODO: rename this to PlayerBonusCard
 function BonusCard({ bonus }: BonusCardProps) {
   // transform bonus into a label

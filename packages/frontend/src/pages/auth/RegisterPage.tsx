@@ -31,6 +31,8 @@ function RegisterPage() {
 
   // TODO: Create a polling in Check your email and redirect to login
 
+  // TODO: Add translations!
+
   return (
     <Container component="main" maxWidth="xs" disableGutters>
       <Box component="section" marginTop={4}>
