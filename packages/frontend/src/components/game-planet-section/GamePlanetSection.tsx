@@ -34,7 +34,7 @@ function GamePlanetSection() {
   } = planet || {}
 
   const productionBonus = owner?.perks
-    ? computedBonus(owner.perks, 'resourceProductionBonus')
+    ? computedBonus(owner.perks, 'RESOURCE_PRODUCTION_BONUS')
     : undefined
 
   const updatePlanetResources = useCallback(() => {

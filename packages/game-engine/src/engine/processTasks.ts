@@ -147,7 +147,7 @@ async function processResourceProduction(
 
   return Promise.all(
     planets.map(({ planet, owner }) => {
-      const ownerResourceProductionBonus = computedBonus(owner.perks, 'resourceProductionBonus')
+      const ownerResourceProductionBonus = computedBonus(owner.perks, 'RESOURCE_PRODUCTION_BONUS')
 
       planet.resources = calculateResourceProduction(
         second,

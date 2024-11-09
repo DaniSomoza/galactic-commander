@@ -24,7 +24,7 @@ const fotox: IRace = {
   researches: [],
 
   bonus: {
-    fleetHullRegenerationBonus: FOTOX_HULL_REGENERATION_BONUS
+    FLEET_HULL_REGENERATION_BONUS: FOTOX_HULL_REGENERATION_BONUS
   }
 }
 

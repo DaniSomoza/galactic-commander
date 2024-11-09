@@ -8,7 +8,7 @@ const PIRATE_MINING_RESEARCH: IResearch = {
   initialTime: 20_000,
   resourceCost: 150,
   bonus: {
-    resourceProductionBonus: 10
+    RESOURCE_PRODUCTION_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

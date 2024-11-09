@@ -24,7 +24,7 @@ const ghosts: IRace = {
   researches: [],
 
   bonus: {
-    stealthFleetsMode: true
+    STEALTH_FLEETS_BONUS: true
   }
 }
 

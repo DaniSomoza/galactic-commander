@@ -8,7 +8,7 @@ const PIRATE_TROOPS_TRAINING_RESEARCH: IResearch = {
   initialTime: 23_000,
   resourceCost: 250,
   bonus: {
-    troopsTrainingBonus: 10
+    TROOPS_TRAINING_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

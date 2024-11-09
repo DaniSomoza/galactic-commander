@@ -24,7 +24,7 @@ const cyborgs: IRace = {
   researches: [],
 
   bonus: {
-    maxFleetsAllowedBonus: CYBORGS_MAX_FLEETS_ALLOWED_BONUS
+    MAX_FLEETS_ALLOWED_BONUS: CYBORGS_MAX_FLEETS_ALLOWED_BONUS
   }
 }
 

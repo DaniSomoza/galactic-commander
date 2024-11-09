@@ -8,7 +8,7 @@ const PIRATE_FLEET_ATTACK_RESEARCH: IResearch = {
   initialTime: 23_000,
   resourceCost: 200,
   bonus: {
-    fleetAttackBonus: 10
+    FLEET_ATTACK_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

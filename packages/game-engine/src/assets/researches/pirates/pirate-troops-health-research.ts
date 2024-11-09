@@ -8,7 +8,7 @@ const PIRATE_TROOPS_HEALTH_RESEARCH: IResearch = {
   initialTime: 20_000,
   resourceCost: 100,
   bonus: {
-    troopsHealthBonus: 10
+    TROOPS_HEALTH_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

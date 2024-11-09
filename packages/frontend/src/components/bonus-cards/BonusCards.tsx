@@ -3,6 +3,7 @@ import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
 
 import { IBonus } from 'game-engine/dist/types/bonus'
+import { useTranslations } from '../../store/TranslationContext'
 
 type BonusCardProps = {
   bonus?: IBonus
@@ -17,6 +18,8 @@ function BonusCards({
   isTroopsPopulationResearch,
   isLoading
 }: BonusCardProps) {
+  const { translate } = useTranslations()
+
   if (isLoading) {
     return <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
   }
@@ -26,11 +29,7 @@ function BonusCards({
       {bonus &&
         Object.keys(bonus).map((bono) => (
           <Paper variant="outlined" key={bono}>
-            <Tooltip
-              // TODO: create tooltip
-              title={`${Object.keys(bonus).map((bono) => `${bono}: ${bonus[bono as keyof IBonus]}%`)}`}
-              arrow
-            >
+            <Tooltip title={translate(bono, String(bonus[bono as keyof IBonus]))} arrow>
               <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
             </Tooltip>
           </Paper>
@@ -38,7 +37,7 @@ function BonusCards({
 
       {isFleetEnergyResearch && (
         <Paper variant="outlined">
-          <Tooltip title={'TODO: +50% energy'} arrow>
+          <Tooltip title={translate('RESEARCH_ENERGY_BONUS')} arrow>
             <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
           </Tooltip>
         </Paper>
@@ -46,7 +45,7 @@ function BonusCards({
 
       {isTroopsPopulationResearch && (
         <Paper variant="outlined">
-          <Tooltip title={'TODO: +50% population'} arrow>
+          <Tooltip title={translate('RESEARCH_POPULATION_BONUS')} arrow>
             <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
           </Tooltip>
         </Paper>

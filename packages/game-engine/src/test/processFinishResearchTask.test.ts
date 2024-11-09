@@ -101,8 +101,8 @@ describe('process finish research task', () => {
       // old player bonus
       expect(player?.perks).toEqual([])
 
-      // fleetAttackBonus 10%
-      expect(researchPlayer?.perks[0].bonus.fleetAttackBonus).toEqual(10)
+      // FLEET_ATTACK_BONUS 10%
+      expect(researchPlayer?.perks[0].bonus.FLEET_ATTACK_BONUS).toEqual(10)
       expect(researchPlayer?.perks[0].source).toEqual(research?._id)
       expect(researchPlayer?.perks[0].type).toEqual('Research')
       expect(researchPlayer?.perks.length).toEqual(1)
@@ -234,8 +234,8 @@ describe('process finish research task', () => {
       // old player bonus
       expect(player?.perks).toEqual([])
 
-      // fleetAttackBonus 20%
-      expect(researchPlayer?.perks[0].bonus.fleetAttackBonus).toEqual(20)
+      // FLEET_ATTACK_BONUS 20%
+      expect(researchPlayer?.perks[0].bonus.FLEET_ATTACK_BONUS).toEqual(20)
       expect(researchPlayer?.perks[0].source).toEqual(research?._id)
       expect(researchPlayer?.perks[0].type).toEqual('Research')
       expect(researchPlayer?.perks.length).toEqual(1)

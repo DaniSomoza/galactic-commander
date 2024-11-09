@@ -8,7 +8,7 @@ const PIRATE_DEFENSE_SHIELD_RESEARCH: IResearch = {
   initialTime: 15_000,
   resourceCost: 150,
   bonus: {
-    defensesShieldBonus: 10
+    DEFENSES_SHIELD_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

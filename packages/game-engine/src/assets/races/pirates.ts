@@ -30,7 +30,7 @@ const pirates: IBaseRace = {
 
   bonus: {
     // Capture Fleets Bonus
-    fleetCaptureBonus: PIRATE_CAPTURE_BONUS
+    FLEET_CAPTURE_BONUS: PIRATE_CAPTURE_BONUS
   }
 }
 
