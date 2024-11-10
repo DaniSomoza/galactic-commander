@@ -65,51 +65,60 @@ function GameActiveResearchSection() {
               maxWidth={'192px'}
               sx={{ transform: 'translate(0, -50%)' }}
             >
-              <Paper variant="outlined">
-                <Typography
-                  variant="body1"
-                  fontSize={12}
-                  padding={0.4}
-                  paddingLeft={0.8}
-                  paddingRight={0.8}
-                  textAlign="center"
-                  overflow={'hidden'}
-                  textOverflow="ellipsis"
-                >
-                  {isResearchLoading ? (
-                    <Skeleton variant="text" width={'120px'} />
-                  ) : (
-                    translate(activeResearch?.research.name || '')
-                  )}
-                </Typography>
-              </Paper>
-            </Box>
-
-            <Box position={'absolute'} left={0} bottom={0} padding={1}>
-              <Paper variant="outlined">
-                <Tooltip
-                  title={translate(
-                    'GAME_PLAYER_ACTIVE_RESEARCH_END_DATE',
-                    formatTimestamp(activeResearch?.executeTaskAt || 0)
-                  )}
-                  arrow
-                >
+              {isResearchLoading ? (
+                <Skeleton
+                  variant="rectangular"
+                  width={'150px'}
+                  sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
+                />
+              ) : (
+                <Paper variant="outlined">
                   <Typography
                     variant="body1"
                     fontSize={12}
-                    fontWeight={500}
                     padding={0.4}
                     paddingLeft={0.8}
                     paddingRight={0.8}
+                    textAlign="center"
+                    overflow={'hidden'}
+                    textOverflow="ellipsis"
                   >
-                    {isResearchLoading ? (
-                      <Skeleton variant="text" width={'48px'} />
-                    ) : (
-                      formatTimer(activeResearchCountdown)
-                    )}
+                    {translate(activeResearch?.research.name || '')}
                   </Typography>
-                </Tooltip>
-              </Paper>
+                </Paper>
+              )}
+            </Box>
+
+            <Box position={'absolute'} left={0} bottom={0} padding={1}>
+              {isResearchLoading ? (
+                // TODO: create a component for this !!
+                <Skeleton
+                  variant="rectangular"
+                  width={'70px'}
+                  sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
+                />
+              ) : (
+                <Paper variant="outlined">
+                  <Tooltip
+                    title={translate(
+                      'GAME_PLAYER_ACTIVE_RESEARCH_END_DATE',
+                      formatTimestamp(activeResearch?.executeTaskAt || 0)
+                    )}
+                    arrow
+                  >
+                    <Typography
+                      variant="body1"
+                      fontSize={12}
+                      fontWeight={500}
+                      padding={0.4}
+                      paddingLeft={0.8}
+                      paddingRight={0.8}
+                    >
+                      {formatTimer(activeResearchCountdown)}
+                    </Typography>
+                  </Tooltip>
+                </Paper>
+              )}
             </Box>
 
             <Box position={'absolute'} right={0} bottom={0} padding={1}>
@@ -123,26 +132,31 @@ function GameActiveResearchSection() {
                   />
                 </Stack>
 
-                <Paper variant="outlined">
-                  <Tooltip
-                    title={translate(
-                      'GAME_PLAYER_ACTIVE_RESEARCH_LEVEL',
-                      activeResearch?.level ? activeResearch?.level - 1 : 0,
-                      activeResearch?.level || 0
-                    )}
-                    arrow
-                  >
-                    <Stack
-                      padding={0.4}
-                      paddingLeft={0.8}
-                      paddingRight={0.8}
-                      direction={'row'}
-                      justifyContent="center"
-                      alignItems="center"
+                {isResearchLoading ? (
+                  <Skeleton
+                    variant="rectangular"
+                    width={'42px'}
+                    height={'24px'}
+                    sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
+                  />
+                ) : (
+                  <Paper variant="outlined">
+                    <Tooltip
+                      title={translate(
+                        'GAME_PLAYER_ACTIVE_RESEARCH_LEVEL',
+                        activeResearch?.level ? activeResearch?.level - 1 : 0,
+                        activeResearch?.level || 0
+                      )}
+                      arrow
                     >
-                      {isResearchLoading ? (
-                        <Skeleton variant="text" width={'8px'} />
-                      ) : (
+                      <Stack
+                        padding={0.4}
+                        paddingLeft={0.8}
+                        paddingRight={0.8}
+                        direction={'row'}
+                        justifyContent="center"
+                        alignItems="center"
+                      >
                         <Typography
                           variant="body1"
                           fontSize={12}
@@ -151,13 +165,9 @@ function GameActiveResearchSection() {
                         >
                           {activeResearch!.level - 1}
                         </Typography>
-                      )}
 
-                      <ArrowRightAltRoundedIcon fontSize="inherit" />
+                        <ArrowRightAltRoundedIcon fontSize="inherit" />
 
-                      {isResearchLoading ? (
-                        <Skeleton variant="text" width={'8px'} />
-                      ) : (
                         <Typography
                           variant="body1"
                           fontSize={12}
@@ -166,10 +176,10 @@ function GameActiveResearchSection() {
                         >
                           {activeResearch?.level}
                         </Typography>
-                      )}
-                    </Stack>
-                  </Tooltip>
-                </Paper>
+                      </Stack>
+                    </Tooltip>
+                  </Paper>
+                )}
               </Stack>
             </Box>
           </Stack>

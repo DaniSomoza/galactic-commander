@@ -9,7 +9,8 @@ import {
 } from '../../models/RaceModel'
 import { IResearch } from '../../models/ResearchModel'
 
-const PIRATE_CAPTURE_BONUS = 20 // 20 % ships capture
+const FLEET_CAPTURE_BONUS = 20 // +20% ships capture
+const TROOPS_ATTACK_BONUS = 10 // +10% troops attack bonus
 
 type IBaseRace = {
   researches: IResearch[]
@@ -29,8 +30,8 @@ const pirates: IBaseRace = {
   researches: [],
 
   bonus: {
-    // Capture Fleets Bonus
-    FLEET_CAPTURE_BONUS: PIRATE_CAPTURE_BONUS
+    FLEET_CAPTURE_BONUS,
+    TROOPS_ATTACK_BONUS
   }
 }
 

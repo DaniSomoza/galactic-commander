@@ -39,8 +39,7 @@ export const BASE_PERCENTAGE_BONUS = 100
 export const BASE_NUMERIC_BONUS = 0
 export const BASE_ACTIVATABLE_BONUS = false
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const percentageBonusType = {
+export const percentageBonusType = {
   RESEARCH_BONUS: 'PERCENTAGE_BONUS_TYPE',
   RESOURCE_PRODUCTION_BONUS: 'PERCENTAGE_BONUS_TYPE',
   FLEET_ATTACK_BONUS: 'PERCENTAGE_BONUS_TYPE',
@@ -73,14 +72,12 @@ const percentageBonusType = {
   DEFENSES_SHIELD_REGENERATION_BONUS: 'PERCENTAGE_BONUS_TYPE'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const numericBonusType = {
+export const numericBonusType = {
   EXTRA_PLANETS_BONUS: 'NUMERIC_BONUS_TYPE',
   MAX_FLEETS_ALLOWED_BONUS: 'NUMERIC_BONUS_TYPE'
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const activatableBonusType = {
+export const activatableBonusType = {
   STEALTH_FLEETS_BONUS: 'ACTIVATABLE_BONUS_TYPE',
   STEALTH_FLEETS_DETECTION_BONUS: 'ACTIVATABLE_BONUS_TYPE',
   INTERGALACTIC_TRAVEL_BONUS: 'ACTIVATABLE_BONUS_TYPE',
@@ -89,7 +86,7 @@ const activatableBonusType = {
   DEFENSES_SHIELD_PIERCING_BONUS: 'ACTIVATABLE_BONUS_TYPE'
 }
 
-const bonusTypes: Record<keyof IBonus, BonusType> = {
+export const bonusTypes: Record<keyof IBonus, BonusType> = {
   RESEARCH_BONUS: 'PERCENTAGE_BONUS_TYPE',
   RESOURCE_PRODUCTION_BONUS: 'PERCENTAGE_BONUS_TYPE',
   STEALTH_FLEETS_BONUS: 'ACTIVATABLE_BONUS_TYPE',

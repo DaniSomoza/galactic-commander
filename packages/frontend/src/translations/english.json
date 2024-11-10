@@ -117,13 +117,13 @@
   "DEFENSES_SHIELD_PIERCING_BONUS": "Activates shield piercing against enemy defenses",
   "DEFENSES_SHIELD_REGENERATION_BONUS": "Increases shield regeneration for defenses during combat by {0}%",
   "DEFENSES_BUILDING_BONUS": "Increases the construction speed of defenses by {0}%",
-  "FLEET_CAPTURE_BONUS": "Activates the capture of enemy ships",
-  "FLEET_STARFIGHTER_CAPTURE_BONUS": "Activates the capture of enemy starfighters",
-  "FLEET_SPACE_CARRIER_CAPTURE_BONUS": "Activates the capture of enemy space carriers",
-  "FLEET_SPACE_CRUISER_CAPTURE_BONUS": "Activates the capture of enemy space cruisers",
-  "FLEET_DESTROYER_CAPTURE_BONUS": "Activates the capture of enemy destroyers",
-  "FLEET_SPACE_CARGO_CAPTURE_BONUS": "Activates the capture of enemy cargo ships",
-  "FLEET_FRIGATE_CAPTURE_BONUS": "Activates the capture of enemy space frigates",
-  "FLEET_BOMBER_CAPTURE_BONUS": "Activates the capture of enemy planetary bombers",
-  "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activates the capture of enemy space battle stations"
+  "FLEET_CAPTURE_BONUS": "Activates the capture of enemy ships at a {0}%",
+  "FLEET_STARFIGHTER_CAPTURE_BONUS": "Activates the capture of enemy starfighters at a {0}%",
+  "FLEET_SPACE_CARRIER_CAPTURE_BONUS": "Activates the capture of enemy space carriers at a {0}%",
+  "FLEET_SPACE_CRUISER_CAPTURE_BONUS": "Activates the capture of enemy space cruisers at a {0}%",
+  "FLEET_DESTROYER_CAPTURE_BONUS": "Activates the capture of enemy destroyers at a {0}%",
+  "FLEET_SPACE_CARGO_CAPTURE_BONUS": "Activates the capture of enemy cargo ships at a {0}%",
+  "FLEET_FRIGATE_CAPTURE_BONUS": "Activates the capture of enemy space frigates at a {0}%",
+  "FLEET_BOMBER_CAPTURE_BONUS": "Activates the capture of enemy planetary bombers at a {0}%",
+  "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activates the capture of enemy space battle stations at a {0}%"
 }
