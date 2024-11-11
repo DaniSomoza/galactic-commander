@@ -71,7 +71,7 @@ function PlayerPerksSection({ playerPerks, isLoading }: PlayerPerksSectionProps)
           >
             <Skeleton
               // TODO: DELETE THIS STYLE
-              sx={{ backgroundColor: playerBonus[bono as keyof IBonus] > 100 ? 'green' : '' }}
+              // sx={{ backgroundColor: playerBonus[bono as keyof IBonus] > 100 ? 'green' : '' }}
               variant="rectangular"
               height={'40px'}
               width={'40px'}

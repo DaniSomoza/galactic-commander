@@ -13,7 +13,7 @@ function calculateResearchDuration(
 
 export default calculateResearchDuration
 
-const RESEARCH_FACTOR = 4.5
+const RESEARCH_BASE_TIME_FACTOR = 2
 
 function getBaseResearchDuration(initialTime: number, level: number): number {
   const isFirstLevel = level === 0
@@ -25,7 +25,9 @@ function getBaseResearchDuration(initialTime: number, level: number): number {
   const previousLevel = level - 1
   const previousTime = getBaseResearchDuration(initialTime, previousLevel)
 
-  const baseResearchDuration = previousTime + (previousTime * RESEARCH_FACTOR) / 2
+  const factor = RESEARCH_BASE_TIME_FACTOR - level / (RESEARCH_BASE_TIME_FACTOR * 20)
+
+  const baseResearchDuration = factor * previousTime
 
   return baseResearchDuration
 }
