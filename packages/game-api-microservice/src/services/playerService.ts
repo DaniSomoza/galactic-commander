@@ -89,6 +89,8 @@ async function getPlayer(username: string, universeName: string): Promise<getPla
     throw new NotFoundError('no player present in this universe', { username, universeName })
   }
 
+  // TODO: add future pending tasks to tack them in the frontend
+
   return { player: cleanPlayerFields(player) }
 }
 

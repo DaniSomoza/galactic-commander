@@ -3,17 +3,21 @@ type ImageProps = {
   alt: string
   height: string
   width: string
-  border: boolean
+  border?: boolean
+  disabled?: boolean
 }
 
-function Image({ src, alt, height, width, border }: ImageProps) {
+function Image({ src, alt, height, width, border, disabled }: ImageProps) {
   return (
     <img
       src={src}
       alt={alt}
       height={height}
       width={width}
-      style={{ borderRadius: border ? '4px' : '0px' }}
+      style={{
+        borderRadius: border ? '4px' : '0px',
+        filter: disabled ? 'grayscale(100%)' : 'none'
+      }}
     />
   )
 }

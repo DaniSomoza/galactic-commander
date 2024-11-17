@@ -95,6 +95,7 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -104,6 +105,7 @@ describe('process finish research task', () => {
       // FLEET_ATTACK_BONUS 10%
       expect(researchPlayer?.perks[0].bonus.FLEET_ATTACK_BONUS).toEqual(10)
       expect(researchPlayer?.perks[0].source).toEqual(research?._id)
+      expect(researchPlayer?.perks[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.perks[0].type).toEqual('Research')
       expect(researchPlayer?.perks.length).toEqual(1)
     })
@@ -223,11 +225,13 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       expect(researchPlayer?.points[1].points).toEqual(1_000)
       expect(researchPlayer?.points[1].source).toEqual(research?._id)
+      expect(researchPlayer?.points[1].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
@@ -237,6 +241,7 @@ describe('process finish research task', () => {
       // FLEET_ATTACK_BONUS 20%
       expect(researchPlayer?.perks[0].bonus.FLEET_ATTACK_BONUS).toEqual(20)
       expect(researchPlayer?.perks[0].source).toEqual(research?._id)
+      expect(researchPlayer?.perks[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.perks[0].type).toEqual('Research')
       expect(researchPlayer?.perks.length).toEqual(1)
     })
@@ -319,6 +324,7 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -441,10 +447,12 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
       expect(researchPlayer?.points[1].source).toEqual(research?._id)
+      expect(researchPlayer?.points[1].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
@@ -530,6 +538,7 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
@@ -645,10 +654,12 @@ describe('process finish research task', () => {
       // player points
       expect(researchPlayer?.points[0].points).toEqual(1_000)
       expect(researchPlayer?.points[0].source).toEqual(research?._id)
+      expect(researchPlayer?.points[0].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[0].type).toEqual('Research')
       expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
       expect(researchPlayer?.points[1].points).toEqual(1_000)
       expect(researchPlayer?.points[1].source).toEqual(research?._id)
+      expect(researchPlayer?.points[1].sourceName).toEqual(research?.name)
       expect(researchPlayer?.points[1].type).toEqual('Research')
       expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 

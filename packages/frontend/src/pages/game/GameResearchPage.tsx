@@ -26,11 +26,15 @@ import Image from '../../components/image/Image'
 import { useTranslations } from '../../store/TranslationContext'
 import formatNumber from '../../utils/formatNumber'
 import BonusCards from '../../components/bonus-cards/BonusCards'
+import { usePlayerResources } from '../../store/PlayerResourcesContext'
+import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
 
   const { player, isPlayerLoading } = usePlayer()
+
+  const { resources } = usePlayerResources()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -45,6 +49,8 @@ function GameResearchPage() {
     updateResearchQueue,
     removeResearchFromQueue
   } = useResearch()
+
+  // TODO: include research QUEUE in the ResearchContext
 
   if (!player || isPlayerLoading) {
     return <Loader isLoading />
@@ -263,7 +269,7 @@ function GameResearchPage() {
         const currentLevel = playerResearch?.level || 0
         const nextLevel = calculateResearchLevelInTheQueue(
           raceResearch.name,
-          playerResearch?.level || 0,
+          currentLevel,
           researchQueue,
           researchQueue.length,
           activeResearch
@@ -272,11 +278,12 @@ function GameResearchPage() {
           calculateResearchDuration(raceResearch.initialTime, nextLevel, researchBonus)
         )
 
-        const resourceCost = playerResearch
-          ? calculateResearchResourceCost(playerResearch.research, nextLevel)
-          : raceResearch.resourceCost
+        const resourceCost = calculateResearchResourceCost(raceResearch, nextLevel)
 
-        const hasEnoughResources = resourceCost <= player.planets.principal.resources
+        const principalPlanetLabel = formatCoordinatesLabel(player.planets.principal.coordinates)
+        const resourcesInPrincipalPlanet = resources[principalPlanetLabel]
+
+        const hasEnoughResources = resourcesInPrincipalPlanet >= resourceCost
 
         return (
           <Paper key={raceResearch.name} variant="outlined">
@@ -288,8 +295,8 @@ function GameResearchPage() {
                     <Image
                       src={raceResearch.imgUrl}
                       alt={translate(raceResearch.name)}
-                      height={'200px'}
-                      width={'200px'}
+                      height={'230px'}
+                      width={'230px'}
                       border
                     />
 
@@ -368,6 +375,7 @@ function GameResearchPage() {
                   {translate(raceResearch.description)}
                 </Typography>
 
+                {/* TODO: CREATE A TOOLTIP WITH THE DIFFERENCE (TRY TO PREDICT BASED ON THE QUEUE????)  */}
                 <Typography variant="body2" gutterBottom>
                   {translate(
                     'GAME_RESEARCH_PAGE_RESEARCH_RESOURCE_COST',

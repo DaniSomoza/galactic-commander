@@ -9,6 +9,7 @@ import { useAuthorization } from '../../store/AuthorizationContext'
 import { GameInfoProvider, useGameInfo } from '../../store/GameInfoContext'
 import { PlayerProvider, usePlayer } from '../../store/PlayerContext'
 import { ResearchProvider } from '../../store/ResearchContext'
+import { PlayerResourcesProvider } from '../../store/PlayerResourcesContext'
 import { GAME_CREATE_PLAYER_PATH, LOGIN_PATH } from '../../routes/routes'
 import GameNavigationBar from '../../components/game-navigation-bar/GameNavigationBar'
 import PlanetSelector from '../../components/planet-selector/PlanetSelector'
@@ -110,7 +111,9 @@ function GamePageWithGameProviders() {
     <GameInfoProvider>
       <PlayerProvider>
         <ResearchProvider>
-          <GamePage />
+          <PlayerResourcesProvider>
+            <GamePage />
+          </PlayerResourcesProvider>
         </ResearchProvider>
       </PlayerProvider>
     </GameInfoProvider>

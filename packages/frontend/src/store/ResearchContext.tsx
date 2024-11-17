@@ -55,7 +55,7 @@ function ResearchProvider({ children }: ResearchProviderProps) {
   const [activeResearchCountdown, setActiveResearchCountdown] = useState(0)
 
   const { selectedUniverse } = useGameInfo()
-  const { player, loadPlayer } = usePlayer()
+  const { player, loadPlayer, isPlayerLoading } = usePlayer()
 
   const activeResearch = player?.researches.activeResearch
   const executeTaskAt = activeResearch?.executeTaskAt || 0
@@ -63,9 +63,11 @@ function ResearchProvider({ children }: ResearchProviderProps) {
   const researchQueue = useMemo(() => player?.researches.queue || [], [player])
   const researched = useMemo(() => player?.researches.researched || [], [player])
 
-  const isResearchLoading = activeResearch
-    ? activeResearchCountdown === 0 && researchQueue.length > 0
-    : researchQueue.length > 0
+  const isResearchLoading =
+    isPlayerLoading ||
+    (activeResearch
+      ? activeResearchCountdown === 0 && researchQueue.length > 0
+      : researchQueue.length > 0)
 
   const updateResearchCountdown = useCallback(async () => {
     if (executeTaskAt) {
@@ -116,6 +118,8 @@ function ResearchProvider({ children }: ResearchProviderProps) {
 
   // TODO: create scheduleResearch
   // TODO: create cancelResearch
+
+  // TODO: include HERE the research QUEUE
 
   const value = {
     activeResearch,

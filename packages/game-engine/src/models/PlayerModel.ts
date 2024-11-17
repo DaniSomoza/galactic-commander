@@ -20,6 +20,7 @@ interface IPlayerPlanet {
 export interface IPlayerPerk {
   bonus: IBonus
   source: mongoose.Types.ObjectId
+  sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
@@ -27,6 +28,7 @@ export interface IPlayerPerk {
 export interface IPlayerPoints {
   points: number
   source: mongoose.Types.ObjectId
+  sourceName: string
   type: 'Unit' | 'Research' | 'Battle'
   second: number
 }
@@ -103,6 +105,7 @@ const PlayerSchema: Schema = new Schema({
       _id: false,
       bonus: BonusType,
       source: { type: Schema.Types.ObjectId, required: true },
+      sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
   ],
@@ -113,6 +116,7 @@ const PlayerSchema: Schema = new Schema({
       points: { type: Number, required: true },
       second: { type: Number, required: true },
       source: { type: Schema.Types.ObjectId, required: true },
+      sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
   ],

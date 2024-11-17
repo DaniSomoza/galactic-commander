@@ -61,6 +61,7 @@ async function processNewPlayerTask(
       {
         bonus: race.bonus,
         source: race._id,
+        sourceName: race.name,
         type: 'Race'
       }
     ],

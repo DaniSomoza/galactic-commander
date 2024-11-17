@@ -75,6 +75,8 @@ function PlayerProvider({ children }: PlayerProviderProps) {
     setCreatePlayerTaskId(taskId)
   }, [])
 
+  // TODO: ADD SELECTED PLANET ??
+
   const value = {
     player,
     loadPlayer,

@@ -1,9 +1,8 @@
-import { Tooltip } from '@mui/material'
-import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
 
 import { IBonus } from 'game-engine/dist/types/bonus'
-import { useTranslations } from '../../store/TranslationContext'
+
+import Bonus from '../bonus/Bonus'
 
 type BonusCardProps = {
   bonus?: IBonus
@@ -12,43 +11,35 @@ type BonusCardProps = {
   isLoading?: boolean
 }
 
+// TODO: rename this to ResearchBonus ????
 function BonusCards({
   bonus,
   isFleetEnergyResearch,
   isTroopsPopulationResearch,
   isLoading
 }: BonusCardProps) {
-  const { translate } = useTranslations()
-
   if (isLoading) {
-    return <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
+    return <Skeleton variant="rounded" height={'40px'} width={'40px'} />
   }
 
   return (
     <>
       {bonus &&
         Object.keys(bonus).map((bono) => (
-          <Paper variant="outlined" key={bono}>
-            <Tooltip title={translate(bono, String(bonus[bono as keyof IBonus]))} arrow>
-              <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-            </Tooltip>
-          </Paper>
+          <Bonus
+            key={bono}
+            size="small"
+            bono={bono}
+            bonusValue={bonus[bono as keyof IBonus] as number}
+          />
         ))}
 
       {isFleetEnergyResearch && (
-        <Paper variant="outlined">
-          <Tooltip title={translate('RESEARCH_ENERGY_BONUS')} arrow>
-            <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-          </Tooltip>
-        </Paper>
+        <Bonus size="small" bono="RESEARCH_ENERGY_BONUS" bonusValue={true} />
       )}
 
       {isTroopsPopulationResearch && (
-        <Paper variant="outlined">
-          <Tooltip title={translate('RESEARCH_POPULATION_BONUS')} arrow>
-            <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-          </Tooltip>
-        </Paper>
+        <Bonus size="small" bono="RESEARCH_POPULATION_BONUS" bonusValue={true} />
       )}
     </>
   )

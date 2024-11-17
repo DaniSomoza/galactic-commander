@@ -15,12 +15,12 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
       colonies: planets.colonies.map(cleanPlanetFields),
       explored: planets.explored.map((planetId) => planetId.toString())
     },
-    perks: perks.map(({ bonus, type, source }) => ({ bonus, type, source: source.toString() })),
-    points: points.map(({ points, second, type, source }) => ({
+    perks: perks.map(({ bonus, type, sourceName }) => ({ bonus, type, sourceName })),
+    points: points.map(({ points, second, type, sourceName }) => ({
       points,
       second,
       type,
-      source: source.toString()
+      sourceName
     })),
     researches: {
       researched: researches.researched,

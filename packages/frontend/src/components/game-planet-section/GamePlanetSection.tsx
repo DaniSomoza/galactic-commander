@@ -1,4 +1,3 @@
-import { useCallback, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
@@ -7,65 +6,33 @@ import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import { green } from '@mui/material/colors'
 
-import calculateResourceProductionBonus from 'game-engine/src/engine/resources/calculateResourceProduction'
-import getSecond from 'game-engine/src/helpers/getSecond'
-import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
-
 import Image from '../image/Image'
 import formatNumber from '../../utils/formatNumber'
-import usePolling from '../../hooks/usePolling'
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
+import { usePlayerResources } from '../../store/PlayerResourcesContext'
 
 function GamePlanetSection() {
-  const [resources, setResources] = useState(0)
-
   const { translate } = useTranslations()
-  const { player } = usePlayer()
+  const { player, isPlayerLoading } = usePlayer()
+  const { resources } = usePlayerResources()
 
-  const planet = player?.planets.principal
-  const owner = player
-
-  const {
-    resources: actualPlanetResources,
-    lastResourceProductionTime,
-    resourceQuality
-  } = planet || {}
-
-  const productionBonus = owner?.perks
-    ? computedBonus(owner.perks, 'RESOURCE_PRODUCTION_BONUS')
-    : undefined
-
-  const updatePlanetResources = useCallback(() => {
-    const actualSecond = getSecond(Date.now())
-
-    setResources(
-      calculateResourceProductionBonus(
-        actualSecond,
-        actualPlanetResources || 0,
-        lastResourceProductionTime || actualSecond,
-        resourceQuality || 0,
-        productionBonus
-      )
-    )
-  }, [actualPlanetResources, lastResourceProductionTime, resourceQuality, productionBonus])
-
-  usePolling(updatePlanetResources)
+  const isLoading = isPlayerLoading || !player
 
   return (
     <Paper variant="outlined" sx={{ position: 'relative' }}>
       <Stack justifyContent="center" alignItems="center">
-        {planet ? (
+        {isLoading ? (
+          <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+        ) : (
           <Image
-            src={planet.imgUrl}
+            src={player.planets.principal.imgUrl}
             alt="player planet image"
             height={'200px'}
             width={'200px'}
             border
           />
-        ) : (
-          <Skeleton variant="rounded" width={200} height={200} />
         )}
         <Box
           position={'absolute'}
@@ -74,30 +41,99 @@ function GamePlanetSection() {
           maxWidth={'164px'}
           sx={{ transform: 'translate(0, -50%)' }}
         >
-          <Paper variant="outlined">
-            <Typography
-              variant="body1"
-              fontSize={12}
-              fontWeight={500}
-              padding={0.4}
-              paddingLeft={0.8}
-              paddingRight={0.8}
-              overflow={'hidden'}
-              textOverflow="ellipsis"
-            >
-              {/* TODO: implement change planet name endpoint */}
-              {planet ? planet.name : <Skeleton variant="text" width={130} />}
-            </Typography>
-          </Paper>
+          {isLoading ? (
+            <Box>
+              <Skeleton variant="rounded" width={'120px'} />
+            </Box>
+          ) : (
+            <Paper variant="outlined">
+              <Typography
+                variant="body1"
+                fontSize={12}
+                fontWeight={500}
+                padding={0.4}
+                paddingLeft={0.8}
+                paddingRight={0.8}
+                overflow={'hidden'}
+                textOverflow="ellipsis"
+              >
+                {/* TODO: implement change planet name endpoint */}
+                {player.planets.principal.name}
+              </Typography>
+            </Paper>
+          )}
         </Box>
 
         <Box position={'absolute'} left={0} bottom={0} padding={1}>
           <Stack spacing={0.5} alignItems="center">
+            {isLoading ||
+            (player && !resources[formatCoordinatesLabel(player.planets.principal.coordinates)]) ? (
+              <Box>
+                <Skeleton variant="rounded" width={42} />
+              </Box>
+            ) : (
+              <Paper variant="outlined">
+                <Tooltip
+                  title={translate(
+                    'GAME_PLAYER_PLANET_RESOURCES_TOOLTIP',
+                    formatNumber(
+                      resources[formatCoordinatesLabel(player.planets.principal.coordinates)],
+                      true
+                    )
+                  )}
+                  arrow
+                >
+                  <Typography
+                    variant="body1"
+                    fontSize={12}
+                    fontWeight={500}
+                    color={green[600]}
+                    padding={0.4}
+                  >
+                    {formatNumber(
+                      resources[formatCoordinatesLabel(player.planets.principal.coordinates)]
+                    )}
+                  </Typography>
+                </Tooltip>
+              </Paper>
+            )}
+          </Stack>
+        </Box>
+
+        <Box position={'absolute'} bottom={0} padding={1}>
+          {isLoading ? (
+            <Box>
+              <Skeleton variant="rounded" width={72} />
+            </Box>
+          ) : (
+            <Paper variant="outlined">
+              <Tooltip title={translate('GAME_PLAYER_PLANET_COORDINATES_TOOLTIP')} arrow>
+                <Typography
+                  variant="body1"
+                  fontSize={12}
+                  fontWeight={500}
+                  padding={0.4}
+                  paddingLeft={0.8}
+                  paddingRight={0.8}
+                >
+                  {formatCoordinatesLabel(player.planets.principal.coordinates)}
+                </Typography>
+              </Tooltip>
+            </Paper>
+          )}
+        </Box>
+
+        <Box position={'absolute'} right={0} bottom={0} padding={1}>
+          {isLoading ? (
+            <Box>
+              <Skeleton variant="rounded" width={32} />
+            </Box>
+          ) : (
             <Paper variant="outlined">
               <Tooltip
                 title={translate(
-                  'GAME_PLAYER_PLANET_RESOURCES_TOOLTIP',
-                  formatNumber(resources, true)
+                  'GAME_PLAYER_PLANET_RESOURCE_QUALITY_TOOLTIP',
+                  player.planets.principal.resourceQuality || 0
                 )}
                 arrow
               >
@@ -108,54 +144,11 @@ function GamePlanetSection() {
                   color={green[600]}
                   padding={0.4}
                 >
-                  {resources ? formatNumber(resources) : <Skeleton variant="text" width={32} />}
+                  {player.planets.principal.resourceQuality}%
                 </Typography>
               </Tooltip>
             </Paper>
-          </Stack>
-        </Box>
-
-        <Box position={'absolute'} bottom={0} padding={1}>
-          <Paper variant="outlined">
-            <Tooltip title={translate('GAME_PLAYER_PLANET_COORDINATES_TOOLTIP')} arrow>
-              <Typography
-                variant="body1"
-                fontSize={12}
-                fontWeight={500}
-                padding={0.4}
-                paddingLeft={0.8}
-                paddingRight={0.8}
-              >
-                {planet?.coordinates ? (
-                  formatCoordinatesLabel(planet?.coordinates)
-                ) : (
-                  <Skeleton variant="text" width={24} />
-                )}
-              </Typography>
-            </Tooltip>
-          </Paper>
-        </Box>
-
-        <Box position={'absolute'} right={0} bottom={0} padding={1}>
-          <Paper variant="outlined">
-            <Tooltip
-              title={translate(
-                'GAME_PLAYER_PLANET_RESOURCE_QUALITY_TOOLTIP',
-                planet?.resourceQuality || 0
-              )}
-              arrow
-            >
-              <Typography
-                variant="body1"
-                fontSize={12}
-                fontWeight={500}
-                color={green[600]}
-                padding={0.4}
-              >
-                {planet ? `${planet.resourceQuality}%` : <Skeleton variant="text" width={28} />}
-              </Typography>
-            </Tooltip>
-          </Paper>
+          )}
         </Box>
       </Stack>
     </Paper>

@@ -1,7 +1,7 @@
-import Tooltip from '@mui/material/Tooltip'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
+import Box from '@mui/material/Box'
 
 import { IBonus } from 'game-engine/dist/types/bonus'
 import { PlayerPerkType } from 'game-api-microservice/src/types/Player'
@@ -10,7 +10,7 @@ import computedBonus, {
   percentageBonusType
 } from 'game-engine/src/engine/bonus/computedBonus'
 
-import { useTranslations } from '../../store/TranslationContext'
+import Bonus from '../bonus/Bonus'
 
 type PlayerPerksSectionProps = {
   playerPerks?: PlayerPerkType[]
@@ -18,68 +18,66 @@ type PlayerPerksSectionProps = {
 }
 
 function PlayerPerksSection({ playerPerks, isLoading }: PlayerPerksSectionProps) {
-  const { translate } = useTranslations()
-
-  if (isLoading || !playerPerks) {
-    return (
-      <Paper variant="outlined">
-        <Stack flexWrap={'wrap'} direction={'row'} gap={1} padding={1} justifyContent={'center'}>
-          {Object.keys(bonusTypes).map((bono) => (
-            <Skeleton key={bono} variant="rectangular" height={'40px'} width={'40px'} />
-          ))}
-
-          <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
-        </Stack>
-      </Paper>
-    )
-  }
-
-  // TODO: create an util for this
-  // TODO: create different components for percentageBonusType, activatableBonusType & numericBonusType
-  const playerBonus = Object.keys(bonusTypes).reduce((payerBonus: IBonus, bonusName) => {
-    ;(payerBonus[bonusName as keyof IBonus] as number) = computedBonus(
-      playerPerks,
+  const playerBonus = Object.keys(bonusTypes).reduce((playerBonus: IBonus, bonusName) => {
+    ;(playerBonus[bonusName as keyof IBonus] as number) = computedBonus(
+      playerPerks || [],
       bonusName as keyof typeof percentageBonusType
     )
 
-    return payerBonus
+    const isPercentageBonus = !!percentageBonusType[bonusName as keyof typeof percentageBonusType]
+
+    // adjust % label for player perks
+    if (isPercentageBonus) {
+      ;(playerBonus[bonusName as keyof IBonus] as number) -= 100
+    }
+
+    return playerBonus
   }, {})
-
-  console.log('playerBonus: ', playerBonus)
-  console.log(
-    '>>> SOURCE OF TROOPS_ATTACK_BONUS: ',
-    playerPerks.filter((playerPerk) => !!playerPerk.bonus['TROOPS_ATTACK_BONUS'])
-  )
-
-  // TODO: ADD sourceName instead of source
-
-  // IMPORTANT
-  // TODO: create different components for percentageBonusType, activatableBonusType & numericBonusType
-  // SHOW Active component (green) if:
-  // percentageBonusType is > 100%
-  // activatableBonusType is true
-  // numericBonusType is > 0
 
   return (
     <Paper variant="outlined">
-      <Stack flexWrap={'wrap'} direction={'row'} gap={1} padding={1} justifyContent={'center'}>
-        {Object.keys(playerBonus).map((bono) => (
-          <Tooltip
+      <Stack
+        flexWrap={'wrap'}
+        direction={'row'}
+        gap={1}
+        paddingTop={1}
+        paddingBottom={1}
+        justifyContent={'center'}
+      >
+        {Object.keys(bonusTypes).map((bono) => (
+          <Bonus
             key={bono}
-            title={translate(bono, String(playerBonus[bono as keyof IBonus]))}
-            arrow
-          >
-            <Skeleton
-              // TODO: DELETE THIS STYLE
-              // sx={{ backgroundColor: playerBonus[bono as keyof IBonus] > 100 ? 'green' : '' }}
-              variant="rectangular"
-              height={'40px'}
-              width={'40px'}
-            />
-          </Tooltip>
+            size="large"
+            bono={bono}
+            bonusValue={playerBonus[bono as keyof IBonus] as number}
+            isLoading={isLoading || !playerPerks}
+            sources={playerPerks?.filter((playerPerk) => playerPerk.bonus[bono as keyof IBonus])}
+          />
         ))}
 
-        <Skeleton variant="rectangular" height={'40px'} width={'40px'} />
+        <Paper variant="outlined">
+          <Box>
+            <Skeleton variant="rounded" height={'68px'} width={'68px'} />
+          </Box>
+        </Paper>
+
+        {/* <Paper variant="outlined">
+          <Box>
+            <Skeleton variant="rounded" height={'68'} width={'68'} />
+          </Box>
+        </Paper>
+
+        <Paper variant="outlined">
+          <Box>
+            <Skeleton variant="rounded" height={'68'} width={'68'} />
+          </Box>
+        </Paper> */}
+
+        {/* <Paper variant="outlined">
+          <Box>
+            <Skeleton variant="rounded" height={"68"} width={"68"} />
+          </Box>
+        </Paper> */}
       </Stack>
     </Paper>
   )

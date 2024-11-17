@@ -8,7 +8,7 @@ import { UniverseType } from './Universe'
 
 export type PlayerPerkType = {
   bonus: IBonus
-  source: string
+  sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
@@ -28,7 +28,7 @@ export type PlayerType = {
   // TODO: CREATE A NEW COLLECTION FOR THIS!!!! points collection
   points: {
     points: number
-    source: string
+    sourceName: string
     type: 'Unit' | 'Research' | 'Battle'
     second: number
   }[]

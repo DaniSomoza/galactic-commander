@@ -57,6 +57,7 @@ async function processFinishResearchTask(
       player.perks.push({
         bonus: research.bonus,
         source: task.data.research,
+        sourceName: research.name,
         type: 'Research'
       })
     }
@@ -74,7 +75,15 @@ async function processFinishResearchTask(
 
   const points = task.data.researchResourceCost
   const pointsSource = task.data.research._id
-  player.points = addPoints(player.points, points, pointsSource, 'Research', second)
+  const pointsSourceName = research.name
+  player.points = addPoints(
+    player.points,
+    points,
+    pointsSource,
+    pointsSourceName,
+    'Research',
+    second
+  )
 
   player.researches.activeResearch = undefined
 

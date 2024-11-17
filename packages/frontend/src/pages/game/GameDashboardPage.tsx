@@ -3,7 +3,6 @@ import Paper from '@mui/material/Paper'
 import Skeleton from '@mui/material/Skeleton'
 
 import { usePlayer } from '../../store/PlayerContext'
-import BonusCards from '../../components/bonus-cards/BonusCards'
 import PlayerPerksSection from '../../components/player-perks-section/PlayerPerksSection'
 
 function GameDashboardPage() {
@@ -17,14 +16,7 @@ function GameDashboardPage() {
 
   return (
     <Stack gap={2}>
-      <Paper variant="outlined">
-        {/* TODO: INCLUDE HERE THE RESEARCH QUEUE */}
-
-        {/* TODO: REMOVE THIS */}
-        <Stack direction={'row'} gap={1} padding={1} justifyContent={'center'} flexWrap={'wrap'}>
-          {player?.perks.map((perk) => <BonusCards key={perk.source} bonus={perk.bonus} />)}
-        </Stack>
-      </Paper>
+      {/* TODO: INCLUDE HERE THE RESEARCH QUEUE */}
 
       <PlayerPerksSection playerPerks={player?.perks} isLoading={isPlayerLoading} />
 

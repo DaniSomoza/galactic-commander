@@ -18,8 +18,8 @@ import { useTranslations } from '../../store/TranslationContext'
 import Image from '../image/Image'
 
 function GameActiveResearchSection() {
-  const { translate } = useTranslations()
   const navigate = useNavigate()
+  const { translate } = useTranslations()
 
   const { activeResearch, activeResearchCountdown, isResearchLoading } = useResearch()
 
@@ -48,7 +48,7 @@ function GameActiveResearchSection() {
         ) : (
           <Stack justifyContent="center" alignItems="center">
             {isResearchLoading ? (
-              <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
+              <Skeleton variant="rounded" height={'200px'} width={'200px'} />
             ) : (
               <Image
                 src={activeResearch?.research.imgUrl || ''}
@@ -66,11 +66,9 @@ function GameActiveResearchSection() {
               sx={{ transform: 'translate(0, -50%)' }}
             >
               {isResearchLoading ? (
-                <Skeleton
-                  variant="rectangular"
-                  width={'150px'}
-                  sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
-                />
+                <Box>
+                  <Skeleton variant="rounded" width={'150px'} />
+                </Box>
               ) : (
                 <Paper variant="outlined">
                   <Typography
@@ -91,12 +89,9 @@ function GameActiveResearchSection() {
 
             <Box position={'absolute'} left={0} bottom={0} padding={1}>
               {isResearchLoading ? (
-                // TODO: create a component for this !!
-                <Skeleton
-                  variant="rectangular"
-                  width={'70px'}
-                  sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
-                />
+                <Box>
+                  <Skeleton variant="rounded" width={'70px'} />
+                </Box>
               ) : (
                 <Paper variant="outlined">
                   <Tooltip
@@ -133,12 +128,9 @@ function GameActiveResearchSection() {
                 </Stack>
 
                 {isResearchLoading ? (
-                  <Skeleton
-                    variant="rectangular"
-                    width={'42px'}
-                    height={'24px'}
-                    sx={{ borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.12)' }}
-                  />
+                  <Box>
+                    <Skeleton variant="rounded" width={'42px'} height={'24px'} />
+                  </Box>
                 ) : (
                   <Paper variant="outlined">
                     <Tooltip
