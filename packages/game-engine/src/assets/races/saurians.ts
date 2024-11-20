@@ -12,7 +12,6 @@ const SAURIANS_INTERGALACTIC_TRAVEL_THRESHOLD = 13
 const saurians: IRace = {
   name: 'SAURIANS_RACE_NAME',
   description: 'SAURIANS_RACE_DESCRIPTION',
-  imgUrl: '/races/saurians_race.jpg',
   tags: ['Aggressive', 'Stealth'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,

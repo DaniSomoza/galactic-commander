@@ -54,7 +54,6 @@ export type ShipsTypes =
 export interface IRace {
   name: string
   description: string
-  imgUrl: string
   tags: RaceTags[]
   maxPlanetsAllowed: number
   baseFleetEnergy: number
@@ -75,7 +74,6 @@ const RaceSchema: Schema = new Schema(
   {
     name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-    imgUrl: { type: String, required: true },
     tags: [{ type: String, required: true }],
     maxPlanetsAllowed: { type: Number, required: true, default: DEFAULT_ALLOWED_PLANETS },
     baseFleetEnergy: { type: Number, required: true, default: DEFAULT_FLEET_ENERGY },

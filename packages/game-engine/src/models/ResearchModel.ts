@@ -5,7 +5,6 @@ import { IBonus } from '../types/bonus'
 export interface IResearch {
   name: string
   description: string
-  imgUrl: string
   raceName: string
   bonus: IBonus
   initialTime: number
@@ -73,7 +72,6 @@ export const ResearchSchema = new Schema({
     unique: true
   },
   description: { type: String, required: true },
-  imgUrl: { type: String, required: true },
 
   raceName: { type: String, required: true },
 

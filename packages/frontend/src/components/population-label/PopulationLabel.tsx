@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import GroupIcon from '@mui/icons-material/Group'
 
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
@@ -15,7 +17,9 @@ function PopulationLabel() {
 
   // TODO: Add current population
   const currentPopulation = 0
-  const populationLabel = `${currentPopulation} / ${formatNumber(player?.units.troops.population || 0)}`
+  const populationBonus = computedBonus(player?.perks || [], 'TROOPS_POPULATION_BONUS')
+  const basePopulation = player ? player.units.troops.population * (populationBonus / 100) : 0
+  const populationLabel = `${currentPopulation} / ${formatNumber(basePopulation)}`
 
   return (
     <Paper>

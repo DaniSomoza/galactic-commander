@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
@@ -15,7 +17,10 @@ function EnergyLabel() {
 
   // TODO: Add current energy
   const currentEnergy = 0
-  const energyLabel = `${currentEnergy} / ${formatNumber(player?.units.fleets.energy || 0)}`
+  const energyBonus = computedBonus(player?.perks || [], 'FLEET_ENERGY_BONUS')
+  const baseEnergy = player ? player.units.fleets.energy * (energyBonus / 100) : 0
+
+  const energyLabel = `${currentEnergy} / ${formatNumber(baseEnergy)}`
 
   return (
     <Paper>

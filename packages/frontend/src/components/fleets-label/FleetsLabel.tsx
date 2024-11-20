@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import FlightTakeoffRoundedIcon from '@mui/icons-material/FlightTakeoffRounded'
 
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
 
@@ -13,8 +15,8 @@ function FleetsLabel() {
   const { player } = usePlayer()
 
   // TODO: Add current fleets
-  const maxFleets = 2
   const currentFleets = 0
+  const maxFleets = player ? computedBonus(player.perks, 'MAX_FLEETS_ALLOWED_BONUS') : 0
   const fleetsLabel = `${currentFleets} / ${maxFleets}`
 
   return (

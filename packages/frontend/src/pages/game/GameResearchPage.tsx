@@ -28,6 +28,7 @@ import formatNumber from '../../utils/formatNumber'
 import BonusCards from '../../components/bonus-cards/BonusCards'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
+import getResearchImage from '../../utils/getResearchImage'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
@@ -123,128 +124,132 @@ function GameResearchPage() {
                     onMouseLeave={() => setShowRemoveButton(false)}
                   >
                     <Tooltip title={translate(researchName)} arrow>
-                      <Stack justifyContent="center" alignItems="center" gap={1}>
-                        <Image
-                          src={raceResearch!.imgUrl}
-                          alt={translate(researchName)}
-                          height={'128px'}
-                          width={'128px'}
-                          border
-                        />
+                      <Paper variant="outlined">
+                        <Stack justifyContent="center" alignItems="center" gap={1}>
+                          <Image
+                            src={getResearchImage(raceResearch?.name || '')}
+                            alt={translate(researchName)}
+                            height={'128px'}
+                            width={'128px'}
+                            border
+                          />
 
-                        {/* Countdown */}
-                        <Box
-                          position={'absolute'}
-                          top={16}
-                          sx={{ transform: 'translate(0, -50%)' }}
-                        >
-                          <Tooltip
-                            title={
-                              <div>
-                                <div>
-                                  {translate(
-                                    'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_START_DATE',
-                                    formatTimestamp(startResearchTime)
-                                  )}
-                                </div>
-                                <div>
-                                  {translate(
-                                    'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_END_DATE',
-                                    formatTimestamp(endResearchTime)
-                                  )}
-                                </div>
-                              </div>
-                            }
-                            arrow
-                            placement="top"
+                          {/* Countdown */}
+                          <Box
+                            position={'absolute'}
+                            top={16}
+                            sx={{ transform: 'translate(0, -50%)' }}
                           >
+                            <Tooltip
+                              title={
+                                <div>
+                                  <div>
+                                    {translate(
+                                      'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_START_DATE',
+                                      formatTimestamp(startResearchTime)
+                                    )}
+                                  </div>
+                                  <div>
+                                    {translate(
+                                      'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_END_DATE',
+                                      formatTimestamp(endResearchTime)
+                                    )}
+                                  </div>
+                                </div>
+                              }
+                              arrow
+                              placement="top"
+                            >
+                              <Paper variant="outlined">
+                                <Typography
+                                  variant="body1"
+                                  fontSize={12}
+                                  padding={0.2}
+                                  paddingLeft={0.6}
+                                  paddingRight={0.6}
+                                  textAlign={'center'}
+                                >
+                                  {formatTimer(countdown)}
+                                </Typography>
+                              </Paper>
+                            </Tooltip>
+                          </Box>
+
+                          {/* remove research from the research queue */}
+                          {showRemoveButton && (
+                            <Box position={'absolute'} top={0} right={0}>
+                              <Tooltip
+                                title={translate(
+                                  'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP'
+                                )}
+                                arrow
+                              >
+                                <IconButton
+                                  size="small"
+                                  onClick={() => performRemoveResearchFromQueue(index)}
+                                  aria-label={translate(
+                                    'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP'
+                                  )}
+                                  color="inherit"
+                                  sx={{ fontSize: '14px' }}
+                                >
+                                  <CancelRoundedIcon color="error" fontSize="inherit" />
+                                </IconButton>
+                              </Tooltip>
+                            </Box>
+                          )}
+
+                          {/* position in the queue */}
+                          <Box position={'absolute'} left={0} bottom={0} padding={0.8}>
                             <Paper variant="outlined">
                               <Typography
                                 variant="body1"
                                 fontSize={12}
-                                padding={0.2}
+                                fontWeight={500}
+                                padding={0.3}
                                 paddingLeft={0.6}
                                 paddingRight={0.6}
-                                textAlign={'center'}
                               >
-                                {formatTimer(countdown)}
+                                {index + 1}º
                               </Typography>
                             </Paper>
-                          </Tooltip>
-                        </Box>
-
-                        {/* remove research from the research queue */}
-                        {showRemoveButton && (
-                          <Box position={'absolute'} top={0} right={0}>
-                            <Tooltip
-                              title={translate('GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP')}
-                              arrow
-                            >
-                              <IconButton
-                                size="small"
-                                onClick={() => performRemoveResearchFromQueue(index)}
-                                aria-label={translate(
-                                  'GAME_RESEARCH_PAGE_RESEARCH_QUEUE_REMOVE_TOOLTIP'
-                                )}
-                                color="inherit"
-                                sx={{ fontSize: '14px' }}
-                              >
-                                <CancelRoundedIcon color="error" fontSize="inherit" />
-                              </IconButton>
-                            </Tooltip>
                           </Box>
-                        )}
 
-                        {/* position in the queue */}
-                        <Box position={'absolute'} left={0} bottom={0} padding={0.3}>
-                          <Paper variant="outlined">
-                            <Typography
-                              variant="body1"
-                              fontSize={12}
-                              fontWeight={500}
-                              padding={0.3}
-                              paddingLeft={0.6}
-                              paddingRight={0.6}
-                            >
-                              {index + 1}
-                            </Typography>
-                          </Paper>
-                        </Box>
-
-                        {/* level */}
-                        <Box position={'absolute'} right={0} bottom={0} padding={0.3}>
-                          <Paper variant="outlined">
-                            <Stack
-                              padding={0.3}
-                              paddingLeft={0.6}
-                              paddingRight={0.6}
-                              direction={'row'}
-                              justifyContent="center"
-                              alignItems="center"
-                            >
-                              <Typography
-                                variant="body1"
-                                fontSize={12}
-                                fontWeight={500}
-                                color={orange[600]}
+                          {/* level */}
+                          <Box position={'absolute'} right={0} bottom={0} padding={0.8}>
+                            <Paper variant="outlined">
+                              <Stack
+                                padding={0.3}
+                                paddingLeft={0.6}
+                                paddingRight={0.6}
+                                direction={'row'}
+                                justifyContent="center"
+                                alignItems="center"
                               >
-                                {currentLevel}
-                              </Typography>
+                                <Typography
+                                  variant="body1"
+                                  fontSize={12}
+                                  fontWeight={500}
+                                  color={orange[600]}
+                                >
+                                  {currentLevel}
+                                </Typography>
 
-                              <ArrowRightAltRoundedIcon fontSize="inherit" />
+                                <ArrowRightAltRoundedIcon fontSize="inherit" />
 
-                              <Typography
-                                variant="body1"
-                                fontSize={12}
-                                fontWeight={500}
-                                color={green[600]}
-                              >
-                                {nextLevel}
-                              </Typography>
-                            </Stack>
-                          </Paper>
-                        </Box>
-                      </Stack>
+                                <Typography
+                                  variant="body1"
+                                  fontSize={12}
+                                  fontWeight={500}
+                                  color={green[600]}
+                                >
+                                  {nextLevel}
+                                </Typography>
+                              </Stack>
+                            </Paper>
+                          </Box>
+                        </Stack>
+                      </Paper>
                     </Tooltip>
                   </Box>
 
@@ -293,7 +298,7 @@ function GameResearchPage() {
                 <Box sx={{ position: 'relative' }}>
                   <Stack justifyContent="center" alignItems="center">
                     <Image
-                      src={raceResearch.imgUrl}
+                      src={getResearchImage(raceResearch?.name || '')}
                       alt={translate(raceResearch.name)}
                       height={'230px'}
                       width={'230px'}

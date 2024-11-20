@@ -24,6 +24,7 @@ export type IBonus = {
   FLEET_CARGO_BONUS?: PercentageBonus
   FLEET_BUILDING_BONUS?: PercentageBonus
   MAX_FLEETS_ALLOWED_BONUS?: NumericBonus
+  FLEET_ENERGY_BONUS?: PercentageBonus
 
   // Troops Bonus
   TROOPS_ATTACK_BONUS?: PercentageBonus
@@ -33,6 +34,7 @@ export type IBonus = {
   TROOPS_SHIELD_PIERCING_BONUS?: ActivatableBonus
   TROOPS_SHIELD_REGENERATION_BONUS?: PercentageBonus
   TROOPS_TRAINING_BONUS?: PercentageBonus
+  TROOPS_POPULATION_BONUS?: PercentageBonus
 
   // Defenses Bonus
   DEFENSES_ATTACK_BONUS?: PercentageBonus
@@ -44,12 +46,4 @@ export type IBonus = {
 
   // Capture Units Bonus
   FLEET_CAPTURE_BONUS?: PercentageBonus
-  FLEET_STARFIGHTER_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_SPACE_CARRIER_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_SPACE_CRUISER_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_DESTROYER_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_SPACE_CARGO_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_FRIGATE_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_BOMBER_CAPTURE_BONUS?: PercentageBonus
-  // FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS?: PercentageBonus
 }

@@ -1,7 +1,5 @@
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import Skeleton from '@mui/material/Skeleton'
-import Box from '@mui/material/Box'
 
 import { IBonus } from 'game-engine/dist/types/bonus'
 import { PlayerPerkType } from 'game-api-microservice/src/types/Player'
@@ -54,30 +52,6 @@ function PlayerPerksSection({ playerPerks, isLoading }: PlayerPerksSectionProps)
             sources={playerPerks?.filter((playerPerk) => playerPerk.bonus[bono as keyof IBonus])}
           />
         ))}
-
-        <Paper variant="outlined">
-          <Box>
-            <Skeleton variant="rounded" height={'68px'} width={'68px'} />
-          </Box>
-        </Paper>
-
-        {/* <Paper variant="outlined">
-          <Box>
-            <Skeleton variant="rounded" height={'68'} width={'68'} />
-          </Box>
-        </Paper>
-
-        <Paper variant="outlined">
-          <Box>
-            <Skeleton variant="rounded" height={'68'} width={'68'} />
-          </Box>
-        </Paper> */}
-
-        {/* <Paper variant="outlined">
-          <Box>
-            <Skeleton variant="rounded" height={"68"} width={"68"} />
-          </Box>
-        </Paper> */}
       </Stack>
     </Paper>
   )

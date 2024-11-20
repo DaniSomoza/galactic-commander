@@ -19,7 +19,6 @@ type IBaseRace = {
 const pirates: IBaseRace = {
   name: 'PIRATES_RACE_NAME',
   description: 'PIRATES_RACE_DESCRIPTION',
-  imgUrl: '/races/pirates_race.jpg',
   tags: ['Aggressive', 'Raiders'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,

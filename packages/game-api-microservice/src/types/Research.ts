@@ -6,7 +6,6 @@ import { StartResearchTaskType, TaskType } from './Task'
 export type ResearchType = {
   name: string
   description: string
-  imgUrl: string
   raceName: string
   bonus: IBonus
   initialTime: number

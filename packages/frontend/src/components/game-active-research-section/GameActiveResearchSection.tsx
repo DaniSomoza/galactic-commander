@@ -9,6 +9,7 @@ import Button from '@mui/material/Button'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
 import { green, orange } from '@mui/material/colors'
 
+import getResearchImage from '../../utils/getResearchImage'
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
 import BonusCards from '../bonus-cards/BonusCards'
@@ -51,7 +52,7 @@ function GameActiveResearchSection() {
               <Skeleton variant="rounded" height={'200px'} width={'200px'} />
             ) : (
               <Image
-                src={activeResearch?.research.imgUrl || ''}
+                src={getResearchImage(activeResearch?.research.name || '')}
                 alt="player active research image"
                 height={'200px'}
                 width={'200px'}

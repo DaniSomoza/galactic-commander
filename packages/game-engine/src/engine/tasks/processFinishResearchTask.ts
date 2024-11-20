@@ -92,6 +92,8 @@ async function processFinishResearchTask(
   const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
 
   if (nextResearch) {
+    // TODO: has enough resources???
+
     const startResearchTask = createStartResearchTask(
       task.universe._id,
       player._id,

@@ -119,6 +119,8 @@ function ResearchProvider({ children }: ResearchProviderProps) {
   // TODO: create scheduleResearch
   // TODO: create cancelResearch
 
+  // TODO: create reorderResearch Queue
+
   // TODO: include HERE the research QUEUE
 
   const value = {

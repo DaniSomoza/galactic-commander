@@ -24,7 +24,6 @@ export type RaceTags =
 export type RaceType = {
   name: string
   description: string
-  imgUrl: string
   tags: RaceTags[]
   maxPlanetsAllowed: number
   baseFleetEnergy: number

@@ -10,15 +10,18 @@ import {
   numericBonusType,
   activatableBonusType
 } from 'game-engine/src/engine/bonus/computedBonus'
+import { IBonus } from 'game-engine/dist/types/bonus'
 
 import { useTranslations } from '../../store/TranslationContext'
-import Image from '../image/Image'
+import getBonusImage from '../../utils/getBonusImage'
 import { usePlayer } from '../../store/PlayerContext'
-import { IBonus } from 'game-engine/dist/types/bonus'
+import Image from '../image/Image'
+import getResearchImage from '../../utils/getResearchImage'
+import getRaceImage from '../../utils/getRaceImage'
 
 type BonusProps = {
   size?: 'small' | 'large'
-  bono: keyof typeof bonusImages
+  bono: string
   bonusValue: number | boolean
   isLoading?: boolean
   sources?: PlayerPerkType[]
@@ -27,13 +30,11 @@ type BonusProps = {
 function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: BonusProps) {
   const { translate } = useTranslations()
 
-  const bonusImg = bonusImages[bono]
+  const bonusImg = getBonusImage(bono)
 
   const bonusLabel = getBonusLabel(bono, bonusValue as number)
   const showBonusLabel = isBonusLabelVisible(bono, bonusValue as number)
   const showSources = sources.length > 0
-
-  // TODO: SHOW NEGATIVE RED LABEL
 
   return (
     <Paper variant="outlined">
@@ -66,12 +67,11 @@ function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: Bo
 
             {showBonusLabel && (
               <Box position={'absolute'}>
-                {/* <Paper variant="outlined"> */}
                 <Typography
                   variant="h5"
                   component={'p'}
                   padding={'0 4px'}
-                  color="success"
+                  color={getBonusLabelColor(bono, bonusValue as number)}
                   fontSize={fontSizes[size]}
                   fontWeight={fontWeights[size]}
                   sx={{
@@ -82,7 +82,6 @@ function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: Bo
                 >
                   {bonusLabel}
                 </Typography>
-                {/* </Paper> */}
               </Box>
             )}
           </Stack>
@@ -95,7 +94,7 @@ function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: Bo
 export default Bonus
 
 const sizes = {
-  small: '48px',
+  small: '42px',
   large: '68px'
 }
 
@@ -113,16 +112,43 @@ function getBonusLabel(bono: string, bonusValue: number): string {
   const isPercentageBonus = !!percentageBonusType[bono as keyof typeof percentageBonusType]
 
   if (isPercentageBonus) {
-    return bonusValue >= 100 ? `x${bonusValue / 100}` : `+${bonusValue}%`
+    const isNegative = bonusValue < 0
+
+    if (isNegative) {
+      return `${bonusValue}%`
+    }
+
+    const showMultiplier = bonusValue >= 100
+
+    return showMultiplier ? `x${bonusValue / 100 + 1}` : `+${bonusValue}%`
   }
 
   const isNumericBonus = !!numericBonusType[bono as keyof typeof numericBonusType]
 
   if (isNumericBonus) {
-    return `+${bonusValue}`
+    return bonusValue < 0 ? `${bonusValue}` : `+${bonusValue}`
   }
 
   return ''
+}
+
+const GREEN_LABEL = 'success'
+const RED_LABEL = 'error'
+
+function getBonusLabelColor(bono: string, bonusValue: number): string {
+  const isPercentageBonus = !!percentageBonusType[bono as keyof typeof percentageBonusType]
+
+  if (isPercentageBonus) {
+    return bonusValue < 0 ? RED_LABEL : GREEN_LABEL
+  }
+
+  const isNumericBonus = !!numericBonusType[bono as keyof typeof numericBonusType]
+
+  if (isNumericBonus) {
+    return bonusValue < 0 ? RED_LABEL : GREEN_LABEL
+  }
+
+  return GREEN_LABEL
 }
 
 function isBonusLabelVisible(bono: string, bonusValue: number): boolean {
@@ -171,23 +197,39 @@ type BonusSourceImage = {
 function BonusSourceImage({ source, bono }: BonusSourceImage) {
   const { player } = usePlayer()
 
-  if (source.type === 'Research') {
-    return (
-      <Bonus size="small" bono={bono} bonusValue={source.bonus[bono as keyof IBonus] as number} />
-    )
-  }
-
-  // TODO: show percentage labels
+  const bonusValue = source.bonus[bono as keyof IBonus] as number
+  const bonusLabel = getBonusLabel(bono, bonusValue)
 
   return (
-    <Image
-      src={getBonusSourceImg(source.type, source.sourceName, player)}
-      // TODO: CREATE PROPER ALT
-      alt=""
-      height={'48px'}
-      width={'48px'}
-      border
-    />
+    <Paper variant="outlined">
+      <Box sx={{ position: 'relative' }}>
+        <Stack justifyContent="flex-end" alignItems="center">
+          <Image
+            src={getBonusSourceImg(source.type, source.sourceName, player)}
+            alt={`bonus source ${bonusLabel} from ${source.sourceName}`}
+            height={sizes.small}
+            width={sizes.small}
+            border
+          />
+
+          {bonusLabel && (
+            <Box position={'absolute'}>
+              <Typography
+                padding={'0 4px'}
+                color={getBonusLabelColor(bono, bonusValue)}
+                sx={{
+                  textShadow:
+                    '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, -1px 0px 0 #000, 1px 0px 0 #000, 0px -1px 0 #000, 0px 1px 0 #000;'
+                }}
+                textAlign={'center'}
+              >
+                {bonusLabel}
+              </Typography>
+            </Box>
+          )}
+        </Stack>
+      </Box>
+    </Paper>
   )
 }
 
@@ -197,88 +239,16 @@ function getBonusSourceImg(
   player?: PlayerType
 ): string {
   if (sourceType === 'Race') {
-    return player?.race.imgUrl || ''
+    return getRaceImage(player?.race.name || '')
   }
 
   if (sourceType === 'Research') {
-    return player?.race.researches.find((research) => research.name === sourceName)?.imgUrl || ''
+    const research = player?.race.researches.find((research) => research.name === sourceName)
+
+    return getResearchImage(research?.name || '')
   }
 
   // TODO: implement all source sourceTypes
 
   return ''
-}
-
-const bonusImages: Record<string, string> = {
-  RESEARCH_BONUS: '/bonus/research_bonus.jpeg',
-  RESOURCE_PRODUCTION_BONUS: '/bonus/resource_production_bonus.jpeg',
-  STEALTH_FLEETS_BONUS: '/bonus/stealth_fleet_bonus.jpeg',
-  STEALTH_FLEETS_DETECTION_BONUS: '/bonus/stealth_fleet_detection_bonus.jpeg',
-  EXTRA_PLANETS_BONUS: '/bonus/extra_planets_bonus.jpeg',
-  INTERGALACTIC_TRAVEL_BONUS: '/bonus/intergalactic_travel_bonus.jpeg',
-  FLEET_ATTACK_BONUS: '/bonus/fleet_attack_bonus.jpeg',
-  FLEET_HULL_BONUS: '/bonus/fleet_hull_bonus.jpeg',
-  FLEET_HULL_REGENERATION_BONUS: '/bonus/fleet_hull_regeneration_bonus.jpeg',
-  FLEET_SHIELD_BONUS: '/bonus/fleet_shield_bonus.jpeg',
-  FLEET_SHIELD_PIERCING_BONUS: '/bonus/fleet_shield_piercing_bonus.jpeg',
-  FLEET_SHIELD_REGENERATION_BONUS: '/bonus/fleet_shield_regeneration_bonus.jpeg',
-  FLEET_SPEED_BONUS: '/bonus/fleet_speed_bonus.jpeg',
-  FLEET_CARGO_BONUS: '/bonus/fleet_cargo_bonus.jpeg',
-  FLEET_BUILDING_BONUS: '/bonus/fleet_building_bonus.jpeg',
-  MAX_FLEETS_ALLOWED_BONUS: '/bonus/max_fleet_allowed_bonus.jpeg',
-  TROOPS_ATTACK_BONUS: '/bonus/troops_attack_bonus.jpeg',
-  TROOPS_HEALTH_BONUS: '/bonus/troops_health_bonus.jpeg',
-  TROOPS_HEALTH_REGENERATION_BONUS: '/bonus/troops_health_regeneration_bonus.jpeg',
-  TROOPS_SHIELD_BONUS: '/bonus/troops_shield_bonus.jpeg',
-  TROOPS_SHIELD_PIERCING_BONUS: '/bonus/troops_shield_piercing_bonus.jpeg',
-  TROOPS_SHIELD_REGENERATION_BONUS: '/bonus/troops_shield_regeneration_bonus.jpeg',
-  TROOPS_TRAINING_BONUS: '/bonus/troops_training_bonus.jpeg',
-  DEFENSES_ATTACK_BONUS: '/bonus/defenses_attack_bonus.jpeg',
-  DEFENSES_HULL_BONUS: '/bonus/defenses_hull_bonus.jpeg',
-  DEFENSES_SHIELD_BONUS: '/bonus/defenses_shield_bonus.jpeg',
-  DEFENSES_SHIELD_PIERCING_BONUS: '/bonus/defenses_shield_piercing_bonus.jpeg',
-  DEFENSES_SHIELD_REGENERATION_BONUS: '/bonus/defenses_shield_regeneration_bonus.jpeg',
-  DEFENSES_BUILDING_BONUS: '/bonus/defenses_building_bonus.jpeg',
-  FLEET_CAPTURE_BONUS: '/bonus/fleet_capture_bonus.jpeg',
-  FLEET_STARFIGHTER_CAPTURE_BONUS: '/bonus/fleet_starfigther_capture_bonus.jpeg',
-  RESEARCH_ENERGY_BONUS: '/bonus/energy_bonus.jpeg',
-  RESEARCH_POPULATION_BONUS: '/bonus/population_bonus.jpeg'
-  // }
-
-  // // DELETE THIS
-  // RESEARCH_BONUS: '/bonus/research_bonus.jpg',
-  // RESOURCE_PRODUCTION_BONUS: '/bonus/resource_production_bonus.jpg',
-  // STEALTH_FLEETS_BONUS: '/bonus/research_bonus.jpg',
-  // STEALTH_FLEETS_DETECTION_BONUS: '/bonus/research_bonus.jpg',
-  // EXTRA_PLANETS_BONUS: '/bonus/research_bonus.jpg',
-  // INTERGALACTIC_TRAVEL_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_ATTACK_BONUS: '/bonus/fleet_attack_bonus.jpg',
-  // FLEET_HULL_BONUS: '/bonus/fleet_hull_bonus.jpg',
-  // FLEET_HULL_REGENERATION_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_SHIELD_BONUS: '/bonus/fleet_shield_bonus.jpg',
-  // FLEET_SHIELD_PIERCING_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_SHIELD_REGENERATION_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_SPEED_BONUS: '/bonus/fleet_speed_bonus.jpg',
-  // FLEET_CARGO_BONUS: '/bonus/fleet_cargo_bonus.jpg',
-  // FLEET_BUILDING_BONUS: '/bonus/research_bonus.jpg',
-  // MAX_FLEETS_ALLOWED_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_ATTACK_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_HEALTH_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_HEALTH_REGENERATION_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_SHIELD_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_SHIELD_PIERCING_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_SHIELD_REGENERATION_BONUS: '/bonus/research_bonus.jpg',
-  // TROOPS_TRAINING_BONUS: '/bonus/research_bonus.jpg',
-  // DEFENSES_ATTACK_BONUS: '/bonus/defenses_attack_bonus.jpg',
-  // DEFENSES_HULL_BONUS: '/bonus/research_bonus.jpg',
-  // DEFENSES_SHIELD_BONUS: '/bonus/research_bonus.jpg',
-  // DEFENSES_SHIELD_PIERCING_BONUS: '/bonus/research_bonus.jpg',
-  // DEFENSES_SHIELD_REGENERATION_BONUS: '/bonus/research_bonus.jpg',
-  // DEFENSES_BUILDING_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_CAPTURE_BONUS: '/bonus/research_bonus.jpg',
-  // FLEET_STARFIGHTER_CAPTURE_BONUS: '/bonus/research_bonus.jpg',
-
-  // // TODO: review this energy + troops pop
-  // RESEARCH_ENERGY_BONUS: '/bonus/research_bonus.jpg',
-  // RESEARCH_POPULATION_BONUS: '/bonus/research_bonus.jpg'
 }

@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import PublicIcon from '@mui/icons-material/Public'
 
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
 
@@ -12,7 +14,11 @@ function PlanetsLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
 
-  const planetsLabel = `${player?.planets.colonies.length} / ${player?.race.maxPlanetsAllowed}`
+  const raceMaxPlanetsAllowed = player?.race.maxPlanetsAllowed || 0
+  const bonusMaxPlanetsAllowed = computedBonus(player?.perks || [], 'EXTRA_PLANETS_BONUS')
+  const maxPlanetsAllowed = raceMaxPlanetsAllowed + bonusMaxPlanetsAllowed
+
+  const planetsLabel = `${player?.planets.colonies.length || 0} / ${maxPlanetsAllowed}`
 
   return (
     <Paper>
