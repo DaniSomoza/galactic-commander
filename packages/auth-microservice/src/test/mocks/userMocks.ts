@@ -1,4 +1,4 @@
-import { IUser } from '../../models/UserModel'
+import { IUser } from '../../types/User'
 
 export const UNCONFIRMED_USER: IUser = {
   email: 'unconfirmedUser@example.com',

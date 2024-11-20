@@ -1,5 +1,26 @@
 import mongoose, { Document, Schema, Model } from 'mongoose'
-import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
+
+import { BonusType, IResearchDocument } from './ResearchModel'
+import { IBonus } from '../types/bonus'
+
+type Aggressive = 'Aggressive'
+type Defensive = 'Defensive'
+type Explorer = 'Explorer'
+type Trader = 'Trader'
+type Scientist = 'Scientist'
+type Stealth = 'Stealth'
+type Raiders = 'Raiders'
+type Colonizer = 'Colonizer'
+
+export type RaceTags =
+  | Aggressive
+  | Defensive
+  | Explorer
+  | Trader
+  | Scientist
+  | Raiders
+  | Stealth
+  | Colonizer
 
 export const DEFAULT_FLEET_ENERGY = 100
 export const DEFAULT_ALLOWED_PLANETS = 4
@@ -30,30 +51,10 @@ export type ShipsTypes =
   | SpacePlanetaryBomber
   | SpaceCargo
 
-type Aggressive = 'Aggressive'
-type Defensive = 'Defensive'
-type Explorer = 'Explorer'
-type Trader = 'Trader'
-type Scientist = 'Scientist'
-type Stealth = 'Stealth'
-type Raiders = 'Raiders'
-type Colonizer = 'Colonizer'
-
-type RaceType =
-  | Aggressive
-  | Defensive
-  | Explorer
-  | Trader
-  | Scientist
-  | Raiders
-  | Stealth
-  | Colonizer
-
 export interface IRace {
   name: string
   description: string
-  image: string
-  type: RaceType[]
+  tags: RaceTags[]
   maxPlanetsAllowed: number
   baseFleetEnergy: number
   baseTroopsPopulation: number
@@ -73,8 +74,7 @@ const RaceSchema: Schema = new Schema(
   {
     name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
-    image: { type: String, required: true },
-    type: [{ type: String, required: true }],
+    tags: [{ type: String, required: true }],
     maxPlanetsAllowed: { type: Number, required: true, default: DEFAULT_ALLOWED_PLANETS },
     baseFleetEnergy: { type: Number, required: true, default: DEFAULT_FLEET_ENERGY },
     baseTroopsPopulation: { type: Number, required: true, default: DEFAULT_TROOPS_POPULATION },

@@ -1,21 +1,7 @@
-import { IUser } from '../models/UserModel'
-
-export type CleanUserData = Pick<
-  IUser,
-  | 'username'
-  | 'email'
-  | 'isActivated'
-  | 'isAdmin'
-  | 'isBanned'
-  | 'createdAt'
-  | 'activatedAt'
-  | 'bannedAt'
-  | 'lastLoginDate'
->
+import { IUser, UserType } from '../types/User'
 
 // TODO: add Jsdoc
-
-function cleanUserFields(user: IUser): CleanUserData {
+function cleanUserFields(user: IUser): UserType {
   const {
     username,
     email,

@@ -9,17 +9,17 @@ import {
 } from '../../models/RaceModel'
 import { IResearch } from '../../models/ResearchModel'
 
-const PIRATE_CAPTURE_BONUS = 20 // 20 % ships capture
+const FLEET_CAPTURE_BONUS = 20 // +20% ships capture
+const TROOPS_ATTACK_BONUS = 10 // +10% troops attack bonus
 
 type IBaseRace = {
   researches: IResearch[]
 } & Omit<IRace, 'researches'>
 
 const pirates: IBaseRace = {
-  name: 'pirates',
-  description: 'pirate race description',
-  image: 'image_url',
-  type: ['Aggressive', 'Raiders'],
+  name: 'PIRATES_RACE_NAME',
+  description: 'PIRATES_RACE_DESCRIPTION',
+  tags: ['Aggressive', 'Raiders'],
   maxPlanetsAllowed: DEFAULT_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,
@@ -29,8 +29,8 @@ const pirates: IBaseRace = {
   researches: [],
 
   bonus: {
-    // Capture Fleets Bonus
-    fleetCaptureBonus: PIRATE_CAPTURE_BONUS
+    FLEET_CAPTURE_BONUS,
+    TROOPS_ATTACK_BONUS
   }
 }
 

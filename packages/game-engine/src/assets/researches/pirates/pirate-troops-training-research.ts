@@ -1,12 +1,13 @@
 import { IResearch } from '../../../models/ResearchModel'
 
 const PIRATE_TROOPS_TRAINING_RESEARCH: IResearch = {
-  name: 'PIRATE_TROOPS_TRAINING_RESEARCH',
-  raceName: 'pirates',
+  name: 'PIRATE_TROOPS_TRAINING_RESEARCH_NAME',
+  description: 'PIRATE_TROOPS_TRAINING_RESEARCH_DESCRIPTION',
+  raceName: 'PIRATES_RACE_NAME',
   initialTime: 23_000,
   resourceCost: 250,
   bonus: {
-    troopsTrainingBonus: 10
+    TROOPS_TRAINING_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

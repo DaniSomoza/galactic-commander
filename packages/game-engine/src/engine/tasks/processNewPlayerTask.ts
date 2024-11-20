@@ -1,4 +1,5 @@
 import { Document } from 'mongoose'
+
 import getRandomPlanet from '../../helpers/getRandomPlanet'
 import PlayerModel, { IPlayer } from '../../models/PlayerModel'
 import planetRepository from '../../repositories/planetRepository'
@@ -7,7 +8,9 @@ import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
 import universeRepository from '../../repositories/universeRepository'
 import playerRepository from '../../repositories/playerRepository'
+import getPlanetImgUrl from '../../helpers/getPlanetImgUrl'
 
+// TODO: rename to processCreateNewPlayerTask
 async function processNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
   second: number
@@ -54,10 +57,11 @@ async function processNewPlayerTask(
       explored: [principalPlanet._id]
     },
 
-    bonus: [
+    perks: [
       {
         bonus: race.bonus,
         source: race._id,
+        sourceName: race.name,
         type: 'Race'
       }
     ],
@@ -65,7 +69,8 @@ async function processNewPlayerTask(
     points: [],
 
     researches: {
-      researched: []
+      researched: [],
+      queue: []
     },
 
     units: {
@@ -91,6 +96,8 @@ async function processNewPlayerTask(
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
   principalPlanet.resourceQuality = 100 // max value for principal planets by default
+  // TODO: create specific principal planet image ???
+  principalPlanet.imgUrl = getPlanetImgUrl(principalPlanet.resourceQuality)
   principalPlanet.lastResourceProductionTime = second
 
   // we create the player before update the planet

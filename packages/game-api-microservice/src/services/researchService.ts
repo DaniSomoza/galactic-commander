@@ -1,15 +1,13 @@
-import {
-  ITask,
-  StartResearchTaskType,
-  PENDING_TASK_STATUS,
-  START_RESEARCH_TASK_TYPE
-} from 'game-engine/dist/models/TaskModel'
 import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
-import getSecond from 'game-engine/dist/helpers/getSecond'
+import createStartResearchTask from 'game-engine/dist/engine/tasks/utils/createStartResearchTask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import BadRequestError from 'auth-microservice/dist/errors/BadRequestError'
+
+import cleanPlayerFields from '../utils/cleanPlayerFields'
+import { startResearchResponseType, updateResearchQueueResponseType } from '../types/Research'
+import cleanTaskFields from '../utils/cleanTaskFields'
 
 type ResearchData = {
   username: string
@@ -23,7 +21,7 @@ async function startResearch({
   researchName,
   universeName,
   executeTaskAt
-}: ResearchData): Promise<ITask<StartResearchTaskType>> {
+}: ResearchData): Promise<startResearchResponseType> {
   const universe = await universeRepository.findUniverseByName(universeName)
   const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
@@ -41,39 +39,67 @@ async function startResearch({
     throw new BadRequestError('invalid schedule', { executeTaskAt })
   }
 
-  // TODO: create base Task util
-  const startResearchTask: ITask<StartResearchTaskType> = {
-    type: START_RESEARCH_TASK_TYPE,
-    universe: universe._id,
-    data: {
-      player: player._id,
-      research: research._id
-    },
-
-    status: PENDING_TASK_STATUS,
-    isCancellable: false,
-
-    executeTaskAt: executeTaskAt ? getSecond(executeTaskAt) : null,
-    processedAt: null,
-    processingDuration: null,
-
-    history: [
-      {
-        taskStatus: PENDING_TASK_STATUS,
-        updatedAt: new Date().getTime()
-      }
-    ],
-
-    errorDetails: null
-  }
+  const startResearchTask = createStartResearchTask(
+    universe._id,
+    player._id,
+    research._id,
+    executeTaskAt
+  )
 
   const newTask = await taskRepository.createStartResearchTask(startResearchTask)
 
-  return newTask
+  return { task: cleanTaskFields(newTask) }
+}
+
+type AddResearchToQueueData = {
+  username: string
+  researchQueue: string[]
+  universeName: string
+}
+
+async function updateResearchQueue({
+  username,
+  researchQueue,
+  universeName
+}: AddResearchToQueueData): Promise<updateResearchQueueResponseType> {
+  const universe = await universeRepository.findUniverseByName(universeName)
+  const player = await playerRepository.findPlayerByUsername(username, universe!._id)
+
+  if (!player || !universe) {
+    throw new NotFoundError('invalid player', { username, universeName })
+  }
+
+  const isValidQueue = researchQueue.every((researchName) =>
+    player.race.researches.some((research) => research.name === researchName)
+  )
+
+  if (!isValidQueue) {
+    throw new NotFoundError('invalid research queue', { researchQueue })
+  }
+
+  // update player research queue
+  player.researches.queue = researchQueue
+
+  if (!player.researches.activeResearch) {
+    // if no research is active, just start the first research in the queue
+    const nextResearchName = player.researches.queue.shift()
+    if (nextResearchName) {
+      await startResearch({
+        username,
+        researchName: nextResearchName,
+        universeName
+      })
+    }
+  }
+
+  await player.save()
+
+  return { player: cleanPlayerFields(player) }
 }
 
 const researchService = {
-  startResearch
+  startResearch,
+  updateResearchQueue
 }
 
 export default researchService

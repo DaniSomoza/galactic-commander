@@ -18,7 +18,7 @@ import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
 import pirates from '../assets/races/pirates'
 import processTasks from '../engine/processTasks'
 import PlayerModel, { IPlayer } from '../models/PlayerModel'
-import { IBonus } from '../models/ResearchModel'
+import { IBonus } from '../types/bonus'
 
 describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {
@@ -118,7 +118,7 @@ describe('process new player creation Task', () => {
     expect(playerPrincipalPlanet._id).toEqual(newPrincipalPlanet!._id)
     expect(colonies.map((planet) => planet._id)).toEqual([newPrincipalPlanet!._id])
     expect(playerPlanetsExplored.map((planet) => planet._id)).toEqual([newPrincipalPlanet!._id])
-    const playerBonus = createdPlayer!.bonus[0].bonus
+    const playerBonus = createdPlayer!.perks[0].bonus
 
     Object.keys(pirates.bonus).forEach((key) => {
       const bonusName = key as keyof IBonus
@@ -368,10 +368,11 @@ describe('process new player creation Task', () => {
         explored: [principalPlanet!._id]
       },
 
-      bonus: [],
+      perks: [],
       points: [],
       researches: {
-        researched: []
+        researched: [],
+        queue: []
       },
 
       units: {

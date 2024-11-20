@@ -7,13 +7,7 @@ import handleErrorResponse from 'auth-microservice/dist/errors/handleErrorRespon
 import { checkSessionToken, getJWTFromAuthHeader } from 'auth-microservice/dist/lib/jwt'
 
 import researchService from '../services/researchService'
-
-type StartResearchData = {
-  researchName: string
-  universeName: string
-
-  executeTaskAt?: number
-}
+import { StartResearchData, updateResearchQueueData } from '../types/Research'
 
 const researchValidationSchema = Joi.object<StartResearchData>({
   researchName: Joi.string().required(),
@@ -46,8 +40,38 @@ async function startResearch(request: FastifyRequest, response: FastifyReply) {
   }
 }
 
+const updateResearchQueueValidationSchema = Joi.object<updateResearchQueueData>({
+  researchQueue: Joi.array().items(Joi.string()).required(),
+  universeName: Joi.string().required()
+})
+
+async function updateResearchQueue(request: FastifyRequest, response: FastifyReply) {
+  try {
+    await validateInputData(request.body, updateResearchQueueValidationSchema)
+
+    const { researchQueue, universeName } = request.body as updateResearchQueueData
+
+    const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
+
+    const { username } = checkSessionToken(jwtToken)
+
+    const player = await researchService.updateResearchQueue({
+      username,
+      researchQueue,
+      universeName
+    })
+
+    response.code(StatusCodes.OK).send(player)
+  } catch (error) {
+    const { code, body } = handleErrorResponse(error)
+
+    return response.code(code).send(body)
+  }
+}
+
 const researchController = {
-  startResearch
+  startResearch,
+  updateResearchQueue
 }
 
 export default researchController

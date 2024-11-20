@@ -1,6 +1,5 @@
-import applyBonus from '../../helpers/applyBonus'
+import computedBonus from '../bonus/computedBonus'
 import getSecond from '../../helpers/getSecond'
-import { IResearch } from '../../models/ResearchModel'
 import getTaskModel, {
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskType,
@@ -10,8 +9,11 @@ import getTaskModel, {
   StartResearchTaskType
 } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
+import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
+import calculateResearchDuration from '../research/calculateResearchDuration'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
+import createStartResearchTask from './utils/createStartResearchTask'
 
 // TODO: only taskData required
 async function processStartResearchTask(
@@ -48,26 +50,36 @@ async function processStartResearchTask(
   const hasEnoughResources = player.planets.principal.resources >= researchResourceCost
 
   if (!hasEnoughResources) {
+    // we try to execute next research present in the player research queue
+    const nextResearchName = player.researches.queue.shift()
+    const nextResearch = player.race.researches.find(
+      (research) => research.name === nextResearchName
+    )
+
+    if (nextResearch) {
+      const startResearchTask = createStartResearchTask(
+        task.universe._id,
+        player._id,
+        nextResearch._id
+      )
+
+      await Promise.all([
+        player.save(),
+        await taskRepository.createStartResearchTask(startResearchTask)
+      ])
+    }
+
     throw new GameEngineError('no resources available')
   }
 
-  const researchBonus = applyBonus(player.bonus, 'researchBonus', true)
-  const baseResearchDuration = calculateResearchDuration(research, level)
+  const researchBonus = computedBonus(player.perks, 'RESEARCH_BONUS')
+  const researchDuration = calculateResearchDuration(research.initialTime, level, researchBonus)
 
-  const researchDuration = baseResearchDuration * (100 / researchBonus)
   const executeTaskAt = getSecond(second + researchDuration)
 
   const principalPlanet = player.planets.principal
 
   principalPlanet.resources -= researchResourceCost
-
-  const activeResearch = {
-    research: research._id,
-    level: level + 1,
-    executeTaskAt
-  }
-
-  player.researches.activeResearch = activeResearch
 
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
@@ -102,23 +114,16 @@ async function processStartResearchTask(
   const taskModel = getTaskModel<FinishResearchTaskType>()
   const newTask = new taskModel(finishResearchTask)
 
+  const activeResearch = {
+    research: research._id,
+    level: level + 1,
+    executeTaskAt,
+    taskId: newTask._id
+  }
+
+  player.researches.activeResearch = activeResearch
+
   return Promise.all([newTask.save(), principalPlanet.save(), player.save()])
 }
 
 export default processStartResearchTask
-
-const RESEARCH_FACTOR = 4.5
-
-// TODO: move this to another file ???
-function calculateResearchDuration(research: IResearch, level: number): number {
-  const isFirstLevel = level === 0
-
-  if (isFirstLevel) {
-    return research.initialTime
-  }
-
-  const previousLevel = level - 1
-  const previousTime = calculateResearchDuration(research, previousLevel)
-
-  return previousTime + (previousTime * RESEARCH_FACTOR) / 2
-}

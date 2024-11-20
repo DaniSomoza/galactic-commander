@@ -1,15 +1,16 @@
 import crypto from 'crypto'
+import mongoose from 'mongoose'
+
 import {
   GALAXIES,
   PLANETS_PER_SYSTEM,
   SECTORS_PER_GALAXIES,
   SYSTEM_PER_SECTORS,
-  DEFAULT_PLANET_RESOURCES,
   IPlanet
 } from '../models/PlanetModel'
 import getRandomNumber from './getRandomNumber'
 import getSecond from './getSecond'
-import mongoose from 'mongoose'
+import getPlanetImgUrl from './getPlanetImgUrl'
 
 // TODO: create a universeConfig for test (galaxy, sector, system, planet)
 
@@ -21,15 +22,20 @@ function generatePlanets(universe: mongoose.Types.ObjectId): IPlanet[] {
     for (let sector = 1; sector <= SECTORS_PER_GALAXIES; sector++) {
       for (let system = 1; system <= SYSTEM_PER_SECTORS; system++) {
         for (let planet = 1; planet <= PLANETS_PER_SYSTEM; planet++) {
+          const resourceQuality = getRandomNumber(10, 100)
+
           planets.push({
             name: generateDefaultPlanetName(),
+
+            imgUrl: getPlanetImgUrl(resourceQuality),
+
             owner: null,
             colonizedAt: 0,
 
             universe,
 
-            resources: DEFAULT_PLANET_RESOURCES,
-            resourceQuality: getRandomNumber(0, 100),
+            resources: getRandomNumber(100, resourceQuality * 100),
+            resourceQuality,
             lastResourceProductionTime: getSecond(new Date().getTime()),
 
             coordinates: {

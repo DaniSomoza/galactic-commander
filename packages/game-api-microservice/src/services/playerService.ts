@@ -1,23 +1,15 @@
-import {
-  ITask,
-  NewPlayerTaskType,
-  NEW_PLAYER_TASK_TYPE,
-  PENDING_TASK_STATUS
-} from 'game-engine/dist/models/TaskModel'
 import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
+import { ITask } from 'game-engine/models/TaskModel'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import ConflictError from 'auth-microservice/dist/errors/ConflictError'
 
-type PlayerData = {
-  username: string
-  email: string
-  isActivated: boolean
-  raceName: string
-  universeName: string
-}
+import { PlayerData, createPlayerResponseType, getPlayerResponseType } from '../types/Player'
+import { NewPlayerTaskType, NEW_PLAYER_TASK_TYPE, PENDING_TASK_STATUS } from '../types/Task'
+import cleanTaskFields from '../utils/cleanTaskFields'
+import cleanPlayerFields from '../utils/cleanPlayerFields'
 
 async function createPlayer({
   username,
@@ -25,7 +17,7 @@ async function createPlayer({
   isActivated,
   raceName,
   universeName
-}: PlayerData): Promise<ITask<NewPlayerTaskType>> {
+}: PlayerData): Promise<createPlayerResponseType> {
   if (!isActivated) {
     throw new ConflictError('user is not activated', { username })
   }
@@ -78,13 +70,33 @@ async function createPlayer({
     errorDetails: null
   }
 
-  const newTask = await taskRepository.createPlayerTask(newPlayerTask)
+  const task = await taskRepository.createPlayerTask(newPlayerTask)
 
-  return newTask
+  return { task: cleanTaskFields(task) }
+}
+
+async function getPlayer(username: string, universeName: string): Promise<getPlayerResponseType> {
+  const universeData = await universeRepository.findUniverseByName(universeName)
+
+  if (!universeData) {
+    throw new NotFoundError('invalid universe', { universeName })
+  }
+
+  const player = await playerRepository.findPlayerByUsername(username, universeData._id)
+
+  if (!player) {
+    // TODO: create enum or const for the errors NO_PLAYER_FOUND_ERROR
+    throw new NotFoundError('no player present in this universe', { username, universeName })
+  }
+
+  // TODO: add future pending tasks to tack them in the frontend
+
+  return { player: cleanPlayerFields(player) }
 }
 
 const playerService = {
-  createPlayer
+  createPlayer,
+  getPlayer
 }
 
 export default playerService

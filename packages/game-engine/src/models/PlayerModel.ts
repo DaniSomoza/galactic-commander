@@ -1,8 +1,10 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
-import { BonusType, IBonus, IResearchDocument } from './ResearchModel'
+
+import { BonusType, IResearchDocument } from './ResearchModel'
 import { IRaceDocument } from './RaceModel'
 import { IUniverseDocument } from './UniverseModel'
 import { IPlanetDocument } from './PlanetModel'
+import { IBonus } from '../types/bonus'
 
 interface IPlayerUser {
   username: string
@@ -15,31 +17,38 @@ interface IPlayerPlanet {
   explored: mongoose.Types.ObjectId[]
 }
 
-export interface IPlayerBonus {
+export interface IPlayerPerk {
   bonus: IBonus
   source: mongoose.Types.ObjectId
+  sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
 
+// TODO: refactor points to remove them from the player Model (create points collection)
 export interface IPlayerPoints {
   points: number
   source: mongoose.Types.ObjectId
+  sourceName: string
   type: 'Unit' | 'Research' | 'Battle'
   second: number
 }
 
-interface IPlayerResearch {
-  researched: {
-    research: IResearchDocument
-    level: number
-  }[]
-  activeResearch?: IPlayerActiveResearch
+export interface IPlayerResearch {
+  research: IResearchDocument
+  level: number
 }
 
-interface IPlayerActiveResearch {
+export interface IPlayerActiveResearch {
   research: IResearchDocument
   level: number
   executeTaskAt: number
+  taskId: mongoose.Types.ObjectId
+}
+
+export interface IPlayerResearches {
+  researched: IPlayerResearch[]
+  activeResearch?: IPlayerActiveResearch
+  queue: string[]
 }
 
 interface IPlayerUnits {
@@ -59,9 +68,9 @@ export interface IPlayer {
   race: IRaceDocument
   universe: IUniverseDocument
   planets: IPlayerPlanet
-  bonus: IPlayerBonus[]
+  perks: IPlayerPerk[]
   points: IPlayerPoints[]
-  researches: IPlayerResearch
+  researches: IPlayerResearches
   units: IPlayerUnits
 }
 
@@ -69,7 +78,8 @@ const ActiveResearchSchema = new Schema(
   {
     research: { type: Schema.Types.ObjectId, ref: 'Research' },
     level: { type: Number },
-    executeTaskAt: { type: Number }
+    executeTaskAt: { type: Number },
+    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
   },
   { _id: false }
 )
@@ -90,11 +100,12 @@ const PlayerSchema: Schema = new Schema({
     explored: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
   },
 
-  bonus: [
+  perks: [
     {
       _id: false,
       bonus: BonusType,
       source: { type: Schema.Types.ObjectId, required: true },
+      sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
   ],
@@ -105,6 +116,7 @@ const PlayerSchema: Schema = new Schema({
       points: { type: Number, required: true },
       second: { type: Number, required: true },
       source: { type: Schema.Types.ObjectId, required: true },
+      sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
   ],
@@ -121,7 +133,8 @@ const PlayerSchema: Schema = new Schema({
       type: ActiveResearchSchema,
       required: false,
       default: undefined
-    }
+    },
+    queue: [{ type: String }]
   },
 
   units: {

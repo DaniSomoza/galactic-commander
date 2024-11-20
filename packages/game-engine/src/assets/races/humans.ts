@@ -10,10 +10,9 @@ const HUMANS_TROOPS_POPULATION = 15
 const HUMANS_INTERGALACTIC_TRAVEL_THRESHOLD = 10
 
 const humans: IRace = {
-  name: 'humans',
-  description: 'humans race description',
-  image: 'image_url',
-  type: ['Colonizer'], // TODO: get proper types
+  name: 'HUMANS_RACE_NAME',
+  description: 'HUMANS_RACE_DESCRIPTION',
+  tags: ['Colonizer'], // TODO: get proper types
   maxPlanetsAllowed: HUMANS_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: HUMANS_TROOPS_POPULATION,

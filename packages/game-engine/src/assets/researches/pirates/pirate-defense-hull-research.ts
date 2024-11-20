@@ -1,12 +1,13 @@
 import { IResearch } from '../../../models/ResearchModel'
 
 const PIRATE_DEFENSE_HULL_RESEARCH: IResearch = {
-  name: 'PIRATE_DEFENSE_HULL_RESEARCH',
+  name: 'PIRATE_DEFENSE_HULL_RESEARCH_NAME',
+  description: 'PIRATE_DEFENSE_HULL_RESEARCH_DESCRIPTION',
+  raceName: 'PIRATES_RACE_NAME',
   initialTime: 15_000,
   resourceCost: 100,
-  raceName: 'pirates',
   bonus: {
-    defensesHullBonus: 10
+    DEFENSES_HULL_BONUS: 10
   },
   isTroopsPopulationResearch: false,
   isFleetEnergyResearch: false

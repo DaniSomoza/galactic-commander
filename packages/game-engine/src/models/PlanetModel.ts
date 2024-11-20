@@ -1,11 +1,8 @@
 import mongoose, { Schema, Document, Model } from 'mongoose'
-import { IPlayerDocument } from './PlayerModel'
-
-export const DEFAULT_PLANET_RESOURCES = 10_000
 
 export const GALAXIES = 3
-export const SECTORS_PER_GALAXIES = 6
-export const SYSTEM_PER_SECTORS = 15
+export const SECTORS_PER_GALAXIES = 32
+export const SYSTEM_PER_SECTORS = 64
 export const PLANETS_PER_SYSTEM = 12
 
 // TODO: implement moons
@@ -19,14 +16,16 @@ export type PlanetCoordinates = {
 
 export interface IPlanet {
   name: string
-  owner: IPlayerDocument | null
+  universe: mongoose.Types.ObjectId
+
+  imgUrl: string
+
+  owner: mongoose.Types.ObjectId | null
   colonizedAt: number
 
   resources: number
   resourceQuality: number
   lastResourceProductionTime: number
-
-  universe: mongoose.Types.ObjectId
 
   coordinates: PlanetCoordinates
 
@@ -52,18 +51,19 @@ export interface IPlanet {
 const PlanetSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
+    imgUrl: { type: String, required: true },
+
+    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'Player',
       required: false,
       default: null
     },
-
-    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
-
     colonizedAt: { type: Number },
 
-    resources: { type: Number, required: true, default: DEFAULT_PLANET_RESOURCES },
+    resources: { type: Number, required: true },
     resourceQuality: { type: Number, required: true },
     lastResourceProductionTime: { type: Number, required: true },
 

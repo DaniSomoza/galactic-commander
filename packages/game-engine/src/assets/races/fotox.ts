@@ -11,10 +11,9 @@ const FOTOX_INTERGALACTIC_TRAVEL_THRESHOLD = 12
 const FOTOX_ALLOWED_PLANETS = 5
 
 const fotox: IRace = {
-  name: 'fotox',
-  description: 'fotox race description',
-  image: 'image_url',
-  type: ['Aggressive', 'Colonizer'],
+  name: 'FOTOX_RACE_NAME',
+  description: 'FOTOX_RACE_DESCRIPTION',
+  tags: ['Aggressive', 'Colonizer'],
   maxPlanetsAllowed: FOTOX_ALLOWED_PLANETS,
   baseFleetEnergy: DEFAULT_FLEET_ENERGY,
   baseTroopsPopulation: DEFAULT_TROOPS_POPULATION,
@@ -24,7 +23,7 @@ const fotox: IRace = {
   researches: [],
 
   bonus: {
-    fleetHullRegenerationBonus: FOTOX_HULL_REGENERATION_BONUS
+    FLEET_HULL_REGENERATION_BONUS: FOTOX_HULL_REGENERATION_BONUS
   }
 }
 

@@ -3,8 +3,10 @@ import playerRepository from '../../repositories/playerRepository'
 import GameEngineError from '../errors/GameEngineError'
 import addPoints from '../points/addPoints'
 import { IRace } from '../../models/RaceModel'
-import upgradeBonus from '../bonus/upgradeBonus'
-import { IBonus } from '../../models/ResearchModel'
+import upgradeResearchBonus from '../bonus/upgradeResearchBonus'
+import { IBonus } from '../../types/bonus'
+import createStartResearchTask from './utils/createStartResearchTask'
+import taskRepository from '../../repositories/taskRepository'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -47,14 +49,15 @@ async function processFinishResearchTask(
   const hasBonusToUpdate = hasBonus(research.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.bonus.find((bonus) => bonus.source.equals(task.data.research))
+    const PlayerBonus = player.perks.find((perk) => perk.source.equals(task.data.research))
 
     if (PlayerBonus) {
-      PlayerBonus.bonus = upgradeBonus(research.bonus, newLevel)
+      PlayerBonus.bonus = upgradeResearchBonus(research.bonus, newLevel)
     } else {
-      player.bonus.push({
+      player.perks.push({
         bonus: research.bonus,
         source: task.data.research,
+        sourceName: research.name,
         type: 'Research'
       })
     }
@@ -68,11 +71,37 @@ async function processFinishResearchTask(
     player.units.troops.population = calculateTroopsPopulation(player.race, newLevel)
   }
 
+  // TODO: intergalacticTravel check?
+
   const points = task.data.researchResourceCost
   const pointsSource = task.data.research._id
-  player.points = addPoints(player.points, points, pointsSource, 'Research', second)
+  const pointsSourceName = research.name
+  player.points = addPoints(
+    player.points,
+    points,
+    pointsSource,
+    pointsSourceName,
+    'Research',
+    second
+  )
 
   player.researches.activeResearch = undefined
+
+  // check player research queue
+  const nextResearchName = player.researches.queue.shift()
+  const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
+
+  if (nextResearch) {
+    // TODO: has enough resources???
+
+    const startResearchTask = createStartResearchTask(
+      task.universe._id,
+      player._id,
+      nextResearch._id
+    )
+
+    return Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
+  }
 
   return Promise.all([player.save()])
 }
@@ -86,7 +115,7 @@ function hasBonus(bonus: IBonus): boolean {
 
 const TROOP_POPULATION_FACTOR = 2.55
 
-// create file
+// TODO: create file in engine/troops ???
 function calculateTroopsPopulation(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 
@@ -102,7 +131,7 @@ function calculateTroopsPopulation(race: IRace, level: number): number {
 
 const FLEET_ENERGY_FACTOR = 4
 
-// create file
+// TODO: create file in engine/fleets ???
 function calculateFleetEnergy(race: IRace, level: number): number {
   const isFirstLevel = level === 1
 

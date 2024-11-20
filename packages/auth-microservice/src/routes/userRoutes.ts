@@ -1,9 +1,6 @@
 import { Route } from '../configuration/Server'
 import userController from '../controllers/userController'
-
-export const USER_PATH = '/user'
-export const ACTIVATE_USER_PATH = `${USER_PATH}/activate`
-export const LOGIN_USER_PATH = `${USER_PATH}/session`
+import { ACTIVATE_USER_PATH, LOGIN_USER_PATH, USER_PATH } from './constants'
 
 const createUserRoute: Route = {
   url: USER_PATH,
