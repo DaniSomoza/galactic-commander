@@ -17,7 +17,7 @@ import { testServer } from './helpers/testServer'
 import getSecond from 'game-engine/dist/helpers/getSecond'
 
 describe('researches task', () => {
-  it('creates a new valid research task', async () => {
+  it.only('creates a new valid research task', async () => {
     const newResearchData = {
       researchName: PIRATE_FLEET_ATTACK_RESEARCH.name,
       universeName: UNIVERSE_TEST_MOCK.name
@@ -51,7 +51,7 @@ describe('researches task', () => {
       body: newResearchData
     })
 
-    const taskCreated = JSON.parse(response.body)
+    const { task: taskCreated } = JSON.parse(response.body)
 
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
     expect(taskCreated.type).toEqual(START_RESEARCH_TASK_TYPE)
@@ -64,7 +64,7 @@ describe('researches task', () => {
     expect(taskCreated.processedAt).toEqual(null)
 
     const newStartResearchTask = await taskRepository.findTaskById<StartResearchTaskType>(
-      taskCreated._id
+      taskCreated.taskId
     )
 
     expect(newStartResearchTask?.type).toEqual(START_RESEARCH_TASK_TYPE)
@@ -102,7 +102,7 @@ describe('researches task', () => {
       body: newResearchData
     })
 
-    const taskCreated = JSON.parse(response.body)
+    const { task: taskCreated } = JSON.parse(response.body)
 
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
     expect(taskCreated.type).toEqual(START_RESEARCH_TASK_TYPE)
