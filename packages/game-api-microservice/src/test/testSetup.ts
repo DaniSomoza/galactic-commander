@@ -12,11 +12,12 @@ import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import planetRepository from 'game-engine/dist/repositories/planetRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
 import PlanetModel from 'game-engine/dist/models/PlanetModel'
-import { IPlayer } from 'game-engine/dist/models/PlayerModel'
+import { IPlayer } from 'game-engine/dist/types/IPlayer'
 import ResearchModel from 'game-engine/dist/models/ResearchModel'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from 'game-engine/dist/test/mocks/planetMocks'
-import getTaskModel, { TaskType } from 'game-engine/dist/models/TaskModel'
+import { TaskType } from 'game-engine/dist/types/ITask'
+import getTaskModel from 'game-engine/dist/models/TaskModel'
 
 // initialize database
 let mongoTestDB = new MongoMemoryServer()
@@ -66,16 +67,15 @@ export async function mockTestGameDatabase() {
     race: (await raceRepository.findRaceByName(pirates.name))!,
     universe: (await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name))!,
     planets: {
-      principal: principalPlanet!._id,
-      colonies: [principalPlanet!._id],
-      explored: [principalPlanet!._id]
+      principal: principalPlanet!,
+      colonies: [principalPlanet!]
     }
   }
 
   const player1Pirate = await PlayerModel.create(player1)
 
   // update player principal planet
-  principalPlanet!.owner = player1Pirate._id
+  principalPlanet!.owner = player1Pirate
   await principalPlanet!.save()
 }
 

@@ -51,6 +51,9 @@ function handleErrorResponse(error: unknown): ErrorResponse {
     }
   }
 
+  // TODO: fix this error!
+  console.log('>>> error : ', error)
+
   // en caso de que no se sepa qué error es
   return {
     code: INTERNAL_SERVER_ERROR,

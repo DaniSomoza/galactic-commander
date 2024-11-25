@@ -1,19 +1,20 @@
 import mongoose from 'mongoose'
 import processUniverse from '../engine/processUniverse'
 import getSecond from '../helpers/getSecond'
-import getTaskModel, {
+import getTaskModel from '../models/TaskModel'
+import universeRepository from '../repositories/universeRepository'
+import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import { TASK_HANDLER } from '../engine/tasks/taskHandlers'
+import taskRepository from '../repositories/taskRepository'
+import GameEngineError from '../engine/errors/GameEngineError'
+import {
   ERROR_TASK_STATUS,
   ITask,
   NEW_PLAYER_TASK_TYPE,
   NewPlayerTaskType,
   PENDING_TASK_STATUS,
   PROCESSED_TASK_STATUS
-} from '../models/TaskModel'
-import universeRepository from '../repositories/universeRepository'
-import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
-import { TASK_HANDLER } from '../engine/tasks/taskHandlers'
-import taskRepository from '../repositories/taskRepository'
-import GameEngineError from '../engine/errors/GameEngineError'
+} from '../types/ITask'
 
 const originalHandler = TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler
 

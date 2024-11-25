@@ -3,20 +3,21 @@ import mongoose from 'mongoose'
 import PIRATE_FLEET_ATTACK_RESEARCH from '../assets/researches/pirates/pirate-fleet-attack-research'
 import processTasks from '../engine/processTasks'
 import { IResearchDocument } from '../models/ResearchModel'
-import getTaskModel, {
-  ITask,
-  PENDING_TASK_STATUS,
-  StartResearchTaskType,
-  FinishResearchTaskData,
-  START_RESEARCH_TASK_TYPE,
-  FINISH_RESEARCH_TASK_TYPE,
-  ERROR_TASK_STATUS
-} from '../models/TaskModel'
+import getTaskModel from '../models/TaskModel'
 import playerRepository from '../repositories/playerRepository'
 import taskRepository from '../repositories/taskRepository'
 import universeRepository from '../repositories/universeRepository'
 import { PLAYER_TEST_1_PIRATE } from './mocks/playerMocks'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import {
+  ERROR_TASK_STATUS,
+  FINISH_RESEARCH_TASK_TYPE,
+  FinishResearchTaskData,
+  ITask,
+  PENDING_TASK_STATUS,
+  START_RESEARCH_TASK_TYPE,
+  StartResearchTaskType
+} from '../types/ITask'
 
 describe('process start research task', () => {
   it('process a valid start research task', async () => {

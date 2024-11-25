@@ -1,6 +1,6 @@
 import Skeleton from '@mui/material/Skeleton'
 
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import Bonus from '../bonus/Bonus'
 

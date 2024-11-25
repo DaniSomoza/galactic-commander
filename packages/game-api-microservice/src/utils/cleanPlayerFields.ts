@@ -4,7 +4,7 @@ import { PlayerType } from '../types/Player'
 import cleanPlanetFields from './cleanPlanetFields'
 
 function cleanPlayerFields(player: IPlayerDocument): PlayerType {
-  const { user, race, universe, planets, perks, points, researches, units } = player
+  const { user, race, universe, planets, perks, researches, units } = player
 
   return {
     user,
@@ -12,16 +12,9 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
     universe,
     planets: {
       principal: cleanPlanetFields(planets.principal),
-      colonies: planets.colonies.map(cleanPlanetFields),
-      explored: planets.explored.map((planetId) => planetId.toString())
+      colonies: planets.colonies.map(cleanPlanetFields)
     },
     perks: perks.map(({ bonus, type, sourceName }) => ({ bonus, type, sourceName })),
-    points: points.map(({ points, second, type, sourceName }) => ({
-      points,
-      second,
-      type,
-      sourceName
-    })),
     researches: {
       researched: researches.researched,
       queue: researches.queue,

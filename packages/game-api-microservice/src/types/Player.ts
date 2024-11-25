@@ -1,4 +1,4 @@
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { PlanetType } from './Planet'
 import { RaceType } from './Race'
@@ -22,16 +22,8 @@ export type PlayerType = {
   planets: {
     principal: PlanetType
     colonies: PlanetType[]
-    explored: string[]
   }
   perks: PlayerPerkType[]
-  // TODO: CREATE A NEW COLLECTION FOR THIS!!!! points collection
-  points: {
-    points: number
-    sourceName: string
-    type: 'Unit' | 'Research' | 'Battle'
-    second: number
-  }[]
   researches: {
     researched: {
       research: ResearchType

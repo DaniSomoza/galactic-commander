@@ -1,4 +1,4 @@
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { ResearchType } from './Research'
 

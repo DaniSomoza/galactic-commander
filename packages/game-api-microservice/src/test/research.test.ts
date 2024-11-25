@@ -10,14 +10,14 @@ import {
   START_RESEARCH_TASK_TYPE,
   PENDING_TASK_STATUS,
   StartResearchTaskType
-} from 'game-engine/dist/models/TaskModel'
+} from 'game-engine/dist/types/ITask'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 
 import { testServer } from './helpers/testServer'
 import getSecond from 'game-engine/dist/helpers/getSecond'
 
 describe('researches task', () => {
-  it.only('creates a new valid research task', async () => {
+  it('creates a new valid research task', async () => {
     const newResearchData = {
       researchName: PIRATE_FLEET_ATTACK_RESEARCH.name,
       universeName: UNIVERSE_TEST_MOCK.name

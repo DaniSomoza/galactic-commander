@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 import { PlayerPerkType } from 'game-api-microservice/src/types/Player'
 import computedBonus, {
   bonusTypes,

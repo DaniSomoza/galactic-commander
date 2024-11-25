@@ -2,7 +2,7 @@ import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
-import { ITask } from 'game-engine/models/TaskModel'
+import { ITask } from 'game-engine/dist/types/ITask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import ConflictError from 'auth-microservice/dist/errors/ConflictError'
 
