@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+
 import UniverseModel from '../models/UniverseModel'
 
 async function findUniverses() {
@@ -10,7 +11,7 @@ async function findUniverseByName(name: string) {
 }
 
 async function findUniverseById(universeId: mongoose.Types.ObjectId) {
-  return UniverseModel.findById(universeId).lean().exec()
+  return UniverseModel.findOne({ _id: universeId }).exec()
 }
 
 const universeRepository = {

@@ -1,7 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const races = require('../dist/assets/races/races.js').default
+import { Db } from 'mongodb'
 
-async function up(db) {
+import races from '../assets/races/races'
+
+export async function up(db: Db) {
   const researches = await db.collection('researches').find().toArray()
 
   const racesWithResearches = races.map((race) => ({
@@ -14,11 +15,6 @@ async function up(db) {
   await db.collection('races').insertMany(racesWithResearches)
 }
 
-async function down(db) {
-  return db.collection('races').deleteMany({})
-}
-
-module.exports = {
-  up,
-  down
+export async function down(db: Db) {
+  return await db.collection('races').deleteMany({})
 }

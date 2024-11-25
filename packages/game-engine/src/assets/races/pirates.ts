@@ -6,17 +6,12 @@ import {
   DEFAULT_RESOURCE_NAME,
   DEFAULT_TROOPS_POPULATION,
   IRace
-} from '../../models/RaceModel'
-import { IResearch } from '../../models/ResearchModel'
+} from '../../types/IRace'
 
 const FLEET_CAPTURE_BONUS = 20 // +20% ships capture
 const TROOPS_ATTACK_BONUS = 10 // +10% troops attack bonus
 
-type IBaseRace = {
-  researches: IResearch[]
-} & Omit<IRace, 'researches'>
-
-const pirates: IBaseRace = {
+const pirates: IRace = {
   name: 'PIRATES_RACE_NAME',
   description: 'PIRATES_RACE_DESCRIPTION',
   tags: ['Aggressive', 'Raiders'],
@@ -26,7 +21,12 @@ const pirates: IBaseRace = {
   baseResources: DEFAULT_INITIAL_RESOURCES,
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: DEFAULT_INTERGALACTIC_TRAVEL_THRESHOLD,
+
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     FLEET_CAPTURE_BONUS,

@@ -1,15 +1,15 @@
 import { Document } from 'mongoose'
 
-import {
-  TaskType,
-  ITaskTypeDocument,
-  NEW_PLAYER_TASK_TYPE,
-  FINISH_RESEARCH_TASK_TYPE,
-  START_RESEARCH_TASK_TYPE
-} from '../../models/TaskModel'
-import processNewPlayerTask from './processNewPlayerTask'
+import { ITaskTypeDocument } from '../../models/TaskModel'
+import processCreateNewPlayerTask from './processCreateNewPlayerTask'
 import processFinishResearchTask from './processFinishResearchTask'
 import processStartResearchTask from './processStartResearchTask'
+import {
+  TaskType,
+  NEW_PLAYER_TASK_TYPE,
+  START_RESEARCH_TASK_TYPE,
+  FINISH_RESEARCH_TASK_TYPE
+} from '../../types/ITask'
 
 type taskPriority = {
   [Type in TaskType]: number
@@ -79,7 +79,7 @@ type TaskHandlerType = {
 export const TASK_HANDLER: TaskHandlerType = {
   [NEW_PLAYER_TASK_TYPE]: {
     processTasksInParallel: false, // this is important to prevent duplicate players
-    handler: processNewPlayerTask,
+    handler: processCreateNewPlayerTask,
     priority: TASK_PRIORITY[NEW_PLAYER_TASK_TYPE]
   },
   [FINISH_RESEARCH_TASK_TYPE]: {

@@ -1,17 +1,18 @@
 import { Document } from 'mongoose'
 
 import getRandomPlanet from '../../helpers/getRandomPlanet'
-import PlayerModel, { IPlayer } from '../../models/PlayerModel'
+import PlayerModel from '../../models/PlayerModel'
 import planetRepository from '../../repositories/planetRepository'
 import raceRepository from '../../repositories/raceRepository'
-import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
+import { ITaskTypeDocument } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
 import universeRepository from '../../repositories/universeRepository'
 import playerRepository from '../../repositories/playerRepository'
 import getPlanetImgUrl from '../../helpers/getPlanetImgUrl'
+import { NewPlayerTaskType } from '../../types/ITask'
+import { IPlayer } from '../../types/IPlayer'
 
-// TODO: rename to processCreateNewPlayerTask
-async function processNewPlayerTask(
+async function processCreateNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
   second: number
 ): Promise<Document[]> {
@@ -47,14 +48,13 @@ async function processNewPlayerTask(
       email: task.data.email
     },
 
-    universe: universe._id,
+    universe,
 
-    race: race._id,
+    race,
 
     planets: {
-      principal: principalPlanet._id,
-      colonies: [principalPlanet._id],
-      explored: [principalPlanet._id]
+      principal: principalPlanet,
+      colonies: [principalPlanet]
     },
 
     perks: [
@@ -65,8 +65,6 @@ async function processNewPlayerTask(
         type: 'Race'
       }
     ],
-
-    points: [],
 
     researches: {
       researched: [],
@@ -90,13 +88,12 @@ async function processNewPlayerTask(
 
   const newPlayer = new PlayerModel(newPlayerData)
 
-  principalPlanet.owner = newPlayer._id
+  principalPlanet.owner = newPlayer
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
   principalPlanet.resourceQuality = 100 // max value for principal planets by default
-  // TODO: create specific principal planet image ???
   principalPlanet.imgUrl = getPlanetImgUrl(principalPlanet.resourceQuality)
   principalPlanet.lastResourceProductionTime = second
 
@@ -106,4 +103,4 @@ async function processNewPlayerTask(
   return Promise.all([principalPlanet.save()])
 }
 
-export default processNewPlayerTask
+export default processCreateNewPlayerTask

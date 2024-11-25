@@ -1,10 +1,10 @@
 import {
-  IRace,
   DEFAULT_FLEET_ENERGY,
-  DEFAULT_RESOURCE_NAME,
   DEFAULT_INITIAL_RESOURCES,
-  DEFAULT_TROOPS_POPULATION
-} from '../../models/RaceModel'
+  DEFAULT_RESOURCE_NAME,
+  DEFAULT_TROOPS_POPULATION,
+  IRace
+} from '../../types/IRace'
 
 const FOTOX_HULL_REGENERATION_BONUS = 20 // 20%
 const FOTOX_INTERGALACTIC_TRAVEL_THRESHOLD = 12
@@ -21,6 +21,10 @@ const fotox: IRace = {
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: FOTOX_INTERGALACTIC_TRAVEL_THRESHOLD,
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     FLEET_HULL_REGENERATION_BONUS: FOTOX_HULL_REGENERATION_BONUS

@@ -1,12 +1,14 @@
-import { ITaskTypeDocument, FinishResearchTaskType } from '../../models/TaskModel'
-import playerRepository from '../../repositories/playerRepository'
+import { IPoint } from '../../types/IPoint'
+import { IBonus } from '../../types/IBonus'
+import { IRace } from '../../types/IRace'
+import { FinishResearchTaskType } from '../../types/ITask'
 import GameEngineError from '../errors/GameEngineError'
-import addPoints from '../points/addPoints'
-import { IRace } from '../../models/RaceModel'
-import upgradeResearchBonus from '../bonus/upgradeResearchBonus'
-import { IBonus } from '../../types/bonus'
-import createStartResearchTask from './utils/createStartResearchTask'
+import PointModel from '../../models/PointModel'
+import { ITaskTypeDocument } from '../../models/TaskModel'
 import taskRepository from '../../repositories/taskRepository'
+import playerRepository from '../../repositories/playerRepository'
+import upgradeResearchBonus from '../bonus/upgradeResearchBonus'
+import createStartResearchTask from './utils/createStartResearchTask'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
@@ -73,17 +75,13 @@ async function processFinishResearchTask(
 
   // TODO: intergalacticTravel check?
 
-  const points = task.data.researchResourceCost
-  const pointsSource = task.data.research._id
-  const pointsSourceName = research.name
-  player.points = addPoints(
-    player.points,
-    points,
-    pointsSource,
-    pointsSourceName,
-    'Research',
+  const points: IPoint = {
+    points: task.data.researchResourceCost,
+    source: task.data.research._id,
+    sourceName: research.name,
+    types: 'Research',
     second
-  )
+  }
 
   player.researches.activeResearch = undefined
 
@@ -92,7 +90,7 @@ async function processFinishResearchTask(
   const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
 
   if (nextResearch) {
-    // TODO: has enough resources???
+    // TODO: check if it has enough resources => next Research ???
 
     const startResearchTask = createStartResearchTask(
       task.universe._id,
@@ -100,10 +98,14 @@ async function processFinishResearchTask(
       nextResearch._id
     )
 
-    return Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
+    return Promise.all([
+      player.save(),
+      taskRepository.createStartResearchTask(startResearchTask),
+      new PointModel(points)
+    ])
   }
 
-  return Promise.all([player.save()])
+  return Promise.all([player.save(), new PointModel(points)])
 }
 
 export default processFinishResearchTask

@@ -46,4 +46,5 @@ export type IBonus = {
 
   // Capture Units Bonus
   FLEET_CAPTURE_BONUS?: PercentageBonus
+  // TODO: TROOPS_CAPTURE_BONUS?: PercentageBonus
 }

@@ -1,21 +1,21 @@
 import crypto from 'crypto'
-import mongoose from 'mongoose'
 
 import {
   GALAXIES,
+  IPlanet,
   PLANETS_PER_SYSTEM,
   SECTORS_PER_GALAXIES,
-  SYSTEM_PER_SECTORS,
-  IPlanet
-} from '../models/PlanetModel'
+  SYSTEM_PER_SECTORS
+} from '../types/IPlanet'
 import getRandomNumber from './getRandomNumber'
 import getSecond from './getSecond'
 import getPlanetImgUrl from './getPlanetImgUrl'
+import { IUniverse } from '../types/IUniverse'
 
 // TODO: create a universeConfig for test (galaxy, sector, system, planet)
 
 // TODO: add more galaxies based on number of players, time, etc... (and send an email notification for it)
-function generatePlanets(universe: mongoose.Types.ObjectId): IPlanet[] {
+function generatePlanets(universe: IUniverse): IPlanet[] {
   const planets: IPlanet[] = []
 
   for (let galaxy = 1; galaxy <= GALAXIES; galaxy++) {

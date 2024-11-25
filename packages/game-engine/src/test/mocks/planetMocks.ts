@@ -1,11 +1,12 @@
 import pirates from '../../assets/races/pirates'
-import { IPlanet } from '../../models/PlanetModel'
+import { IPlanet } from '../../types/IPlanet'
+import universe from './universeMocks'
 
-type IBasePlanet = Omit<IPlanet, 'universe'>
-
-export const PRINCIPAL_PLANET_TEST_1: IBasePlanet = {
+export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
   name: 'principal_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
+
+  universe,
 
   owner: null,
   colonizedAt: 0,
@@ -33,9 +34,11 @@ export const PRINCIPAL_PLANET_TEST_1: IBasePlanet = {
   isBuildingDefenses: false
 }
 
-export const AVAILABLE_PLANET_TEST_1: IBasePlanet = {
+export const AVAILABLE_PLANET_TEST_1: IPlanet = {
   name: 'available_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
+
+  universe,
 
   owner: null,
   colonizedAt: 0,

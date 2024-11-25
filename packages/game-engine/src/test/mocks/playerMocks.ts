@@ -1,18 +1,29 @@
-import { IPlayer } from '../../models/PlayerModel'
+import pirates from '../../assets/races/pirates'
+import { IPlayer } from '../../types/IPlayer'
+import { PRINCIPAL_PLANET_TEST_1 } from './planetMocks'
+import universe from './universeMocks'
 
-type IBasePlayer = Omit<Omit<Omit<IPlayer, 'universe'>, 'race'>, 'planets'>
-
-export const PLAYER_TEST_1_PIRATE: IBasePlayer = {
+export const PLAYER_TEST_1_PIRATE: IPlayer = {
   user: {
     username: 'username_test_1',
     email: 'username_1@test.com'
   },
   perks: [],
-  points: [],
+
+  race: pirates,
+
+  planets: {
+    principal: PRINCIPAL_PLANET_TEST_1,
+    colonies: [PRINCIPAL_PLANET_TEST_1]
+  },
+
+  universe,
+
   researches: {
     researched: [],
     queue: []
   },
+
   units: {
     troops: {
       population: 0

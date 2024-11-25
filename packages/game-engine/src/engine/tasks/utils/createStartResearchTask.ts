@@ -5,7 +5,7 @@ import {
   PENDING_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
   StartResearchTaskType
-} from '../../../models/TaskModel'
+} from '../../../types/ITask'
 import getSecond from '../../../helpers/getSecond'
 
 // TODO: add create BASE task

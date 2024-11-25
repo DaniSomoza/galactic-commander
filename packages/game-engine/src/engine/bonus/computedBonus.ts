@@ -1,4 +1,4 @@
-import { BonusType, IBonus } from '../../types/bonus'
+import { BonusType, IBonus } from '../../types/IBonus'
 
 function computedBonus<T extends keyof typeof percentageBonusType>(
   playerBonus: { bonus: IBonus }[],

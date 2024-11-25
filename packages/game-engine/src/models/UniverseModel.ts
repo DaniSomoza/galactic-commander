@@ -1,12 +1,6 @@
-import mongoose, { Schema, Document, Model } from 'mongoose'
+import mongoose, { Schema, Model, Document } from 'mongoose'
 
-// TODO: universeConfig
-
-export interface IUniverse {
-  name: string
-  isProcessingInProgress: boolean
-  lastProcessedTime: number
-}
+import { IUniverse } from '../types/IUniverse'
 
 const UniverseSchema: Schema = new Schema(
   {
@@ -19,7 +13,9 @@ const UniverseSchema: Schema = new Schema(
   }
 )
 
-export interface IUniverseDocument extends IUniverse, Document {}
+export interface IUniverseDocument extends IUniverse, Document {
+  _id: mongoose.Types.ObjectId
+}
 
 const UniverseModel: Model<IUniverseDocument> = mongoose.model<IUniverseDocument>(
   'Universe',

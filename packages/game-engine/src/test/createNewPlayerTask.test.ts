@@ -1,13 +1,6 @@
 import mongoose from 'mongoose'
 
-import getTaskModel, {
-  ERROR_TASK_STATUS,
-  ITask,
-  NEW_PLAYER_TASK_TYPE,
-  NewPlayerTaskType,
-  PENDING_TASK_STATUS,
-  PROCESSED_TASK_STATUS
-} from '../models/TaskModel'
+import getTaskModel from '../models/TaskModel'
 import planetRepository from '../repositories/planetRepository'
 import playerRepository from '../repositories/playerRepository'
 import raceRepository from '../repositories/raceRepository'
@@ -17,8 +10,8 @@ import { AVAILABLE_PLANET_TEST_1 } from './mocks/planetMocks'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
 import pirates from '../assets/races/pirates'
 import processTasks from '../engine/processTasks'
-import PlayerModel, { IPlayer } from '../models/PlayerModel'
-import { IBonus } from '../types/bonus'
+import PlayerModel from '../models/PlayerModel'
+import { ITask, NewPlayerTaskType } from '../types/ITask'
 
 describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {

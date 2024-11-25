@@ -1,28 +1,27 @@
 import { MongoServerError } from 'mongodb'
 
-import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import {
+  TaskType,
   ERROR_TASK_STATUS,
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskData,
-  ITaskDocument,
-  ITaskTypeDocument,
   NEW_PLAYER_TASK_TYPE,
   NewPlayerTaskData,
   PROCESSED_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
-  StartResearchTaskData,
-  TaskType
-} from '../models/TaskModel'
+  StartResearchTaskData
+} from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
-import GameEngineError from './errors/GameEngineError'
-import { IUniverseDocument } from '../models/UniverseModel'
+import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import { IPlanetDocument } from '../models/PlanetModel'
 import { IPlayerDocument } from '../models/PlayerModel'
-import calculateResourceProduction from './resources/calculateResourceProduction'
+import { IUniverseDocument } from '../models/UniverseModel'
+import { ITaskDocument, ITaskTypeDocument } from '../models/TaskModel'
 import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
+import calculateResourceProduction from './resources/calculateResourceProduction'
 import computedBonus from './bonus/computedBonus'
+import GameEngineError from './errors/GameEngineError'
 
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)

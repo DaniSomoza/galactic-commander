@@ -20,6 +20,6 @@
     "fastify": "^5.0.0",
     "http-status-codes": "^2.3.0",
     "joi": "^17.13.3",
-    "mongoose": "^8.0.1"
+    "mongoose": "^8.8.2"
   }
 }

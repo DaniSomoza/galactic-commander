@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
 
-import getTaskModel, {
+import getTaskModel from '../models/TaskModel'
+import {
   ITask,
-  NewPlayerTaskType,
   NEW_PLAYER_TASK_TYPE,
+  NewPlayerTaskType,
   PENDING_TASK_STATUS,
-  TaskType,
-  StartResearchTaskType
-} from '../models/TaskModel'
+  StartResearchTaskType,
+  TaskType
+} from '../types/ITask'
 
 async function getPendingTasks(universeId: mongoose.Types.ObjectId, second: number) {
   const taskModel = getTaskModel<TaskType>()

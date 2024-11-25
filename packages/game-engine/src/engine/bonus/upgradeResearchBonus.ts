@@ -1,4 +1,4 @@
-import { IBonus } from '../../types/bonus'
+import { IBonus } from '../../types/IBonus'
 
 function upgradeResearchBonus(bonus: IBonus, level: number): IBonus {
   const updatedBonus: IBonus = {}

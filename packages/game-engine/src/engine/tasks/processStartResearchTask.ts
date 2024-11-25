@@ -1,21 +1,20 @@
-import computedBonus from '../bonus/computedBonus'
-import getSecond from '../../helpers/getSecond'
-import getTaskModel, {
+import {
+  ITask,
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskType,
-  ITask,
-  ITaskTypeDocument,
   PENDING_TASK_STATUS,
   StartResearchTaskType
-} from '../../models/TaskModel'
+} from '../../types/ITask'
+import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
 import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
+import getSecond from '../../helpers/getSecond'
+import computedBonus from '../bonus/computedBonus'
+import createStartResearchTask from './utils/createStartResearchTask'
 import calculateResearchDuration from '../research/calculateResearchDuration'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
-import createStartResearchTask from './utils/createStartResearchTask'
 
-// TODO: only taskData required
 async function processStartResearchTask(
   task: ITaskTypeDocument<StartResearchTaskType>,
   second: number
@@ -115,7 +114,7 @@ async function processStartResearchTask(
   const newTask = new taskModel(finishResearchTask)
 
   const activeResearch = {
-    research: research._id,
+    research: research,
     level: level + 1,
     executeTaskAt,
     taskId: newTask._id

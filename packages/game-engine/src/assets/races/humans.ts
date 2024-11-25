@@ -1,9 +1,9 @@
 import {
-  IRace,
   DEFAULT_FLEET_ENERGY,
+  DEFAULT_INITIAL_RESOURCES,
   DEFAULT_RESOURCE_NAME,
-  DEFAULT_INITIAL_RESOURCES
-} from '../../models/RaceModel'
+  IRace
+} from '../../types/IRace'
 
 const HUMANS_ALLOWED_PLANETS = 5
 const HUMANS_TROOPS_POPULATION = 15
@@ -19,7 +19,12 @@ const humans: IRace = {
   baseResources: DEFAULT_INITIAL_RESOURCES,
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: HUMANS_INTERGALACTIC_TRAVEL_THRESHOLD,
+
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     // TODO: add bonus ??
