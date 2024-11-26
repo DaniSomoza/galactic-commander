@@ -73,7 +73,7 @@ export async function mockTestGameDatabase() {
   const player1Pirate = await PlayerModel.create(player1)
 
   // update test player principal planet
-  principalPlanet.owner = player1Pirate
+  principalPlanet.owner = player1Pirate._id
   await principalPlanet.save()
 }
 

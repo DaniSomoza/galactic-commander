@@ -1,4 +1,5 @@
-import { IPlayer } from './IPlayer'
+import { Types } from 'mongoose'
+
 import { ISpecial } from './ISpecial'
 import { IUniverse } from './IUniverse'
 
@@ -24,7 +25,7 @@ export interface IPlanet {
 
   imgUrl: string
 
-  owner: IPlayer | null
+  owner: Types.ObjectId | null
   colonizedAt: number
 
   resources: number

@@ -17,7 +17,7 @@ async function processCreateNewPlayerTask(
   second: number
 ): Promise<Document[]> {
   // get all the required data from DB
-  const [availablePrincipalPlanets, race, universe, player] = await Promise.all([
+  const [availablePrincipalPlanets, race, universe, playerAlreadyExists] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
     raceRepository.findRaceById(task.data.race),
     universeRepository.findUniverseById(task.universe),
@@ -36,7 +36,7 @@ async function processCreateNewPlayerTask(
     throw new GameEngineError('invalid universe')
   }
 
-  if (player) {
+  if (playerAlreadyExists) {
     throw new GameEngineError('player already created')
   }
 
@@ -88,7 +88,7 @@ async function processCreateNewPlayerTask(
 
   const newPlayer = new PlayerModel(newPlayerData)
 
-  principalPlanet.owner = newPlayer
+  principalPlanet.owner = newPlayer._id
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second

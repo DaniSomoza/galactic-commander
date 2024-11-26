@@ -92,8 +92,9 @@ async function setTaskAsProcessed<Type extends TaskType>(
     task.status = PROCESSED_TASK_STATUS
     task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      task.errorDetails = error.message
+    if (error?.constructor?.name === 'MongoServerError') {
+      const mongoError = error as MongoServerError
+      task.errorDetails = mongoError.message
     }
     if (error instanceof GameEngineError) {
       task.errorDetails = error.message
