@@ -10,12 +10,12 @@ import {
 import getRandomNumber from './getRandomNumber'
 import getSecond from './getSecond'
 import getPlanetImgUrl from './getPlanetImgUrl'
-import { IUniverse } from '../types/IUniverse'
+import { IUniverseDocument } from '../models/UniverseModel'
 
 // TODO: create a universeConfig for test (galaxy, sector, system, planet)
 
 // TODO: add more galaxies based on number of players, time, etc... (and send an email notification for it)
-function generatePlanets(universe: IUniverse): IPlanet[] {
+function generatePlanets(universe: IUniverseDocument): IPlanet[] {
   const planets: IPlanet[] = []
 
   for (let galaxy = 1; galaxy <= GALAXIES; galaxy++) {
@@ -52,9 +52,19 @@ function generatePlanets(universe: IUniverse): IPlanet[] {
 
             specials: [],
 
-            isBuildingFleets: false,
-            isTrainingTroops: false,
-            isBuildingDefenses: false
+            unitBuild: {
+              troops: {
+                queue: []
+              },
+              spaceships: {
+                queue: []
+              },
+              defenses: {
+                queue: []
+              }
+            },
+
+            units: []
           })
         }
       }

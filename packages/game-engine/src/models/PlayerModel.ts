@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from 'mongoose'
+import mongoose, { Schema, Model, Document } from 'mongoose'
 
 import { BonusSchema } from './BonusModel'
 import { IPlayer } from '../types/IPlayer'
@@ -6,6 +6,7 @@ import { IRaceDocument } from './RaceModel'
 import { IUniverseDocument } from './UniverseModel'
 import { IResearchDocument } from './ResearchModel'
 import { IPlanetDocument } from './PlanetModel'
+import { FleetSchema, IFleetDocument } from './FleetModel'
 
 const ActiveResearchSchema = new Schema(
   {
@@ -59,17 +60,7 @@ const PlayerSchema: Schema = new Schema({
     queue: [{ type: String }]
   },
 
-  units: {
-    troops: {
-      population: { type: Number, required: true }
-    },
-    fleets: {
-      energy: { type: Number, required: true }
-    },
-    defenses: {
-      structures: { type: Number, required: true }
-    }
-  }
+  fleets: [FleetSchema]
 })
 
 interface IPlayerResearchDocument {
@@ -86,6 +77,7 @@ interface IPlayerActiveResearchDocument {
 
 export interface IPlayerDocument extends IPlayer, Document {
   _id: mongoose.Types.ObjectId
+
   race: IRaceDocument
   universe: IUniverseDocument
   researches: {
@@ -97,6 +89,8 @@ export interface IPlayerDocument extends IPlayer, Document {
     principal: IPlanetDocument
     colonies: IPlanetDocument[]
   }
+
+  fleets: IFleetDocument[]
 }
 
 const PlayerModel: Model<IPlayerDocument> = mongoose.model<IPlayerDocument>('Player', PlayerSchema)

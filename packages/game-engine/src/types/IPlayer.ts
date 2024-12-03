@@ -5,6 +5,7 @@ import { IPlanet } from './IPlanet'
 import { IResearch } from './IResearch'
 import { IRace } from './IRace'
 import { IUniverse } from './IUniverse'
+import { IFleet } from './IFleet'
 
 interface IPlayerUser {
   username: string
@@ -41,18 +42,6 @@ interface IPlayerResearches {
   queue: string[]
 }
 
-interface IPlayerUnits {
-  troops: {
-    population: number
-  }
-  fleets: {
-    energy: number
-  }
-  defenses: {
-    structures: number
-  }
-}
-
 export interface IPlayer {
   user: IPlayerUser
   race: IRace
@@ -60,5 +49,5 @@ export interface IPlayer {
   planets: IPlayerPlanets
   perks: IPlayerPerk[]
   researches: IPlayerResearches
-  units: IPlayerUnits
+  fleets: IFleet[]
 }

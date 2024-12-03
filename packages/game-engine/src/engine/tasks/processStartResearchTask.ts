@@ -20,7 +20,7 @@ async function processStartResearchTask(
   second: number
 ) {
   // get all the required data from DB
-  const player = await playerRepository.findPlayerById(task.data.player)
+  const player = await playerRepository.findPlayerById(task.data.playerId)
 
   if (!player) {
     throw new GameEngineError('invalid player')
@@ -31,7 +31,7 @@ async function processStartResearchTask(
   }
 
   const research = player.race.researches.find((research) =>
-    research._id.equals(task.data.research)
+    research._id.equals(task.data.researchId)
   )
 
   if (!research) {
@@ -86,8 +86,8 @@ async function processStartResearchTask(
     universe: player.universe._id,
 
     data: {
-      player: player._id,
-      research: task.data.research,
+      playerId: player._id,
+      researchId: task.data.researchId,
       researchDuration,
       researchResourceCost
     },

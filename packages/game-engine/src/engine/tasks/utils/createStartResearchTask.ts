@@ -19,8 +19,8 @@ function createStartResearchTask(
     type: START_RESEARCH_TASK_TYPE,
     universe: universeId,
     data: {
-      player: playerId,
-      research: researchId
+      playerId,
+      researchId
     },
 
     status: PENDING_TASK_STATUS,

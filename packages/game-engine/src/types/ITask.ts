@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { UnitTypes } from './IUnit'
 
 export const PENDING_TASK_STATUS = 'PENDING'
 export const PROCESSED_TASK_STATUS = 'PROCESSED'
@@ -16,23 +17,48 @@ export type NewPlayerTaskType = typeof NEW_PLAYER_TASK_TYPE
 export type NewPlayerTaskData = {
   username: string
   email: string
-  race: mongoose.Types.ObjectId
+  raceId: mongoose.Types.ObjectId
 }
 
 export const START_RESEARCH_TASK_TYPE = 'START_RESEARCH_TASK'
 export type StartResearchTaskType = typeof START_RESEARCH_TASK_TYPE
 export type StartResearchTaskData = {
-  player: mongoose.Types.ObjectId
-  research: mongoose.Types.ObjectId
+  playerId: mongoose.Types.ObjectId
+  researchId: mongoose.Types.ObjectId
 }
 
 export const FINISH_RESEARCH_TASK_TYPE = 'FINISH_RESEARCH_TASK'
 export type FinishResearchTaskType = typeof FINISH_RESEARCH_TASK_TYPE
 export type FinishResearchTaskData = {
-  player: mongoose.Types.ObjectId
-  research: mongoose.Types.ObjectId
+  playerId: mongoose.Types.ObjectId
+  researchId: mongoose.Types.ObjectId
   researchDuration: number
   researchResourceCost: number
+}
+
+export const START_BUILD_UNITS_TASK_TYPE = 'START_BUILD_UNITS_TASK_TYPE'
+export type StartBuildUnitsTaskType = typeof START_BUILD_UNITS_TASK_TYPE
+export type StartBuildUnitsTaskData = {
+  playerId: mongoose.Types.ObjectId
+  planetId: mongoose.Types.ObjectId
+  build: {
+    unitId: mongoose.Types.ObjectId
+    amount: number
+  }
+}
+
+export const FINISH_BUILD_UNITS_TASK_TYPE = 'FINISH_BUILD_UNITS_TASK'
+export type FinishBuildUnitsTaskType = typeof FINISH_BUILD_UNITS_TASK_TYPE
+export type FinishBuildUnitsTaskData = {
+  playerId: mongoose.Types.ObjectId
+  planetId: mongoose.Types.ObjectId
+  build: {
+    unitId: mongoose.Types.ObjectId
+    amount: number
+  }
+  buildUnitType: UnitTypes
+  buildUnitsDuration: number
+  buildUnitsResourceCost: number
 }
 
 // const EXPLORE_PLANET_TASK_TYPE = 'ExplorePlanetTask'
@@ -41,14 +67,24 @@ export type FinishResearchTaskData = {
 //   // TODO: implement task data
 // }
 
-export type TaskType = NewPlayerTaskType | StartResearchTaskType | FinishResearchTaskType
+export type TaskType =
+  | NewPlayerTaskType
+  | StartResearchTaskType
+  | FinishResearchTaskType
+  | StartBuildUnitsTaskType
+  | FinishBuildUnitsTaskType
+
 export type TaskData<T extends TaskType> = T extends NewPlayerTaskType
   ? NewPlayerTaskData
   : T extends StartResearchTaskType
     ? StartResearchTaskData
     : T extends FinishResearchTaskType
       ? FinishResearchTaskData
-      : never
+      : T extends StartBuildUnitsTaskType
+        ? StartBuildUnitsTaskData
+        : T extends FinishBuildUnitsTaskType
+          ? FinishBuildUnitsTaskData
+          : never
 
 type HistoryStatusItem = {
   taskStatus: TaskStatus

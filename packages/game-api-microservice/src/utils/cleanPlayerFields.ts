@@ -2,13 +2,15 @@ import { IPlayerDocument } from 'game-engine/models/PlayerModel'
 
 import { PlayerType } from '../types/Player'
 import cleanPlanetFields from './cleanPlanetFields'
+import cleanRaceFields from './cleanRaceFields'
+import cleanFleetFields from './cleanFleetFields'
 
 function cleanPlayerFields(player: IPlayerDocument): PlayerType {
-  const { user, race, universe, planets, perks, researches, units } = player
+  const { user, race, universe, planets, perks, researches, fleets } = player
 
   return {
     user,
-    race,
+    race: cleanRaceFields(race),
     universe,
     planets: {
       principal: cleanPlanetFields(planets.principal),
@@ -27,7 +29,7 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
           }
         : undefined
     },
-    units
+    fleets: fleets.map(cleanFleetFields)
   }
 }
 

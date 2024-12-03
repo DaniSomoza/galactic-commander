@@ -24,17 +24,7 @@ export const PLAYER_TEST_1_PIRATE: IPlayer = {
     queue: []
   },
 
-  units: {
-    troops: {
-      population: 0
-    },
-    fleets: {
-      energy: 0
-    },
-    defenses: {
-      structures: 0
-    }
-  }
+  fleets: []
 }
 
 const ALL_PLAYERS_MOCK = [PLAYER_TEST_1_PIRATE]

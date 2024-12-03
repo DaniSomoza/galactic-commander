@@ -50,7 +50,7 @@ async function createPlayer({
     data: {
       username,
       email,
-      race: raceData._id
+      raceId: raceData._id
     },
 
     status: PENDING_TASK_STATUS,

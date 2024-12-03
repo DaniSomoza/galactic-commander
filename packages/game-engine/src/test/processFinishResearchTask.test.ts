@@ -19,6 +19,16 @@ import {
   PENDING_TASK_STATUS,
   PROCESSED_TASK_STATUS
 } from '../types/ITask'
+import calculateMaxEnergy from '../engine/units/calculateMaxEnergy'
+import calculateMaxPopulation from '../engine/units/calculateMaxPopulation'
+
+const ENERGY_VALUE_LEVEL_0 = pirates.baseFleetEnergy
+const ENERGY_VALUE_LEVEL_1 = 400
+const ENERGY_VALUE_LEVEL_2 = 1_000
+
+const POPULATION_VALUE_LEVEL_0 = pirates.baseTroopsPopulation
+const POPULATION_VALUE_LEVEL_1 = 35
+const POPULATION_VALUE_LEVEL_2 = 79
 
 describe('process finish research task', () => {
   describe('finish bonus research task', () => {
@@ -40,8 +50,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -129,8 +139,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -171,8 +181,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -267,8 +277,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -302,7 +312,12 @@ describe('process finish research task', () => {
 
       await player?.save()
 
-      expect(player?.units.fleets.energy).toBe(0)
+      const energyResearch = player!.researches.researched.find(
+        ({ research }) => research.isFleetEnergyResearch
+      )
+      const currentEnergyLevel = energyResearch?.level || 0
+
+      expect(calculateMaxEnergy(player!.race, currentEnergyLevel)).toBe(ENERGY_VALUE_LEVEL_0)
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -330,7 +345,9 @@ describe('process finish research task', () => {
       // expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       // new energy
-      expect(researchPlayer?.units.fleets.energy).toBe(pirates.baseFleetEnergy)
+      expect(
+        calculateMaxEnergy(researchPlayer!.race, researchPlayer!.researches.researched[0].level)
+      ).toBe(ENERGY_VALUE_LEVEL_1)
     })
 
     it('level 2 fleet energy research', async () => {
@@ -351,8 +368,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -393,8 +410,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -458,7 +475,9 @@ describe('process finish research task', () => {
       // expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
       // new energy
-      expect(researchPlayer?.units.fleets.energy).toBe(300)
+      expect(
+        calculateMaxEnergy(researchPlayer!.race, researchPlayer!.researches.researched[0].level)
+      ).toBe(ENERGY_VALUE_LEVEL_2)
     })
   })
 
@@ -481,8 +500,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -516,7 +535,14 @@ describe('process finish research task', () => {
 
       await player?.save()
 
-      expect(player?.units.troops.population).toBe(0)
+      const populationResearch = player!.researches.researched.find(
+        ({ research }) => research.isTroopsPopulationResearch
+      )
+      const currentPopulationLevel = populationResearch?.level || 0
+
+      expect(calculateMaxPopulation(player!.race, currentPopulationLevel)).toBe(
+        POPULATION_VALUE_LEVEL_0
+      )
 
       // we process the task here
       await processTasks([task!], universe!)
@@ -544,7 +570,9 @@ describe('process finish research task', () => {
       // expect(researchPlayer?.points[0].second).toEqual(universe?.lastProcessedTime)
 
       // new troops population value
-      expect(researchPlayer?.units.troops.population).toBe(pirates.baseTroopsPopulation)
+      expect(
+        calculateMaxPopulation(researchPlayer!.race, researchPlayer!.researches.researched[0].level)
+      ).toBe(POPULATION_VALUE_LEVEL_1)
     })
 
     it('level 2 troops population research', async () => {
@@ -567,8 +595,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -600,8 +628,8 @@ describe('process finish research task', () => {
         type: FINISH_RESEARCH_TASK_TYPE,
         universe: universe!._id,
         data: {
-          player: player!._id,
-          research: research!._id,
+          playerId: player!._id,
+          researchId: research!._id,
           researchDuration,
           researchResourceCost
         },
@@ -665,7 +693,9 @@ describe('process finish research task', () => {
       // expect(researchPlayer?.points[1].second).toEqual(universe?.lastProcessedTime)
 
       // new troops population value
-      expect(researchPlayer?.units.troops.population).toBe(22)
+      expect(
+        calculateMaxPopulation(researchPlayer!.race, researchPlayer!.researches.researched[0].level)
+      ).toBe(POPULATION_VALUE_LEVEL_2)
     })
   })
 
@@ -680,8 +710,8 @@ describe('process finish research task', () => {
       universe: universe!._id,
       data: {
         // invalid playerId
-        player: new mongoose.Types.ObjectId(),
-        research: new mongoose.Types.ObjectId(),
+        playerId: new mongoose.Types.ObjectId(),
+        researchId: new mongoose.Types.ObjectId(),
         researchDuration,
         researchResourceCost
       },
@@ -729,9 +759,9 @@ describe('process finish research task', () => {
       type: FINISH_RESEARCH_TASK_TYPE,
       universe: universe!._id,
       data: {
-        player: player?.id,
+        playerId: player?.id,
         // invalid researchId
-        research: new mongoose.Types.ObjectId(),
+        researchId: new mongoose.Types.ObjectId(),
         researchDuration,
         researchResourceCost
       },

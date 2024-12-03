@@ -12,9 +12,9 @@ import {
   StartResearchTaskType
 } from 'game-engine/dist/types/ITask'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
+import getSecond from 'game-engine/dist/helpers/getSecond'
 
 import { testServer } from './helpers/testServer'
-import getSecond from 'game-engine/dist/helpers/getSecond'
 
 describe('researches task', () => {
   it('creates a new valid research task', async () => {
@@ -57,8 +57,8 @@ describe('researches task', () => {
     expect(taskCreated.type).toEqual(START_RESEARCH_TASK_TYPE)
     expect(taskCreated.universe).toEqual(universe!.id.toString())
     expect(taskCreated.status).toEqual(PENDING_TASK_STATUS)
-    expect(taskCreated.data.player).toEqual(player?._id.toString())
-    expect(taskCreated.data.research).toEqual(research?._id.toString())
+    expect(taskCreated.data.playerId).toEqual(player?._id.toString())
+    expect(taskCreated.data.researchId).toEqual(research?._id.toString())
     expect(taskCreated.isCancellable).toEqual(false)
     expect(taskCreated.executeTaskAt).toEqual(null)
     expect(taskCreated.processedAt).toEqual(null)
@@ -69,8 +69,8 @@ describe('researches task', () => {
 
     expect(newStartResearchTask?.type).toEqual(START_RESEARCH_TASK_TYPE)
     expect(newStartResearchTask?.status).toEqual(PENDING_TASK_STATUS)
-    expect(newStartResearchTask?.data.player).toEqual(player?._id)
-    expect(newStartResearchTask?.data.research).toEqual(research?._id)
+    expect(newStartResearchTask?.data.playerId).toEqual(player?._id)
+    expect(newStartResearchTask?.data.researchId).toEqual(research?._id)
     expect(newStartResearchTask?.isCancellable).toEqual(false)
     expect(newStartResearchTask?.executeTaskAt).toEqual(null)
     expect(newStartResearchTask?.processedAt).toEqual(null)

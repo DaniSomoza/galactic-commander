@@ -1,5 +1,5 @@
 import PlanetModel from '../models/PlanetModel'
-import { IPlanetCoordinates } from '../types/IPlanet'
+import { IPlanet, IPlanetCoordinates } from '../types/IPlanet'
 
 async function findPlanetById(planetId: string) {
   return PlanetModel.findById(planetId).exec()
@@ -21,12 +21,17 @@ async function findPlanetByCoordinates(coordinates: IPlanetCoordinates) {
   }).exec()
 }
 
+async function insertPlanets(planets: IPlanet[]) {
+  return PlanetModel.insertMany(planets)
+}
+
 // TODO: findPlanetsBySystem? => return all planets of a system
 
 const planetRepository = {
   findPlanetById,
   findPlanetByCoordinates,
-  findAvailablePrincipalPlanets
+  findAvailablePrincipalPlanets,
+  insertPlanets
 }
 
 export default planetRepository

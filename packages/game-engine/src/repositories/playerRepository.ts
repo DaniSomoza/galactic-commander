@@ -4,16 +4,39 @@ import PlayerModel from '../models/PlayerModel'
 
 async function findPlayerByUsername(username: string, universeId: mongoose.Types.ObjectId) {
   return PlayerModel.findOne({ 'user.username': username, universe: universeId })
-    .populate('planets.principal')
     .populate({
-      path: 'planets.colonies'
+      path: 'planets',
+      populate: [
+        {
+          path: 'principal',
+          model: 'Planet'
+        },
+        {
+          path: 'colonies',
+          model: 'Planet',
+          populate: {
+            path: 'units',
+            model: 'Unit'
+          }
+        }
+      ]
     })
     .populate({
       path: 'race',
-      populate: {
-        path: 'researches',
-        model: 'Research'
-      }
+      populate: [
+        {
+          path: 'researches',
+          model: 'Research'
+        },
+        {
+          path: 'units',
+          model: 'Unit',
+          populate: {
+            path: 'requirements.researches.research',
+            model: 'Research'
+          }
+        }
+      ]
     })
     .populate({
       path: 'researches.researched',
@@ -28,26 +51,66 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
         path: 'research',
         model: 'Research'
       }
+    })
+    .populate({
+      path: 'fleets',
+      populate: [
+        {
+          path: 'planet',
+          model: 'Planet'
+        },
+        {
+          path: 'units.unit',
+          model: 'Unit',
+          populate: {
+            path: 'requirements.researches.research',
+            model: 'Research'
+          }
+        },
+        {
+          path: 'travel.destination',
+          model: 'Planet'
+        }
+      ]
     })
     .exec()
 }
 
 async function findPlayerById(playerId: mongoose.Types.ObjectId) {
   return PlayerModel.findById(playerId)
-    .populate('planets.principal')
     .populate({
-      path: 'planets.colonies',
-      populate: {
-        path: 'owner',
-        model: 'Player'
-      }
+      path: 'planets',
+      populate: [
+        {
+          path: 'principal',
+          model: 'Planet'
+        },
+        {
+          path: 'colonies',
+          model: 'Planet',
+          populate: {
+            path: 'units',
+            model: 'Unit'
+          }
+        }
+      ]
     })
     .populate({
       path: 'race',
-      populate: {
-        path: 'researches',
-        model: 'Research'
-      }
+      populate: [
+        {
+          path: 'researches',
+          model: 'Research'
+        },
+        {
+          path: 'units',
+          model: 'Unit',
+          populate: {
+            path: 'requirements.researches.research',
+            model: 'Research'
+          }
+        }
+      ]
     })
     .populate({
       path: 'researches.researched',
@@ -62,6 +125,27 @@ async function findPlayerById(playerId: mongoose.Types.ObjectId) {
         path: 'research',
         model: 'Research'
       }
+    })
+    .populate({
+      path: 'fleets',
+      populate: [
+        {
+          path: 'planet',
+          model: 'Planet'
+        },
+        {
+          path: 'units.unit',
+          model: 'Unit',
+          populate: {
+            path: 'requirements.researches.research',
+            model: 'Research'
+          }
+        },
+        {
+          path: 'travel.destination',
+          model: 'Planet'
+        }
+      ]
     })
     .exec()
 }

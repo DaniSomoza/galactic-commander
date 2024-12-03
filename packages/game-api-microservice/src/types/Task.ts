@@ -1,3 +1,5 @@
+import { UnitTypes } from './Unit'
+
 export const PENDING_TASK_STATUS = 'PENDING'
 export const PROCESSED_TASK_STATUS = 'PROCESSED'
 export const ERROR_TASK_STATUS = 'ERROR'
@@ -14,26 +16,56 @@ export type NewPlayerTaskType = typeof NEW_PLAYER_TASK_TYPE
 export type NewPlayerTaskData = {
   username: string
   email: string
-  race: string
+  raceId: string
 }
 
 export const START_RESEARCH_TASK_TYPE = 'START_RESEARCH_TASK'
 export type StartResearchTaskType = typeof START_RESEARCH_TASK_TYPE
 export type StartResearchTaskData = {
-  player: string
-  research: string
+  playerId: string
+  researchId: string
 }
 
 export const FINISH_RESEARCH_TASK_TYPE = 'FINISH_RESEARCH_TASK'
 export type FinishResearchTaskType = typeof FINISH_RESEARCH_TASK_TYPE
 export type FinishResearchTaskData = {
-  player: string
-  research: string
+  playerId: string
+  researchId: string
   researchDuration: number
   researchResourceCost: number
 }
 
-export type TaskTypesTypes = NewPlayerTaskType | StartResearchTaskType | FinishResearchTaskType
+export const START_BUILD_UNITS_TASK_TYPE = 'START_BUILD_UNITS_TASK_TYPE'
+export type StartBuildUnitsTaskType = typeof START_BUILD_UNITS_TASK_TYPE
+export type StartBuildUnitsTaskData = {
+  playerId: string
+  planetId: string
+  build: {
+    unitId: string
+    amount: number
+  }
+}
+
+export const FINISH_BUILD_UNITS_TASK_TYPE = 'FINISH_BUILD_UNITS_TASK'
+export type FinishBuildUnitsTaskType = typeof FINISH_BUILD_UNITS_TASK_TYPE
+export type FinishBuildUnitsTaskData = {
+  playerId: string
+  planetId: string
+  build: {
+    unitId: string
+    amount: number
+  }
+  buildUnitType: UnitTypes
+  buildUnitsDuration: number
+  buildUnitsResourceCost: number
+}
+
+export type TaskTypesTypes =
+  | NewPlayerTaskType
+  | StartResearchTaskType
+  | FinishResearchTaskType
+  | StartBuildUnitsTaskType
+  | FinishBuildUnitsTaskType
 
 export type TaskData<T extends TaskTypesTypes> = T extends NewPlayerTaskType
   ? NewPlayerTaskData
@@ -41,7 +73,11 @@ export type TaskData<T extends TaskTypesTypes> = T extends NewPlayerTaskType
     ? StartResearchTaskData
     : T extends FinishResearchTaskType
       ? FinishResearchTaskData
-      : never
+      : T extends StartBuildUnitsTaskType
+        ? StartBuildUnitsTaskData
+        : T extends FinishBuildUnitsTaskType
+          ? FinishBuildUnitsTaskData
+          : never
 
 export type HistoryStatusItemType = {
   taskStatus: TaskStatus

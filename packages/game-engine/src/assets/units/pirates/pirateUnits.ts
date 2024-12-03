@@ -1,4 +1,9 @@
 import { IUnit } from '../../../types/IUnit'
+import PIRATE_TROOPS_ATTACK_RESEARCH from '../../researches/pirates/pirate-troops-attack-research'
+import PIRATE_TROOPS_HEALTH_RESEARCH from '../../researches/pirates/pirate-troops-health-research'
+import PIRATE_TROOPS_POPULATION_RESEARCH from '../../researches/pirates/pirate-troops-population-research'
+import PIRATE_TROOPS_SHIELD_RESEARCH from '../../researches/pirates/pirate-troops-shield-research'
+import PIRATE_TROOPS_TRAINING_RESEARCH from '../../researches/pirates/pirate-troops-training-research'
 
 // TODO: implement pirate heroes
 
@@ -6,6 +11,8 @@ import { IUnit } from '../../../types/IUnit'
 const pirateCadet: IUnit = {
   name: 'TROOP_PIRATE_CADET_NAME',
   description: 'TROOP_PIRATE_CADET_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
 
   type: 'TROOP',
   subtype: 'INFANTRY',
@@ -35,12 +42,17 @@ const pirateCadet: IUnit = {
 
   requirements: {
     researches: [
-      // TODO: add this
-      // { level: 1, research: {} }
+      { level: 4, research: PIRATE_TROOPS_ATTACK_RESEARCH },
+      { level: 2, research: PIRATE_TROOPS_SHIELD_RESEARCH },
+      { level: 3, research: PIRATE_TROOPS_HEALTH_RESEARCH },
+      { level: 1, research: PIRATE_TROOPS_POPULATION_RESEARCH },
+      { level: 1, research: PIRATE_TROOPS_TRAINING_RESEARCH }
     ]
   },
 
-  specials: []
+  specials: [],
+
+  bonus: {}
 }
 
 // Pirate Officer (Troop)

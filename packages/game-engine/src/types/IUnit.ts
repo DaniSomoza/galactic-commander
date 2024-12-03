@@ -1,5 +1,6 @@
+import { Types } from 'mongoose'
+
 import { IBonus } from './IBonus'
-import { IPlanet } from './IPlanet'
 import { ISpecial } from './ISpecial'
 import { IPlayerResearch } from './IPlayer'
 
@@ -7,7 +8,7 @@ type UnitTroopType = 'TROOP'
 type UnitSpaceshipType = 'SPACESHIP'
 type UnitDefenseType = 'DEFENSE'
 
-type UnitTypes = UnitTroopType | UnitSpaceshipType | UnitDefenseType
+export type UnitTypes = UnitTroopType | UnitSpaceshipType | UnitDefenseType
 
 type UnitStatsTypes = {
   attack: number
@@ -64,9 +65,18 @@ type UnitSubtypes =
   | UnitSpaceshipBattleStationSubtype
   | UnitDefenseSubtype
 
+export type BuildUnitsType = {
+  unitId: Types.ObjectId
+  unitType: UnitTypes
+  amount: number
+  taskId: Types.ObjectId
+}
+
 export interface IUnit {
   name: string
   description: string
+
+  raceName?: string
 
   type: UnitTypes
   subtype: UnitSubtypes
@@ -88,10 +98,9 @@ export interface IUnit {
 
   requirements: {
     researches: IPlayerResearch[]
-    planet?: IPlanet
   }
 
   specials: ISpecial[]
 
-  bonus?: IBonus
+  bonus: IBonus
 }

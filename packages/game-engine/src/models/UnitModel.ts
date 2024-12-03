@@ -3,10 +3,22 @@ import mongoose, { Types, Schema, Model, Document } from 'mongoose'
 import { BonusSchema } from './BonusModel'
 import { IUnit } from '../types/IUnit'
 
+export const BuildUnitsSchema = new Schema(
+  {
+    unitId: { type: Schema.Types.ObjectId, ref: 'Unit' },
+    unitType: { type: String },
+    amount: { type: Number },
+    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
+  },
+  { _id: false }
+)
+
 const UnitSchema: Schema = new Schema(
   {
     name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
+
+    raceName: { type: String, required: false },
 
     type: { type: String, required: true },
     subtype: { type: String, required: true },
@@ -41,8 +53,7 @@ const UnitSchema: Schema = new Schema(
           research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
           level: { type: Number, required: true }
         }
-      ],
-      planet: { type: Schema.Types.ObjectId, ref: 'Planet', required: false }
+      ]
     },
 
     // TODO: implement specials!!

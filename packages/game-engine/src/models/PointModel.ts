@@ -1,6 +1,8 @@
 import mongoose, { Model, Schema, Document } from 'mongoose'
 
 import { IPoint } from '../types/IPoint'
+import { IPlayerDocument } from './PlayerModel'
+import { ITaskDocument } from './TaskModel'
 
 const PointSchema = new Schema({
   player: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
@@ -17,6 +19,9 @@ const PointSchema = new Schema({
 
 export interface IPointDocument extends IPoint, Document {
   _id: mongoose.Types.ObjectId
+
+  player: IPlayerDocument
+  task: ITaskDocument
 }
 
 const PointModel: Model<IPointDocument> = mongoose.model<IPointDocument>('Point', PointSchema)

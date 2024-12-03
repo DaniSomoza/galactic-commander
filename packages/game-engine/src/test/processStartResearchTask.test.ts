@@ -36,8 +36,8 @@ describe('process start research task', () => {
       type: START_RESEARCH_TASK_TYPE,
       universe: universe!._id,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id,
+        researchId: research!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -83,8 +83,8 @@ describe('process start research task', () => {
 
     const finishResearchTasksData = finishResearchTasks!.data as FinishResearchTaskData
 
-    expect(finishResearchTasksData.player).toEqual(player?._id)
-    expect(finishResearchTasksData.research).toEqual(research?._id)
+    expect(finishResearchTasksData.playerId).toEqual(player?._id)
+    expect(finishResearchTasksData.researchId).toEqual(research?._id)
     expect(finishResearchTasksData.researchDuration).toEqual(23000)
     expect(finishResearchTasksData.researchResourceCost).toEqual(200)
     expect(finishResearchTasks!.executeTaskAt).toEqual(24000)
@@ -107,8 +107,8 @@ describe('process start research task', () => {
       universe: universe!._id,
       data: {
         // invalid playerId
-        player: new mongoose.Types.ObjectId(),
-        research: research!._id
+        playerId: new mongoose.Types.ObjectId(),
+        researchId: research!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -155,8 +155,8 @@ describe('process start research task', () => {
       type: START_RESEARCH_TASK_TYPE,
       universe: universe!._id,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id,
+        researchId: research!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -202,9 +202,9 @@ describe('process start research task', () => {
       type: START_RESEARCH_TASK_TYPE,
       universe: universe!._id,
       data: {
-        player: player!._id,
+        playerId: player!._id,
         // invalid researchId
-        research: new mongoose.Types.ObjectId()
+        researchId: new mongoose.Types.ObjectId()
       },
 
       status: PENDING_TASK_STATUS,
@@ -256,8 +256,8 @@ describe('process start research task', () => {
       type: START_RESEARCH_TASK_TYPE,
       universe: universe!._id,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id,
+        researchId: research!._id
       },
 
       status: PENDING_TASK_STATUS,

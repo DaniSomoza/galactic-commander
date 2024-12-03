@@ -51,7 +51,7 @@ describe('players task', () => {
 
     expect(taskCreated.data.username).toEqual(userData.username)
     expect(taskCreated.data.email).toEqual(userData.email)
-    expect(taskCreated.data.race).toEqual(race!._id.toString())
+    expect(taskCreated.data.raceId).toEqual(race!._id.toString())
 
     const newPlayerTask = await taskRepository.findNewPlayerTaskByUsername(
       userData.username,

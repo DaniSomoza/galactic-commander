@@ -127,7 +127,7 @@ function createFakeTask(universeId: mongoose.Types.ObjectId) {
     data: {
       username: 'fake_test',
       email: 'fake_test@email.com',
-      race: new mongoose.Types.ObjectId()
+      raceId: new mongoose.Types.ObjectId()
     },
 
     status: PENDING_TASK_STATUS,

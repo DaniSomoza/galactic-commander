@@ -39,23 +39,37 @@ export default cleanTaskFields
 function cleanTaskDataFields(taskData: ITaskDocument['data']): TaskType<TaskTypesTypes>['data'] {
   // NewPlayerTaskType
   if ('username' in taskData) {
-    const { username, email, race } = taskData
-    return { username, email, race: race.toString() }
+    const { username, email, raceId } = taskData
+    return { username, email, raceId: raceId.toString() }
   }
 
   // FinishResearchTaskType
   if ('researchDuration' in taskData) {
-    const { player, research, researchDuration, researchResourceCost } = taskData
+    const { playerId, researchId, researchDuration, researchResourceCost } = taskData
     return {
-      player: player.toString(),
-      research: research.toString(),
+      playerId: playerId.toString(),
+      researchId: researchId.toString(),
       researchDuration,
       researchResourceCost
     }
   }
 
   // StartResearchTaskType
-  const { player, research } = taskData
+  if ('researchId' in taskData) {
+    const { playerId, researchId } = taskData
 
-  return { player: player.toString(), research: research.toString() }
+    return { playerId: playerId.toString(), researchId: researchId.toString() }
+  }
+
+  // StartBuildUnitsTaskType or FinishBuildUnitsTaskType
+  const { playerId, planetId, build } = taskData
+
+  return {
+    playerId: playerId.toString(),
+    planetId: planetId.toString(),
+    build: {
+      ...build,
+      unitId: build.unitId.toString()
+    }
+  }
 }

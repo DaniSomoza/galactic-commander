@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "migrate-mongo": "^11.0.0",
-    "mongoose": "^8.8.2"
+    "mongoose": "^8.8.3"
   },
   "devDependencies": {
     "@types/node": "^20.9.4",

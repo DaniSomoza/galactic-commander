@@ -1,3 +1,6 @@
+import { SpecialType } from './Special'
+import { BuildUnitsType, UnitType } from './Unit'
+
 export type PlanetCoordinatesType = {
   galaxy: number
   sector: number
@@ -25,9 +28,22 @@ export type PlanetType = {
   isUnderConquer: boolean
   isExplored: boolean
 
-  specials: string[]
+  specials: SpecialType[]
 
-  isBuildingFleets: boolean
-  isTrainingTroops: boolean
-  isBuildingDefenses: boolean
+  unitBuild: {
+    troops: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+    spaceships: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+    defenses: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+  }
+
+  units: UnitType[]
 }

@@ -21,6 +21,10 @@ import {
 } from '../types/ITask'
 import { IBonus } from '../types/IBonus'
 import { IPlayer } from '../types/IPlayer'
+import calculateCurrentPlayerPopulation from '../engine/units/calculateCurrentPlayerPopulation'
+import calculateCurrentPlayerEnergy from '../engine/units/calculateCurrentPlayerEnergy'
+import calculateMaxPopulation from '../engine/units/calculateMaxPopulation'
+import calculateMaxEnergy from '../engine/units/calculateMaxEnergy'
 
 describe('process new player creation Task', () => {
   it('process a new valid player (pirates race)', async () => {
@@ -36,7 +40,7 @@ describe('process new player creation Task', () => {
       data: {
         username: newPlayerUsername,
         email: newPlayerEmail,
-        race: newPlayerRace!._id
+        raceId: newPlayerRace!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -111,7 +115,7 @@ describe('process new player creation Task', () => {
 
     const playerRace = createdPlayer!.race
 
-    expect(playerRace._id).toEqual(task!.data.race)
+    expect(playerRace._id).toEqual(task!.data.raceId)
 
     const playerPrincipalPlanet = createdPlayer!.planets.principal
     const colonies = createdPlayer!.planets.colonies
@@ -134,8 +138,26 @@ describe('process new player creation Task', () => {
     expect(createdPlayer!.researches.researched).toEqual([])
     expect(createdPlayer!.researches.activeResearch).toBeUndefined()
 
-    expect(createdPlayer!.units.fleets.energy).toEqual(0)
-    expect(createdPlayer!.units.troops.population).toEqual(0)
+    expect(calculateCurrentPlayerPopulation(createdPlayer!)).toEqual(0)
+    expect(calculateCurrentPlayerEnergy(createdPlayer!)).toEqual(0)
+
+    const populationResearch = player!.researches.researched.find(
+      ({ research }) => research.isTroopsPopulationResearch
+    )
+    const currentPopulationLevel = populationResearch?.level || 0
+
+    expect(calculateMaxPopulation(createdPlayer!.race, currentPopulationLevel)).toEqual(
+      pirates.baseTroopsPopulation
+    )
+
+    const energyResearch = player!.researches.researched.find(
+      ({ research }) => research.isFleetEnergyResearch
+    )
+    const currentEnergyLevel = energyResearch?.level || 0
+
+    expect(calculateMaxEnergy(createdPlayer!.race, currentEnergyLevel)).toEqual(
+      pirates.baseFleetEnergy
+    )
 
     expect(newPrincipalPlanet!.owner).toEqual(createdPlayer!._id)
     expect(newPrincipalPlanet!.isPrincipal).toBe(true)
@@ -159,7 +181,7 @@ describe('process new player creation Task', () => {
       data: {
         username: newPlayerUsername,
         email: newPlayerEmail,
-        race: newPlayerRace!._id
+        raceId: newPlayerRace!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -229,7 +251,7 @@ describe('process new player creation Task', () => {
         username: newPlayerUsername,
         email: newPlayerEmail,
         // invalid raceId
-        race: new mongoose.Types.ObjectId()
+        raceId: new mongoose.Types.ObjectId()
       },
 
       status: PENDING_TASK_STATUS,
@@ -310,7 +332,7 @@ describe('process new player creation Task', () => {
       data: {
         username: 'invalid_test_username',
         email: newPlayerEmail,
-        race: newPlayerRace!._id
+        raceId: newPlayerRace!._id
       },
 
       status: PENDING_TASK_STATUS,
@@ -378,17 +400,7 @@ describe('process new player creation Task', () => {
         queue: []
       },
 
-      units: {
-        troops: {
-          population: newPlayerRace!.baseTroopsPopulation
-        },
-        fleets: {
-          energy: newPlayerRace!.baseFleetEnergy
-        },
-        defenses: {
-          structures: 0
-        }
-      }
+      fleets: []
     }
 
     await PlayerModel.create(newPlayerData)

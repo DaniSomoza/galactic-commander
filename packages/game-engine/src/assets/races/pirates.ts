@@ -7,6 +7,8 @@ import {
   DEFAULT_TROOPS_POPULATION,
   IRace
 } from '../../types/IRace'
+import { pirateResearches } from '../researches/researches'
+import pirateUnits from '../units/pirates/pirateUnits'
 
 const FLEET_CAPTURE_BONUS = 20 // +20% ships capture
 const TROOPS_ATTACK_BONUS = 10 // +10% troops attack bonus
@@ -22,9 +24,9 @@ const pirates: IRace = {
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: DEFAULT_INTERGALACTIC_TRAVEL_THRESHOLD,
 
-  researches: [],
+  researches: pirateResearches,
 
-  units: [],
+  units: pirateUnits,
 
   specials: [],
 

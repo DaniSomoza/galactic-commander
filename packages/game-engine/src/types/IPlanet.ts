@@ -2,6 +2,7 @@ import { Types } from 'mongoose'
 
 import { ISpecial } from './ISpecial'
 import { IUniverse } from './IUniverse'
+import { BuildUnitsType, IUnit } from './IUnit'
 
 export const GALAXIES = 3
 export const SECTORS_PER_GALAXIES = 8
@@ -25,6 +26,7 @@ export interface IPlanet {
 
   imgUrl: string
 
+  // TODO: review this!!!
   owner: Types.ObjectId | null
   colonizedAt: number
 
@@ -41,14 +43,20 @@ export interface IPlanet {
 
   specials: ISpecial[]
 
-  isBuildingFleets: boolean
-  isTrainingTroops: boolean
-  isBuildingDefenses: boolean
+  unitBuild: {
+    troops: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+    spaceships: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+    defenses: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsType[]
+    }
+  }
 
-  // TODO: units in the planet
-  // TODO: fleets traveling to the planet
-  // TODO: fleets traveling from the planet
-  // TODO: fleets landed in the planet
-  // TODO: troops landed in the planet
-  // TODO: defenses landed in the planet
+  units: IUnit[]
 }

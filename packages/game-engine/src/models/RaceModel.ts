@@ -11,6 +11,7 @@ import {
   IRace
 } from '../types/IRace'
 import { IResearchDocument } from './ResearchModel'
+import { IUnitDocument } from './UnitModel'
 
 const RaceSchema: Schema = new Schema(
   {
@@ -60,7 +61,9 @@ const RaceSchema: Schema = new Schema(
 
 export interface IRaceDocument extends IRace, Document {
   _id: mongoose.Types.ObjectId
+
   researches: IResearchDocument[]
+  units: IUnitDocument[]
 }
 
 const RaceModel: Model<IRaceDocument> = mongoose.model<IRaceDocument>('Race', RaceSchema)

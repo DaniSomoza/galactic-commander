@@ -1,6 +1,8 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
 
 import { IPlanet } from '../types/IPlanet'
+import { IUniverseDocument } from './UniverseModel'
+import { BuildUnitsSchema, IUnitDocument } from './UnitModel'
 
 const PlanetSchema: Schema = new Schema(
   {
@@ -41,9 +43,40 @@ const PlanetSchema: Schema = new Schema(
       }
     ],
 
-    isBuildingFleets: { type: Boolean, required: true, default: false },
-    isTrainingTroops: { type: Boolean, required: true, default: false },
-    isBuildingDefenses: { type: Boolean, required: true, default: false }
+    unitBuild: {
+      troops: {
+        activeBuild: {
+          type: BuildUnitsSchema,
+          required: false,
+          default: undefined
+        },
+        queue: [{ type: BuildUnitsSchema }]
+      },
+      spaceships: {
+        activeBuild: {
+          type: BuildUnitsSchema,
+          required: false,
+          default: undefined
+        },
+        queue: [{ type: BuildUnitsSchema }]
+      },
+      defenses: {
+        activeBuild: {
+          type: BuildUnitsSchema,
+          required: false,
+          default: undefined
+        },
+        queue: [{ type: BuildUnitsSchema }]
+      }
+    },
+
+    units: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Unit',
+        required: true
+      }
+    ]
   },
   {
     timestamps: true
@@ -52,6 +85,9 @@ const PlanetSchema: Schema = new Schema(
 
 export interface IPlanetDocument extends IPlanet, Document {
   _id: mongoose.Types.ObjectId
+
+  universe: IUniverseDocument
+  units: IUnitDocument[]
 }
 
 const PlanetModel: Model<IPlanetDocument> = mongoose.model<IPlanetDocument>('Planet', PlanetSchema)

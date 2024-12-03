@@ -29,9 +29,19 @@ export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
 
   specials: [],
 
-  isBuildingFleets: false,
-  isTrainingTroops: false,
-  isBuildingDefenses: false
+  unitBuild: {
+    troops: {
+      queue: []
+    },
+    spaceships: {
+      queue: []
+    },
+    defenses: {
+      queue: []
+    }
+  },
+
+  units: []
 }
 
 export const AVAILABLE_PLANET_TEST_1: IPlanet = {
@@ -61,9 +71,19 @@ export const AVAILABLE_PLANET_TEST_1: IPlanet = {
 
   specials: [],
 
-  isBuildingFleets: false,
-  isTrainingTroops: false,
-  isBuildingDefenses: false
+  unitBuild: {
+    troops: {
+      queue: []
+    },
+    spaceships: {
+      queue: []
+    },
+    defenses: {
+      queue: []
+    }
+  },
+
+  units: []
 }
 
 const ALL_PLANETS_MOCK = [PRINCIPAL_PLANET_TEST_1, AVAILABLE_PLANET_TEST_1]

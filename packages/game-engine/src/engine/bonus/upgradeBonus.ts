@@ -1,6 +1,6 @@
 import { IBonus } from '../../types/IBonus'
 
-function upgradeResearchBonus(bonus: IBonus, level: number): IBonus {
+function upgradeBonus(bonus: IBonus, amount: number): IBonus {
   const updatedBonus: IBonus = {}
 
   Object.keys(bonus).forEach((key) => {
@@ -8,11 +8,11 @@ function upgradeResearchBonus(bonus: IBonus, level: number): IBonus {
     const value = bonus[bono]
 
     if (typeof value === 'number') {
-      ;(updatedBonus[bono] as number) = value * level
+      ;(updatedBonus[bono] as number) = value * amount
     }
   })
 
   return updatedBonus
 }
 
-export default upgradeResearchBonus
+export default upgradeBonus

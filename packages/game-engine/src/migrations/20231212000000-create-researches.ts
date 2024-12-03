@@ -2,6 +2,8 @@ import { Db } from 'mongodb'
 import researches from '../assets/researches/researches'
 
 export async function up(db: Db) {
+  // TODO: use mongoose Model
+
   return await db.collection('researches').insertMany(researches)
 }
 

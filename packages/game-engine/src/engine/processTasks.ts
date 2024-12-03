@@ -6,10 +6,12 @@ import {
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskData,
   NEW_PLAYER_TASK_TYPE,
-  NewPlayerTaskData,
   PROCESSED_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
-  StartResearchTaskData
+  StartResearchTaskData,
+  TaskData,
+  FINISH_BUILD_UNITS_TASK_TYPE,
+  START_BUILD_UNITS_TASK_TYPE
 } from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
@@ -54,6 +56,22 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
     )
     await processTasksSequentially(startResearchTasks, startResearchTaskHandler, second)
 
+    // 4.- Finish Build Units Tasks
+    const finishBuildUnitsTaskHandler = TASK_HANDLER[FINISH_BUILD_UNITS_TASK_TYPE].handler
+
+    const finishBuildUnitsTasks = tasks.filter((task) => task.type === FINISH_BUILD_UNITS_TASK_TYPE)
+    await processTasksInParallel(finishBuildUnitsTasks, finishBuildUnitsTaskHandler, second)
+
+    // 5.- Start Build Units Tasks
+    const startBuildUnitsTaskHandler = TASK_HANDLER[START_BUILD_UNITS_TASK_TYPE].handler
+
+    const startBuildUnitsTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      START_BUILD_UNITS_TASK_TYPE
+    )
+    await processTasksSequentially(startBuildUnitsTasks, startBuildUnitsTaskHandler, second)
+
     // update universe
     universe.lastProcessedTime = second
     await universe.save()
@@ -92,6 +110,13 @@ async function setTaskAsProcessed<Type extends TaskType>(
     task.status = PROCESSED_TASK_STATUS
     task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
   } catch (error) {
+    // TODO: create a task.error as an object
+    // task.error.message
+    // task.error.details
+    // task.error.extraData
+
+    task.errorDetails = (error as Error)?.message
+
     if (error?.constructor?.name === 'MongoServerError') {
       const mongoError = error as MongoServerError
       task.errorDetails = mongoError.message
@@ -124,7 +149,7 @@ async function processResourceProduction(
   for (const task of tasks) {
     // calculate all player planet production
     if (isPlayerTaskData(task.data)) {
-      const player = await playerRepository.findPlayerById(task.data.player)
+      const player = await playerRepository.findPlayerById(task.data.playerId)
 
       if (player) {
         const playerPlanets = player.planets.colonies
@@ -164,7 +189,7 @@ async function processResourceProduction(
 }
 
 function isPlayerTaskData(
-  taskData: NewPlayerTaskData | StartResearchTaskData | FinishResearchTaskData
+  taskData: TaskData<TaskType>
 ): taskData is StartResearchTaskData | FinishResearchTaskData {
   return 'player' in taskData
 }

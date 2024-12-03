@@ -16,8 +16,11 @@ import { IPlayer } from 'game-engine/dist/types/IPlayer'
 import ResearchModel from 'game-engine/dist/models/ResearchModel'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 import ALL_PLANETS_MOCK, { PRINCIPAL_PLANET_TEST_1 } from 'game-engine/dist/test/mocks/planetMocks'
+import ALL_UNITS_MOCK from 'game-engine/dist/test/mocks/unitMocks'
 import { TaskType } from 'game-engine/dist/types/ITask'
 import getTaskModel from 'game-engine/dist/models/TaskModel'
+import UnitModel from 'game-engine/dist/models/UnitModel'
+import FleetModel from 'game-engine/dist/models/FleetModel'
 
 // initialize database
 let mongoTestDB = new MongoMemoryServer()
@@ -37,9 +40,27 @@ export async function mockTestGameDatabase() {
   // add test universe
   const universe = await UniverseModel.create(UNIVERSE_TEST_MOCK)
 
+  // add test planets
+  await Promise.all(ALL_PLANETS_MOCK.map((planet) => PlanetModel.create({ ...planet, universe })))
+
   // add all researches (we can use production values)
   const testResearches = await Promise.all(
     researches.map((research) => ResearchModel.create(research))
+  )
+
+  // add unit with requisites
+  const unitsWithRequisites = ALL_UNITS_MOCK.map((unit) => ({
+    ...unit,
+    requirements: {
+      researches: unit.requirements.researches.map(({ level, research: playerResearch }) => ({
+        level,
+        research: testResearches.find((research) => research.name === playerResearch.name)!._id
+      }))
+    }
+  }))
+
+  const testUnits = await Promise.all(
+    unitsWithRequisites.map((research) => UnitModel.create(research))
   )
 
   // add all races (we can use production values)
@@ -47,15 +68,17 @@ export async function mockTestGameDatabase() {
     races.map((race) =>
       RaceModel.create({
         ...race,
+
         researches: testResearches
           .filter((research) => research.raceName === race.name)
+          .map((research) => research._id),
+
+        units: testUnits
+          .filter((unit) => unit.raceName === race.name)
           .map((research) => research._id)
       })
     )
   )
-
-  // add test planets
-  await Promise.all(ALL_PLANETS_MOCK.map((planet) => PlanetModel.create({ ...planet, universe })))
 
   const principalPlanet = await planetRepository.findPlanetByCoordinates(
     PRINCIPAL_PLANET_TEST_1.coordinates
@@ -80,13 +103,15 @@ export async function mockTestGameDatabase() {
 }
 
 export async function restoreTestDatabase() {
-  await Promise.all([UniverseModel.deleteMany({})])
-  await Promise.all([RaceModel.deleteMany({})])
-  await Promise.all([ResearchModel.deleteMany({})])
-  await Promise.all([PlanetModel.deleteMany({})])
-  await Promise.all([PlayerModel.deleteMany({})])
+  await UniverseModel.deleteMany({})
+  await RaceModel.deleteMany({})
+  await ResearchModel.deleteMany({})
+  await PlanetModel.deleteMany({})
+  await PlayerModel.deleteMany({})
+  await UnitModel.deleteMany({})
+  await FleetModel.deleteMany({})
   const taskModel = getTaskModel<TaskType>()
-  await Promise.all([taskModel.deleteMany({})])
+  await taskModel.deleteMany({})
 }
 
 beforeAll(connectToTestDatabase)

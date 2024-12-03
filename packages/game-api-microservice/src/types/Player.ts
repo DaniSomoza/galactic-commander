@@ -5,11 +5,17 @@ import { RaceType } from './Race'
 import { ResearchType } from './Research'
 import { NewPlayerTaskType, TaskType } from './Task'
 import { UniverseType } from './Universe'
+import { FleetType } from './Fleets'
 
 export type PlayerPerkType = {
   bonus: IBonus
   sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
+}
+
+export type PlayerResearchType = {
+  research: ResearchType
+  level: number
 }
 
 export type PlayerType = {
@@ -25,10 +31,7 @@ export type PlayerType = {
   }
   perks: PlayerPerkType[]
   researches: {
-    researched: {
-      research: ResearchType
-      level: number
-    }[]
+    researched: PlayerResearchType[]
     activeResearch?: {
       research: ResearchType
       level: number
@@ -37,17 +40,7 @@ export type PlayerType = {
     }
     queue: string[]
   }
-  units: {
-    troops: {
-      population: number
-    }
-    fleets: {
-      energy: number
-    }
-    defenses: {
-      structures: number
-    }
-  }
+  fleets: FleetType[]
 }
 
 export type PlayerData = {

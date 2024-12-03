@@ -19,7 +19,7 @@ async function processCreateNewPlayerTask(
   // get all the required data from DB
   const [availablePrincipalPlanets, race, universe, playerAlreadyExists] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
-    raceRepository.findRaceById(task.data.race),
+    raceRepository.findRaceById(task.data.raceId),
     universeRepository.findUniverseById(task.universe),
     playerRepository.findPlayerByUsername(task.data.username, task.universe)
   ])
@@ -71,19 +71,7 @@ async function processCreateNewPlayerTask(
       queue: []
     },
 
-    units: {
-      troops: {
-        population: 0
-      },
-
-      fleets: {
-        energy: 0
-      },
-
-      defenses: {
-        structures: 0
-      }
-    }
+    fleets: []
   }
 
   const newPlayer = new PlayerModel(newPlayerData)
