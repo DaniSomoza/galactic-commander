@@ -10,7 +10,7 @@ import {
   PLANETS_PER_SYSTEM,
   SECTORS_PER_GALAXIES,
   SYSTEM_PER_SECTORS
-} from 'game-engine/types/IPlanet'
+} from 'game-engine/dist/types/IPlanet'
 
 import buildUnitsService from '../services/buildUnitsService'
 import { StartBuildUnitsData, updateBuildUnitsQueueData } from '../types/Unit'

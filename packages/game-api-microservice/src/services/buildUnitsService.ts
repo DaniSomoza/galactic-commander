@@ -5,13 +5,13 @@ import planetRepository from 'game-engine/dist/repositories/planetRepository'
 import createStartBuildUnitsTask from 'game-engine/dist/engine/tasks/utils/createStartBuildUnitsTask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import BadRequestError from 'auth-microservice/dist/errors/BadRequestError'
+import ConflictError from 'auth-microservice/dist/errors/ConflictError'
 
 import cleanPlayerFields from '../utils/cleanPlayerFields'
 import { startResearchResponseType, updateResearchQueueResponseType } from '../types/Research'
 import cleanTaskFields from '../utils/cleanTaskFields'
 import { UnitTypes } from '../types/Unit'
 import { PlanetCoordinatesType } from '../types/Planet'
-import ConflictError from 'packages/auth-microservice/dist/errors/ConflictError'
 
 type BuildUnitsData = {
   username: string

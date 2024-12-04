@@ -2,8 +2,8 @@ import { IPlayer } from '../../types/IPlayer'
 import { IUnit } from '../../types/IUnit'
 import calculateCurrentPlayerEnergy from './calculateCurrentPlayerEnergy'
 import calculateCurrentPlayerPopulation from './calculateCurrentPlayerPopulation'
-import calculateMaxEnergy from './calculateMaxEnergy'
-import calculateMaxPopulation from './calculateMaxPopulation'
+import calculateMaxPlayerEnergy from './calculateMaxPlayerEnergy'
+import calculateMaxPlayerPopulation from './calculateMaxPlayerPopulation'
 
 function isValidUnitAmount(unit: IUnit, amount: number, player: IPlayer): boolean {
   const isValidAmountValue = unit.isHero ? amount === 1 : amount > 0
@@ -13,22 +13,14 @@ function isValidUnitAmount(unit: IUnit, amount: number, player: IPlayer): boolea
   }
 
   if (unit.type === 'TROOP') {
-    const populationResearch = player.researches.researched.find(
-      ({ research }) => research.isTroopsPopulationResearch
-    )
-    const currentPopulationLevel = populationResearch?.level || 0
-    const playerMaxPopulation = calculateMaxPopulation(player.race, currentPopulationLevel)
+    const playerMaxPopulation = calculateMaxPlayerPopulation(player)
     const currentPlayerPopulation = calculateCurrentPlayerPopulation(player)
 
     return currentPlayerPopulation + amount <= playerMaxPopulation
   }
 
   if (unit.type === 'SPACESHIP') {
-    const energyResearch = player.researches.researched.find(
-      ({ research }) => research.isFleetEnergyResearch
-    )
-    const currentEnergyLevel = energyResearch?.level || 0
-    const playerMaxEnergy = calculateMaxEnergy(player.race, currentEnergyLevel)
+    const playerMaxEnergy = calculateMaxPlayerEnergy(player)
     const currentPlayerEnergy = calculateCurrentPlayerEnergy(player)
 
     return currentPlayerEnergy + amount * unit.energyCost <= playerMaxEnergy

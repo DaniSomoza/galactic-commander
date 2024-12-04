@@ -54,6 +54,7 @@ export interface IFleetDocument extends IFleet, Document {
   }
 }
 
+// TODO: delete this ???? => use player.fleets [] ONLY
 const FleetModel: Model<IFleetDocument> = mongoose.model<IFleetDocument>('Fleet', FleetSchema)
 
 export default FleetModel

@@ -71,7 +71,7 @@ async function processStartBuildUnitsTask(
 
   // TODO: create buildUnits queue
 
-  if (isValidUnitAmount(unit, task.data.build.amount, player)) {
+  if (!isValidUnitAmount(unit, task.data.build.amount, player)) {
     // TODO: check build units queue
 
     throw new GameEngineError('invalid unit amount')

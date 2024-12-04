@@ -55,8 +55,18 @@ async function processFinishBuildUnitsTask(
     new FleetModel({
       planet,
       playerId: player._id,
-      units: []
+      units: [
+        {
+          unit,
+          amount: task.data.build.amount
+        }
+      ]
     })
+
+  // update player fleets with the new fleet
+  if (!existingPlanetFleet) {
+    player.fleets.push(planetFleet)
+  }
 
   const fleetUnit = planetFleet.units.find((fleetUnit) => fleetUnit.unit._id.equals(unit._id))
 
