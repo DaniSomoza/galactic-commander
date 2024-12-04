@@ -1,10 +1,7 @@
-import { Types } from 'mongoose'
-
 import { IBonus } from './IBonus'
 import { IPlanet } from './IPlanet'
 import { IResearch } from './IResearch'
 import { IRace } from './IRace'
-import { IUniverse } from './IUniverse'
 import { IFleet } from './IFleet'
 
 interface IPlayerUser {
@@ -19,7 +16,7 @@ interface IPlayerPlanets {
 
 interface IPlayerPerk {
   bonus: IBonus
-  source: Types.ObjectId
+  sourceId: string
   sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
@@ -33,7 +30,7 @@ interface IPlayerActiveResearch {
   research: IResearch
   level: number
   executeTaskAt: number
-  taskId: Types.ObjectId
+  taskId: string
 }
 
 interface IPlayerResearches {
@@ -45,7 +42,7 @@ interface IPlayerResearches {
 export interface IPlayer {
   user: IPlayerUser
   race: IRace
-  universe: IUniverse
+  universeId: string
   planets: IPlayerPlanets
   perks: IPlayerPerk[]
   researches: IPlayerResearches

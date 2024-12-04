@@ -5,11 +5,7 @@ import { ITask, TaskType } from '../types/ITask'
 const TaskSchema: Schema = new Schema(
   {
     type: { type: String, required: true },
-    universe: {
-      type: Schema.Types.ObjectId,
-      ref: 'Universe',
-      required: true
-    },
+    universeId: { type: String, required: true },
     status: { type: String, required: true },
     data: { type: Schema.Types.Mixed, required: true },
     isCancellable: { type: Schema.Types.Mixed, required: true },

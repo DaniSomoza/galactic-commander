@@ -20,8 +20,8 @@ async function processFinishResearchTask(
     throw new GameEngineError('invalid player')
   }
 
-  const research = player.race.researches.find((research) =>
-    research._id.equals(task.data.researchId)
+  const research = player.race.researches.find(
+    (research) => research._id.toString() === task.data.researchId
   )
 
   if (!research) {
@@ -50,14 +50,14 @@ async function processFinishResearchTask(
   const hasBonusToUpdate = hasBonus(research.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.perks.find((perk) => perk.source.equals(task.data.researchId))
+    const PlayerBonus = player.perks.find((perk) => perk.sourceId === task.data.researchId)
 
     if (PlayerBonus) {
       PlayerBonus.bonus = upgradeBonus(research.bonus, newLevel)
     } else {
       player.perks.push({
         bonus: research.bonus,
-        source: task.data.researchId,
+        sourceId: task.data.researchId,
         sourceName: research.name,
         type: 'Research'
       })
@@ -66,10 +66,10 @@ async function processFinishResearchTask(
 
   // TODO: intergalacticTravel check?
   const point: IPoint = {
-    player: player,
-    task: task,
+    playerId: player._id.toString(),
+    taskId: task._id.toString(),
     points: task.data.researchResourceCost,
-    source: task.data.researchId,
+    sourceId: task.data.researchId,
     sourceName: research.name,
     type: 'Research',
     second
@@ -87,9 +87,9 @@ async function processFinishResearchTask(
     // TODO: check if it has enough resources => next Research ???
 
     const startResearchTask = createStartResearchTask(
-      task.universe._id,
-      player._id,
-      nextResearch._id
+      task.universeId,
+      player._id.toString(),
+      nextResearch._id.toString()
     )
 
     return Promise.all([

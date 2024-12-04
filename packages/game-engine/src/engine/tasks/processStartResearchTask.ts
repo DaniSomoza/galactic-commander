@@ -57,9 +57,9 @@ async function processStartResearchTask(
 
     if (nextResearch) {
       const startResearchTask = createStartResearchTask(
-        task.universe._id,
-        player._id,
-        nextResearch._id
+        task.universeId,
+        player._id.toString(),
+        nextResearch._id.toString()
       )
 
       await Promise.all([
@@ -83,10 +83,10 @@ async function processStartResearchTask(
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
     type: FINISH_RESEARCH_TASK_TYPE,
-    universe: player.universe._id,
+    universeId: player.universeId,
 
     data: {
-      playerId: player._id,
+      playerId: player._id.toString(),
       researchId: task.data.researchId,
       researchDuration,
       researchResourceCost
@@ -117,7 +117,7 @@ async function processStartResearchTask(
     research: research,
     level: level + 1,
     executeTaskAt,
-    taskId: newTask._id
+    taskId: newTask._id.toString()
   }
 
   player.researches.activeResearch = activeResearch

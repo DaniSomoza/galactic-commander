@@ -1,7 +1,6 @@
 import pirates from '../../assets/races/pirates'
 import { IPlayer } from '../../types/IPlayer'
 import { PRINCIPAL_PLANET_TEST_1 } from './planetMocks'
-import universe from './universeMocks'
 
 export const PLAYER_TEST_1_PIRATE: IPlayer = {
   user: {
@@ -17,7 +16,7 @@ export const PLAYER_TEST_1_PIRATE: IPlayer = {
     colonies: [PRINCIPAL_PLANET_TEST_1]
   },
 
-  universe,
+  universeId: 'Migration pending...',
 
   researches: {
     researched: [],

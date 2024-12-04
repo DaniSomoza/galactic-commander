@@ -1,7 +1,6 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
 
 import { IPlanet } from '../types/IPlanet'
-import { IUniverseDocument } from './UniverseModel'
 import { BuildUnitsSchema, IUnitDocument } from './UnitModel'
 
 const PlanetSchema: Schema = new Schema(
@@ -9,11 +8,10 @@ const PlanetSchema: Schema = new Schema(
     name: { type: String, required: true },
     imgUrl: { type: String, required: true },
 
-    universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+    universeId: { type: String, required: true },
 
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'Player',
+    ownerId: {
+      type: String,
       required: false,
       default: null
     },
@@ -86,7 +84,6 @@ const PlanetSchema: Schema = new Schema(
 export interface IPlanetDocument extends IPlanet, Document {
   _id: mongoose.Types.ObjectId
 
-  universe: IUniverseDocument
   units: IUnitDocument[]
 }
 

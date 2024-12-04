@@ -18,6 +18,8 @@ import { IUniverseDocument } from '../models/UniverseModel'
 function generatePlanets(universe: IUniverseDocument): IPlanet[] {
   const planets: IPlanet[] = []
 
+  const universeId = universe._id.toString()
+
   for (let galaxy = 1; galaxy <= GALAXIES; galaxy++) {
     for (let sector = 1; sector <= SECTORS_PER_GALAXIES; sector++) {
       for (let system = 1; system <= SYSTEM_PER_SECTORS; system++) {
@@ -29,10 +31,10 @@ function generatePlanets(universe: IUniverseDocument): IPlanet[] {
 
             imgUrl: getPlanetImgUrl(resourceQuality),
 
-            owner: null,
+            ownerId: null,
             colonizedAt: 0,
 
-            universe,
+            universeId,
 
             resources: getRandomNumber(100, resourceQuality * 100),
             resourceQuality,

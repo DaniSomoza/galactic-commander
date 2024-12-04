@@ -64,6 +64,8 @@ export interface IRaceDocument extends IRace, Document {
 
   researches: IResearchDocument[]
   units: IUnitDocument[]
+
+  // TODO: add specials ?
 }
 
 const RaceModel: Model<IRaceDocument> = mongoose.model<IRaceDocument>('Race', RaceSchema)

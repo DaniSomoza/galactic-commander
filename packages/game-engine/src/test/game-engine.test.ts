@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import processUniverse from '../engine/processUniverse'
 import getSecond from '../helpers/getSecond'
 import getTaskModel from '../models/TaskModel'
@@ -52,7 +51,7 @@ describe('game-engine', () => {
     const fakeTaskHandler = jest.fn()
     TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
-    const fakeTask = createFakeTask(testUniverse!._id)
+    const fakeTask = createFakeTask(testUniverse!._id.toString())
 
     const taskModel = getTaskModel<NewPlayerTaskType>()
     await taskModel.create(fakeTask)
@@ -91,7 +90,7 @@ describe('game-engine', () => {
 
     TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
-    const fakeTask = createFakeTask(testUniverse!._id)
+    const fakeTask = createFakeTask(testUniverse!._id.toString())
 
     const taskModel = getTaskModel<NewPlayerTaskType>()
     await taskModel.create(fakeTask)
@@ -120,14 +119,14 @@ describe('game-engine', () => {
   })
 })
 
-function createFakeTask(universeId: mongoose.Types.ObjectId) {
+function createFakeTask(universeId: string) {
   const newFakeTask: ITask<NewPlayerTaskType> = {
     type: NEW_PLAYER_TASK_TYPE,
-    universe: universeId,
+    universeId,
     data: {
       username: 'fake_test',
       email: 'fake_test@email.com',
-      raceId: new mongoose.Types.ObjectId()
+      raceId: ''
     },
 
     status: PENDING_TASK_STATUS,

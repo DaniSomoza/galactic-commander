@@ -1,9 +1,7 @@
-import mongoose from 'mongoose'
-
 import PlayerModel from '../models/PlayerModel'
 
-async function findPlayerByUsername(username: string, universeId: mongoose.Types.ObjectId) {
-  return PlayerModel.findOne({ 'user.username': username, universe: universeId })
+async function findPlayerByUsername(username: string, universeId: string) {
+  return PlayerModel.findOne({ 'user.username': username, universeId })
     .populate({
       path: 'planets',
       populate: [
@@ -76,7 +74,7 @@ async function findPlayerByUsername(username: string, universeId: mongoose.Types
     .exec()
 }
 
-async function findPlayerById(playerId: mongoose.Types.ObjectId) {
+async function findPlayerById(playerId: string) {
   return PlayerModel.findById(playerId)
     .populate({
       path: 'planets',

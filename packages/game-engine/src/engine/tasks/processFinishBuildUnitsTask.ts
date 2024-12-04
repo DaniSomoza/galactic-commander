@@ -22,17 +22,19 @@ async function processFinishBuildUnitsTask(
     throw new GameEngineError('invalid player')
   }
 
-  const planet = player.planets.colonies.find((playerColony) =>
-    playerColony._id.equals(task.data.planetId)
+  const planet = player.planets.colonies.find(
+    (playerColony) => playerColony._id.toString() === task.data.planetId
   )
 
   if (!planet) {
     throw new GameEngineError('invalid planet owner')
   }
 
-  const raceUnit = player.race.units.find((raceUnit) => raceUnit._id.equals(task.data.build.unitId))
-  const specialPlanetUnit = planet.units.find((planetUnit) =>
-    planetUnit._id.equals(task.data.build.unitId)
+  const raceUnit = player.race.units.find(
+    (raceUnit) => raceUnit._id.toString() === task.data.build.unitId
+  )
+  const specialPlanetUnit = planet.units.find(
+    (planetUnit) => planetUnit._id.toString() === task.data.build.unitId
   )
 
   const unit = raceUnit || specialPlanetUnit
@@ -71,7 +73,7 @@ async function processFinishBuildUnitsTask(
   const hasBonusToUpdate = hasBonus(unit.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.perks.find((perk) => perk.source.equals(unit._id))
+    const PlayerBonus = player.perks.find((perk) => perk.sourceId === unit._id.toString())
 
     if (PlayerBonus) {
       const totalAmountOfUnits = getTotalAmountOfUnits(player, unit)
@@ -79,7 +81,7 @@ async function processFinishBuildUnitsTask(
     } else {
       player.perks.push({
         bonus: unit.bonus,
-        source: unit._id,
+        sourceId: unit._id.toString(),
         sourceName: unit.name,
         type: 'Unit'
       })
@@ -87,10 +89,10 @@ async function processFinishBuildUnitsTask(
   }
 
   const point: IPoint = {
-    player: player,
-    task: task,
+    playerId: player._id.toString(),
+    taskId: task._id.toString(),
     points: task.data.buildUnitsResourceCost,
-    source: task.data.build.unitId,
+    sourceId: task.data.build.unitId,
     sourceName: unit.name,
     type: 'Unit',
     second

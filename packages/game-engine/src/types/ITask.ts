@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import { UnitTypes } from './IUnit'
 
 export const PENDING_TASK_STATUS = 'PENDING'
@@ -17,21 +16,21 @@ export type NewPlayerTaskType = typeof NEW_PLAYER_TASK_TYPE
 export type NewPlayerTaskData = {
   username: string
   email: string
-  raceId: mongoose.Types.ObjectId
+  raceId: string
 }
 
 export const START_RESEARCH_TASK_TYPE = 'START_RESEARCH_TASK'
 export type StartResearchTaskType = typeof START_RESEARCH_TASK_TYPE
 export type StartResearchTaskData = {
-  playerId: mongoose.Types.ObjectId
-  researchId: mongoose.Types.ObjectId
+  playerId: string
+  researchId: string
 }
 
 export const FINISH_RESEARCH_TASK_TYPE = 'FINISH_RESEARCH_TASK'
 export type FinishResearchTaskType = typeof FINISH_RESEARCH_TASK_TYPE
 export type FinishResearchTaskData = {
-  playerId: mongoose.Types.ObjectId
-  researchId: mongoose.Types.ObjectId
+  playerId: string
+  researchId: string
   researchDuration: number
   researchResourceCost: number
 }
@@ -39,10 +38,10 @@ export type FinishResearchTaskData = {
 export const START_BUILD_UNITS_TASK_TYPE = 'START_BUILD_UNITS_TASK_TYPE'
 export type StartBuildUnitsTaskType = typeof START_BUILD_UNITS_TASK_TYPE
 export type StartBuildUnitsTaskData = {
-  playerId: mongoose.Types.ObjectId
-  planetId: mongoose.Types.ObjectId
+  playerId: string
+  planetId: string
   build: {
-    unitId: mongoose.Types.ObjectId
+    unitId: string
     amount: number
   }
 }
@@ -50,10 +49,10 @@ export type StartBuildUnitsTaskData = {
 export const FINISH_BUILD_UNITS_TASK_TYPE = 'FINISH_BUILD_UNITS_TASK'
 export type FinishBuildUnitsTaskType = typeof FINISH_BUILD_UNITS_TASK_TYPE
 export type FinishBuildUnitsTaskData = {
-  playerId: mongoose.Types.ObjectId
-  planetId: mongoose.Types.ObjectId
+  playerId: string
+  planetId: string
   build: {
-    unitId: mongoose.Types.ObjectId
+    unitId: string
     amount: number
   }
   buildUnitType: UnitTypes
@@ -94,7 +93,7 @@ type HistoryStatusItem = {
 export interface ITask<Type extends TaskType> {
   type: Type
   data: TaskData<Type>
-  universe: mongoose.Types.ObjectId
+  universeId: string
 
   isCancellable: boolean
   status: TaskStatus

@@ -1,27 +1,23 @@
 import mongoose, { Model, Schema, Document } from 'mongoose'
 
 import { IPoint } from '../types/IPoint'
-import { IPlayerDocument } from './PlayerModel'
-import { ITaskDocument } from './TaskModel'
 
 const PointSchema = new Schema({
-  player: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
-  task: { type: Schema.Types.ObjectId, ref: 'Task', required: true },
+  playerId: { type: String, required: true },
+  taskId: { type: String, required: true },
 
   points: { type: Number, required: true },
 
-  second: { type: Number, required: true },
-
-  source: { type: Schema.Types.ObjectId, required: true },
+  sourceId: { type: String, required: true },
   sourceName: { type: String, required: true },
-  type: { type: String, required: true }
+
+  type: { type: String, required: true },
+
+  second: { type: Number, required: true }
 })
 
 export interface IPointDocument extends IPoint, Document {
   _id: mongoose.Types.ObjectId
-
-  player: IPlayerDocument
-  task: ITaskDocument
 }
 
 const PointModel: Model<IPointDocument> = mongoose.model<IPointDocument>('Point', PointSchema)

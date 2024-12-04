@@ -4,11 +4,11 @@ import { PlanetType } from './Planet'
 import { RaceType } from './Race'
 import { ResearchType } from './Research'
 import { NewPlayerTaskType, TaskType } from './Task'
-import { UniverseType } from './Universe'
 import { FleetType } from './Fleets'
 
 export type PlayerPerkType = {
   bonus: IBonus
+  sourceId: string
   sourceName: string
   type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
 }
@@ -24,7 +24,9 @@ export type PlayerType = {
     email: string
   }
   race: RaceType
-  universe: UniverseType
+
+  universeId: string
+
   planets: {
     principal: PlanetType
     colonies: PlanetType[]

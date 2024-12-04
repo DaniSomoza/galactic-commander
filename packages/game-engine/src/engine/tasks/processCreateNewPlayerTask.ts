@@ -20,8 +20,8 @@ async function processCreateNewPlayerTask(
   const [availablePrincipalPlanets, race, universe, playerAlreadyExists] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
     raceRepository.findRaceById(task.data.raceId),
-    universeRepository.findUniverseById(task.universe),
-    playerRepository.findPlayerByUsername(task.data.username, task.universe)
+    universeRepository.findUniverseById(task.universeId),
+    playerRepository.findPlayerByUsername(task.data.username, task.universeId)
   ])
 
   if (availablePrincipalPlanets.length === 0) {
@@ -48,7 +48,7 @@ async function processCreateNewPlayerTask(
       email: task.data.email
     },
 
-    universe,
+    universeId: universe._id.toString(),
 
     race,
 
@@ -60,7 +60,7 @@ async function processCreateNewPlayerTask(
     perks: [
       {
         bonus: race.bonus,
-        source: race._id,
+        sourceId: race._id.toString(),
         sourceName: race.name,
         type: 'Race'
       }
@@ -76,7 +76,7 @@ async function processCreateNewPlayerTask(
 
   const newPlayer = new PlayerModel(newPlayerData)
 
-  principalPlanet.owner = newPlayer._id
+  principalPlanet.ownerId = newPlayer._id.toString()
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second

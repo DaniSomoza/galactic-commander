@@ -79,5 +79,5 @@ export type UnitType = {
 
   specials: SpecialType[]
 
-  bonus?: IBonus
+  bonus: IBonus
 }

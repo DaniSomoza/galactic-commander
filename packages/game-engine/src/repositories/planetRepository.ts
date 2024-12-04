@@ -11,7 +11,7 @@ async function findAvailablePrincipalPlanets() {
     isPrincipal: false,
     isExplored: false,
     isUnderConquer: false,
-    owner: null
+    ownerId: null
   }).exec()
 }
 

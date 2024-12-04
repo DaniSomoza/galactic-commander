@@ -10,7 +10,10 @@ export type PlanetCoordinatesType = {
 
 export type PlanetType = {
   name: string
-  owner: string | null
+
+  universeId: string
+
+  ownerId: string | null
   colonizedAt: number
 
   imgUrl: string
@@ -18,8 +21,6 @@ export type PlanetType = {
   resources: number
   resourceQuality: number
   lastResourceProductionTime: number
-
-  universe: string
 
   coordinates: PlanetCoordinatesType
 

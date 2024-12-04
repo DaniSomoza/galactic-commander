@@ -1,14 +1,13 @@
 import pirates from '../../assets/races/pirates'
 import { IPlanet } from '../../types/IPlanet'
-import universe from './universeMocks'
 
 export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
   name: 'principal_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
 
-  universe,
+  universeId: 'Migration pending...',
 
-  owner: null,
+  ownerId: null,
   colonizedAt: 0,
 
   resources: pirates.baseResources,
@@ -48,9 +47,9 @@ export const AVAILABLE_PLANET_TEST_1: IPlanet = {
   name: 'available_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
 
-  universe,
+  universeId: 'Migration pending...',
 
-  owner: null,
+  ownerId: null,
   colonizedAt: 0,
 
   resources: 0,

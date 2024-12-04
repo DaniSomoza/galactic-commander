@@ -10,7 +10,6 @@ import pirates from 'game-engine/dist/assets/races/pirates'
 import RaceModel from 'game-engine/dist/models/RaceModel'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import planetRepository from 'game-engine/dist/repositories/planetRepository'
-import universeRepository from 'game-engine/dist/repositories/universeRepository'
 import PlanetModel from 'game-engine/dist/models/PlanetModel'
 import { IPlayer } from 'game-engine/dist/types/IPlayer'
 import ResearchModel from 'game-engine/dist/models/ResearchModel'
@@ -39,13 +38,18 @@ export async function disconnectToTestDatabase() {
 export async function mockTestGameDatabase() {
   // add test universe
   const universe = await UniverseModel.create(UNIVERSE_TEST_MOCK)
+  const universeId = universe._id.toString()
 
   // add test planets
-  await Promise.all(ALL_PLANETS_MOCK.map((planet) => PlanetModel.create({ ...planet, universe })))
+  await Promise.all(
+    ALL_PLANETS_MOCK.map(async (planet) =>
+      (await PlanetModel.create({ ...planet, universeId })).save()
+    )
+  )
 
   // add all researches (we can use production values)
   const testResearches = await Promise.all(
-    researches.map((research) => ResearchModel.create(research))
+    researches.map(async (research) => (await ResearchModel.create(research)).save())
   )
 
   // add unit with requisites
@@ -80,26 +84,30 @@ export async function mockTestGameDatabase() {
     )
   )
 
-  const principalPlanet = await planetRepository.findPlanetByCoordinates(
+  const principalPlanet = (await planetRepository.findPlanetByCoordinates(
     PRINCIPAL_PLANET_TEST_1.coordinates
-  )
+  ))!
+
+  const testPlayerRace = (await raceRepository.findRaceByName(pirates.name))!
 
   // player test 1 pirate
   const player1: IPlayer = {
     ...PLAYER_TEST_1_PIRATE,
-    race: (await raceRepository.findRaceByName(pirates.name))!,
-    universe: (await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name))!,
+    race: testPlayerRace,
+    universeId,
     planets: {
-      principal: principalPlanet!,
-      colonies: [principalPlanet!]
+      principal: principalPlanet,
+      colonies: [principalPlanet]
     }
   }
 
   const player1Pirate = await PlayerModel.create(player1)
 
   // update player principal planet
-  principalPlanet!.owner = player1Pirate._id
-  await principalPlanet!.save()
+  principalPlanet.ownerId = player1Pirate._id.toString()
+  await principalPlanet.save()
+  await universe.save()
+  await player1Pirate.save()
 }
 
 export async function restoreTestDatabase() {

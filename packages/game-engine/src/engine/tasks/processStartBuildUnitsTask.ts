@@ -28,17 +28,19 @@ async function processStartBuildUnitsTask(
     throw new GameEngineError('invalid player')
   }
 
-  const planet = player.planets.colonies.find((playerColony) =>
-    playerColony._id.equals(task.data.planetId)
+  const planet = player.planets.colonies.find(
+    (playerColony) => playerColony._id.toString() === task.data.planetId
   )
 
   if (!planet) {
     throw new GameEngineError('invalid planet owner')
   }
 
-  const raceUnit = player.race.units.find((raceUnit) => raceUnit._id.equals(task.data.build.unitId))
-  const specialPlanetUnit = planet.units.find((planetUnit) =>
-    planetUnit._id.equals(task.data.build.unitId)
+  const raceUnit = player.race.units.find(
+    (raceUnit) => raceUnit._id.toString() === task.data.build.unitId
+  )
+  const specialPlanetUnit = planet.units.find(
+    (planetUnit) => planetUnit._id.toString() === task.data.build.unitId
   )
 
   const unit = raceUnit || specialPlanetUnit
@@ -106,11 +108,11 @@ async function processStartBuildUnitsTask(
   // TODO: implement createBaseTask helper function
   const finishBuildUnitsTask: ITask<FinishBuildUnitsTaskType> = {
     type: FINISH_BUILD_UNITS_TASK_TYPE,
-    universe: player.universe._id,
+    universeId: player.universeId,
     data: {
       build: task.data.build,
-      playerId: player._id,
-      planetId: planet._id,
+      playerId: player._id.toString(),
+      planetId: planet._id.toString(),
       buildUnitType: unit.type,
       buildUnitsDuration: buildUnitsDuration,
       buildUnitsResourceCost: resourceCost
@@ -138,10 +140,10 @@ async function processStartBuildUnitsTask(
   }
 
   planet.unitBuild[buildUnitsType[unit.type]].activeBuild = {
-    unitId: unit._id,
+    unitId: unit._id.toString(),
     unitType: unit.type,
     amount: task.data.build.amount,
-    taskId: newTask._id
+    taskId: newTask._id.toString()
   }
 
   planet.resources -= resourceCost

@@ -15,7 +15,7 @@ async function getPendingTasks(universeId: mongoose.Types.ObjectId, second: numb
   return taskModel
     .find({
       status: PENDING_TASK_STATUS,
-      universe: universeId,
+      universeId,
       $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }]
     })
     .exec()
@@ -30,7 +30,7 @@ async function getPendingTasksByType(
   return taskModel
     .find({
       status: PENDING_TASK_STATUS,
-      universe: universeId,
+      universeId,
       type,
       $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }]
     })
@@ -58,7 +58,7 @@ async function findNewPlayerTaskByUsername(
   return NewPlayerTaskModel.findOne({
     type: NEW_PLAYER_TASK_TYPE,
     'data.username': username,
-    universe: universeId,
+    universeId,
     status
   }).exec()
 }

@@ -26,11 +26,11 @@ const FleetTravelSchema = new Schema(
 export const FleetSchema = new Schema({
   planet: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
 
-  playerId: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
+  playerId: { type: String, required: true },
 
-  travel: { type: FleetTravelSchema, required: false, default: undefined },
+  units: [FleetUnitsSchema],
 
-  units: [FleetUnitsSchema]
+  travel: { type: FleetTravelSchema, required: false, default: undefined }
 })
 
 export interface IFleetDocument extends IFleet, Document {
@@ -38,7 +38,12 @@ export interface IFleetDocument extends IFleet, Document {
 
   planet: IPlanetDocument
 
-  playerId: Types.ObjectId
+  playerId: string
+
+  units: {
+    amount: number
+    unit: IUnitDocument
+  }[]
 
   travel?: {
     destination: IPlanetDocument
@@ -47,11 +52,6 @@ export interface IFleetDocument extends IFleet, Document {
     isReturning: boolean
     resources: number
   }
-
-  units: {
-    amount: number
-    unit: IUnitDocument
-  }[]
 }
 
 const FleetModel: Model<IFleetDocument> = mongoose.model<IFleetDocument>('Fleet', FleetSchema)

@@ -1,5 +1,3 @@
-import { Types } from 'mongoose'
-
 import { IBonus } from './IBonus'
 import { ISpecial } from './ISpecial'
 import { IPlayerResearch } from './IPlayer'
@@ -66,10 +64,10 @@ type UnitSubtypes =
   | UnitDefenseSubtype
 
 export type BuildUnitsType = {
-  unitId: Types.ObjectId
+  unitId: string
   unitType: UnitTypes
   amount: number
-  taskId: Types.ObjectId
+  taskId: string
 }
 
 export interface IUnit {

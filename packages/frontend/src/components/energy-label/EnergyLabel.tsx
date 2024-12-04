@@ -5,7 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 
-import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculateCurrentPlayerEnergy'
+import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
@@ -15,21 +16,18 @@ function EnergyLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
 
-  // TODO: Add current energy
-  const currentEnergy = 0
-  const energyBonus = computedBonus(player?.perks || [], 'FLEET_ENERGY_BONUS')
-  const baseEnergy = player ? player.units.fleets.energy * (energyBonus / 100) : 0
-
-  const energyLabel = `${currentEnergy} / ${formatNumber(baseEnergy)}`
-
   return (
     <Paper>
       <Tooltip
-        title={translate(
-          'GAME_PLAYER_STATS_ENERGY_TOOLTIP',
-          currentEnergy,
-          formatNumber(player?.units.fleets.energy || 0, true)
-        )}
+        title={
+          player
+            ? translate(
+                'GAME_PLAYER_STATS_ENERGY_TOOLTIP',
+                calculateCurrentPlayerEnergy(player),
+                formatNumber(calculateMaxPlayerEnergy(player), true)
+              )
+            : ''
+        }
         arrow
       >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
@@ -43,7 +41,13 @@ function EnergyLabel() {
             textOverflow="ellipsis"
             textAlign="center"
           >
-            {player ? energyLabel : <Skeleton variant="text" width={32} />}
+            {player ? (
+              `${calculateCurrentPlayerEnergy(player)} / ${formatNumber(
+                calculateMaxPlayerEnergy(player)
+              )}`
+            ) : (
+              <Skeleton variant="text" width={32} />
+            )}
           </Typography>
         </Stack>
       </Tooltip>

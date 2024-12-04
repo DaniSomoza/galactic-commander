@@ -1,15 +1,10 @@
-import mongoose from 'mongoose'
-
-import { IPlayer } from './IPlayer'
-import { ITask, TaskType } from './ITask'
-
 type IPointType = 'Unit' | 'Research' | 'Battle'
 
 export interface IPoint {
-  player: IPlayer
-  task: ITask<TaskType>
+  playerId: string
+  taskId: string
   points: number
-  source: mongoose.Types.ObjectId
+  sourceId: string
   sourceName: string
   type: IPointType
   second: number

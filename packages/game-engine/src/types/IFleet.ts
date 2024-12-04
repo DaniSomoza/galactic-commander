@@ -1,4 +1,3 @@
-import { Types } from 'mongoose'
 import { IPlanet } from './IPlanet'
 import { IUnit } from './IUnit'
 
@@ -16,11 +15,11 @@ interface ITravelFleet {
 }
 
 export interface IFleet {
-  units: IFleetUnits[]
-
-  playerId: Types.ObjectId
+  playerId: string
 
   planet: IPlanet
+
+  units: IFleetUnits[]
 
   travel?: ITravelFleet
 }

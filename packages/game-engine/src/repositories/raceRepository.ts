@@ -1,5 +1,3 @@
-import mongoose from 'mongoose'
-
 import RaceModel from '../models/RaceModel'
 import { IRace } from '../types/IRace'
 
@@ -17,7 +15,7 @@ async function findRaces() {
     .exec()
 }
 
-async function findRaceById(raceId: mongoose.Types.ObjectId) {
+async function findRaceById(raceId: string) {
   return RaceModel.findById(raceId).populate('researches').exec()
 }
 

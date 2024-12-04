@@ -90,7 +90,8 @@ export type TaskType<T extends TaskTypesTypes> = {
   taskId: string
   type: TaskTypesTypes
   data: TaskData<T>
-  universe: string
+
+  universeId: string
 
   isCancellable: boolean
   status: TaskStatus

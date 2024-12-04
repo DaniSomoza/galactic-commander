@@ -3,17 +3,16 @@ import mongoose, { Schema, Model, Document } from 'mongoose'
 import { BonusSchema } from './BonusModel'
 import { IPlayer } from '../types/IPlayer'
 import { IRaceDocument } from './RaceModel'
-import { IUniverseDocument } from './UniverseModel'
 import { IResearchDocument } from './ResearchModel'
 import { IPlanetDocument } from './PlanetModel'
 import { FleetSchema, IFleetDocument } from './FleetModel'
 
 const ActiveResearchSchema = new Schema(
   {
-    research: { type: Schema.Types.ObjectId, ref: 'Research' },
-    level: { type: Number },
-    executeTaskAt: { type: Number },
-    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
+    research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
+    level: { type: Number, required: true },
+    executeTaskAt: { type: Number, required: true },
+    taskId: { type: String, required: true }
   },
   { _id: false }
 )
@@ -26,19 +25,18 @@ const PlayerSchema: Schema = new Schema({
 
   race: { type: Schema.Types.ObjectId, ref: 'Race', required: true },
 
-  universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+  universeId: { type: String, required: true },
 
   planets: {
     principal: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
-    colonies: [{ type: Schema.Types.ObjectId, ref: 'Planet' }],
-    explored: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
+    colonies: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
   },
 
   perks: [
     {
       _id: false,
       bonus: BonusSchema,
-      source: { type: Schema.Types.ObjectId, required: true },
+      sourceId: { type: String, required: true },
       sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
@@ -72,14 +70,14 @@ interface IPlayerActiveResearchDocument {
   research: IResearchDocument
   level: number
   executeTaskAt: number
-  taskId: mongoose.Types.ObjectId
+  taskId: string
 }
 
 export interface IPlayerDocument extends IPlayer, Document {
   _id: mongoose.Types.ObjectId
 
   race: IRaceDocument
-  universe: IUniverseDocument
+
   researches: {
     researched: IPlayerResearchDocument[]
     activeResearch?: IPlayerActiveResearchDocument

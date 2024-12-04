@@ -1,7 +1,4 @@
-import { Types } from 'mongoose'
-
 import { ISpecial } from './ISpecial'
-import { IUniverse } from './IUniverse'
 import { BuildUnitsType, IUnit } from './IUnit'
 
 export const GALAXIES = 3
@@ -22,12 +19,11 @@ export type IPlanetCoordinates = {
 
 export interface IPlanet {
   name: string
-  universe: IUniverse
+  universeId: string
 
   imgUrl: string
 
-  // TODO: review this!!!
-  owner: Types.ObjectId | null
+  ownerId: string | null
   colonizedAt: number
 
   resources: number

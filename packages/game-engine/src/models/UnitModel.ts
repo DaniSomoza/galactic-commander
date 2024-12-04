@@ -2,13 +2,14 @@ import mongoose, { Types, Schema, Model, Document } from 'mongoose'
 
 import { BonusSchema } from './BonusModel'
 import { IUnit } from '../types/IUnit'
+import { IResearchDocument } from './ResearchModel'
 
 export const BuildUnitsSchema = new Schema(
   {
-    unitId: { type: Schema.Types.ObjectId, ref: 'Unit' },
-    unitType: { type: String },
-    amount: { type: Number },
-    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
+    unitId: { type: String, required: true },
+    unitType: { type: String, required: true },
+    amount: { type: Number, required: true },
+    taskId: { type: String, required: true }
   },
   { _id: false }
 )
@@ -37,6 +38,7 @@ const UnitSchema: Schema = new Schema(
       troopsCapacity: { type: Number, required: true }
     },
 
+    // TODO: can travel alone ? hasSpaceEngine?
     isHero: { type: Boolean, required: true, default: false },
     isInvisible: { type: Boolean, required: true, default: false },
     isOrganic: { type: Boolean, required: true, default: false },
@@ -68,6 +70,13 @@ const UnitSchema: Schema = new Schema(
 
 export interface IUnitDocument extends IUnit, Document {
   _id: Types.ObjectId
+
+  requirements: {
+    researches: {
+      research: IResearchDocument
+      level: number
+    }[]
+  }
 }
 
 const UnitModel: Model<IUnitDocument> = mongoose.model<IUnitDocument>('Unit', UnitSchema)

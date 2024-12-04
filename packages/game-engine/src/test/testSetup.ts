@@ -13,7 +13,6 @@ import planetRepository from '../repositories/planetRepository'
 import getTaskModel from '../models/TaskModel'
 import UniverseModel from '../models/UniverseModel'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
-import universeRepository from '../repositories/universeRepository'
 import ResearchModel from '../models/ResearchModel'
 import researches from '../assets/researches/researches'
 import { IPlayer } from '../types/IPlayer'
@@ -39,13 +38,18 @@ export async function disconnectToTestDatabase() {
 export async function mockTestGameDatabase() {
   // add test universe
   const universe = await UniverseModel.create(UNIVERSE_TEST_MOCK)
+  const universeId = universe._id.toString()
 
   // add test planets
-  await Promise.all(ALL_PLANETS_MOCK.map((planet) => PlanetModel.create({ ...planet, universe })))
+  await Promise.all(
+    ALL_PLANETS_MOCK.map(async (planet) =>
+      (await PlanetModel.create({ ...planet, universeId })).save()
+    )
+  )
 
   // add all researches (we can use production values)
   const testResearches = await Promise.all(
-    researches.map((research) => ResearchModel.create(research))
+    researches.map(async (research) => (await ResearchModel.create(research)).save())
   )
 
   // add unit with requisites
@@ -83,11 +87,13 @@ export async function mockTestGameDatabase() {
     PRINCIPAL_PLANET_TEST_1.coordinates
   ))!
 
+  const testPlayerRace = (await raceRepository.findRaceByName(pirates.name))!
+
   // player test 1 pirate
   const player1: IPlayer = {
     ...PLAYER_TEST_1_PIRATE,
-    race: (await raceRepository.findRaceByName(pirates.name))!,
-    universe: (await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name))!,
+    race: testPlayerRace,
+    universeId,
     planets: {
       principal: principalPlanet,
       colonies: [principalPlanet]
@@ -97,8 +103,10 @@ export async function mockTestGameDatabase() {
   const player1Pirate = await PlayerModel.create(player1)
 
   // update test player principal planet
-  principalPlanet.owner = player1Pirate._id
+  principalPlanet.ownerId = player1Pirate._id.toString()
+
   await principalPlanet.save()
+  await universe.save()
 }
 
 export async function restoreTestDatabase() {

@@ -24,9 +24,11 @@ describe('researches task', () => {
     }
 
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const raceResearches = player!.race.researches
@@ -55,7 +57,7 @@ describe('researches task', () => {
 
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
     expect(taskCreated.type).toEqual(START_RESEARCH_TASK_TYPE)
-    expect(taskCreated.universe).toEqual(universe!.id.toString())
+    expect(taskCreated.universeId).toEqual(universe!.id.toString())
     expect(taskCreated.status).toEqual(PENDING_TASK_STATUS)
     expect(taskCreated.data.playerId).toEqual(player?._id.toString())
     expect(taskCreated.data.researchId).toEqual(research?._id.toString())
@@ -69,8 +71,8 @@ describe('researches task', () => {
 
     expect(newStartResearchTask?.type).toEqual(START_RESEARCH_TASK_TYPE)
     expect(newStartResearchTask?.status).toEqual(PENDING_TASK_STATUS)
-    expect(newStartResearchTask?.data.playerId).toEqual(player?._id)
-    expect(newStartResearchTask?.data.researchId).toEqual(research?._id)
+    expect(newStartResearchTask?.data.playerId).toEqual(player?._id.toString())
+    expect(newStartResearchTask?.data.researchId).toEqual(research?._id.toString())
     expect(newStartResearchTask?.isCancellable).toEqual(false)
     expect(newStartResearchTask?.executeTaskAt).toEqual(null)
     expect(newStartResearchTask?.processedAt).toEqual(null)
