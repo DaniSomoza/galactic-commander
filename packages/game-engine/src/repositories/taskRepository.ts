@@ -6,6 +6,7 @@ import {
   NEW_PLAYER_TASK_TYPE,
   NewPlayerTaskType,
   PENDING_TASK_STATUS,
+  StartBuildUnitsTaskType,
   StartResearchTaskType,
   TaskType
 } from '../types/ITask'
@@ -44,9 +45,15 @@ async function createPlayerTask(taskData: ITask<NewPlayerTaskType>) {
 }
 
 async function createStartResearchTask(taskData: ITask<StartResearchTaskType>) {
-  const NewPlayerTaskModel = getTaskModel<StartResearchTaskType>()
-  const newPlayerTask = new NewPlayerTaskModel(taskData)
-  return newPlayerTask.save()
+  const newStartResearchTaskModel = getTaskModel<StartResearchTaskType>()
+  const newStartResearchTask = new newStartResearchTaskModel(taskData)
+  return newStartResearchTask.save()
+}
+
+async function createStartBuildUnitsTask(taskData: ITask<StartBuildUnitsTaskType>) {
+  const newStartBuildUnitsTaskModel = getTaskModel<StartBuildUnitsTaskType>()
+  const newStartBuildUnitsTask = new newStartBuildUnitsTaskModel(taskData)
+  return newStartBuildUnitsTask.save()
 }
 
 async function findNewPlayerTaskByUsername(
@@ -72,6 +79,7 @@ const taskRepository = {
   findTaskById,
   createPlayerTask,
   createStartResearchTask,
+  createStartBuildUnitsTask,
   getPendingTasks,
   getPendingTasksByType,
   findNewPlayerTaskByUsername

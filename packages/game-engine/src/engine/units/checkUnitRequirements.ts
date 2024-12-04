@@ -15,8 +15,6 @@ export type CheckUnitRequirementsType = {
 function checkUnitRequirements(unit: IUnit, player: IPlayer): CheckUnitRequirementsType {
   const requiredResearches = unit.requirements.researches
 
-  const requirements: UnitRequirement[] = []
-
   const isOwnerOfTheSpecialPlanet = player.planets.colonies.some((planet) =>
     planet.units.some((planetUnit) => planetUnit.name === unit.name)
   )
@@ -28,13 +26,21 @@ function checkUnitRequirements(unit: IUnit, player: IPlayer): CheckUnitRequireme
 
     const playerResearchLevel = playerResearch?.level || 0
 
-    requirements.push({
+    return playerResearchLevel >= requiredResearch.level
+  })
+
+  const requirements = requiredResearches.map((requiredResearch) => {
+    const playerResearch = player.researches.researched.find(
+      (playerResearch) => playerResearch.research.name === requiredResearch.research.name
+    )
+
+    const playerResearchLevel = playerResearch?.level || 0
+
+    return {
       research: requiredResearch.research,
       level: requiredResearch.level,
       playerResearchLevel
-    })
-
-    return playerResearchLevel >= requiredResearch.level
+    }
   })
 
   const isUnitAvailable = isOwnerOfTheSpecialPlanet || isUnitRequirementsCompleted

@@ -1,5 +1,5 @@
 import { ISpecial } from './ISpecial'
-import { BuildUnitsType, IUnit } from './IUnit'
+import { BuildUnitsQueueType, BuildUnitsType, IUnit } from './IUnit'
 
 export const GALAXIES = 3
 export const SECTORS_PER_GALAXIES = 8
@@ -42,15 +42,15 @@ export interface IPlanet {
   unitBuild: {
     troops: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
     spaceships: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
     defenses: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
   }
 

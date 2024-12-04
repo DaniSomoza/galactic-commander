@@ -68,6 +68,12 @@ export type BuildUnitsType = {
   unitType: UnitTypes
   amount: number
   taskId: string
+  executeTaskAt: number
+}
+
+export type BuildUnitsQueueType = {
+  unitName: string
+  amount: number
 }
 
 export interface IUnit {

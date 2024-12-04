@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
 
 import { IPlanet } from '../types/IPlanet'
-import { BuildUnitsSchema, IUnitDocument } from './UnitModel'
+import { BuildUnitsQueueSchema, BuildUnitsSchema, IUnitDocument } from './UnitModel'
 
 const PlanetSchema: Schema = new Schema(
   {
@@ -48,7 +48,7 @@ const PlanetSchema: Schema = new Schema(
           required: false,
           default: undefined
         },
-        queue: [{ type: BuildUnitsSchema }]
+        queue: [{ type: BuildUnitsQueueSchema }]
       },
       spaceships: {
         activeBuild: {
@@ -56,7 +56,7 @@ const PlanetSchema: Schema = new Schema(
           required: false,
           default: undefined
         },
-        queue: [{ type: BuildUnitsSchema }]
+        queue: [{ type: BuildUnitsQueueSchema }]
       },
       defenses: {
         activeBuild: {
@@ -64,7 +64,7 @@ const PlanetSchema: Schema = new Schema(
           required: false,
           default: undefined
         },
-        queue: [{ type: BuildUnitsSchema }]
+        queue: [{ type: BuildUnitsQueueSchema }]
       }
     },
 

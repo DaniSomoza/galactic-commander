@@ -1,5 +1,5 @@
 import { SpecialType } from './Special'
-import { BuildUnitsType, UnitType } from './Unit'
+import { BuildUnitsQueueType, BuildUnitsType, UnitType } from './Unit'
 
 export type PlanetCoordinatesType = {
   galaxy: number
@@ -34,15 +34,15 @@ export type PlanetType = {
   unitBuild: {
     troops: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
     spaceships: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
     defenses: {
       activeBuild?: BuildUnitsType
-      queue: BuildUnitsType[]
+      queue: BuildUnitsQueueType[]
     }
   }
 

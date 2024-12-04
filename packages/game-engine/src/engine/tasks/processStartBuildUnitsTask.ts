@@ -143,7 +143,8 @@ async function processStartBuildUnitsTask(
     unitId: unit._id.toString(),
     unitType: unit.type,
     amount: task.data.build.amount,
-    taskId: newTask._id.toString()
+    taskId: newTask._id.toString(),
+    executeTaskAt
   }
 
   planet.resources -= resourceCost

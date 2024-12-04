@@ -127,5 +127,20 @@
   "FLEET_SPACE_CARGO_CAPTURE_BONUS": "Activates the capture of enemy cargo ships at a {0}",
   "FLEET_FRIGATE_CAPTURE_BONUS": "Activates the capture of enemy space frigates at a {0}",
   "FLEET_BOMBER_CAPTURE_BONUS": "Activates the capture of enemy planetary bombers at a {0}",
-  "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activates the capture of enemy space battle stations at a {0}"
+  "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activates the capture of enemy space battle stations at a {0}",
+
+  "ATTACK_UNIT_TOOLTIP": "Attack: {1} (Base: {0})",
+  "ATTACK_UNIT_LABEL": "Attack: {0}",
+  "SHIELD_UNIT_TOOLTIP": "Shield: {1} (Base: {0})",
+  "SHIELD_UNIT_LABEL": "Shield: {0}",
+  "HEALTH_UNIT_TOOLTIP": "Health: {1} (Base: {0})",
+  "HEALTH_UNIT_LABEL": "Health: {0}",
+  "GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST": "Cost: {0} resources",
+
+  "GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON": "Schedule",
+  "GAME_BUILD_UNITS_PAGE_BUILD_UNITS_QUEUE_BUTTON": "Queue",
+  "GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON": "Build",
+
+  "TROOP_PIRATE_CADET_NAME": "Pirate Cadet",
+  "TROOP_PIRATE_CADET_DESCRIPTION": "Armed with blasters and rugged spacesuits, these pirate cadets form the core of raiding fleets, ready to conquer from their first mission."
 }

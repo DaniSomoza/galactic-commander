@@ -19,6 +19,7 @@ import PopulationLabel from '../../components/population-label/PopulationLabel'
 import EnergyLabel from '../../components/energy-label/EnergyLabel'
 import GamePlanetSection from '../../components/game-planet-section/GamePlanetSection'
 import GameActiveResearchSection from '../../components/game-active-research-section/GameActiveResearchSection'
+import { BuildUnitsProvider } from '../../store/buildUnitsContext'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
@@ -111,9 +112,11 @@ function GamePageWithGameProviders() {
     <GameInfoProvider>
       <PlayerProvider>
         <ResearchProvider>
-          <PlayerResourcesProvider>
-            <GamePage />
-          </PlayerResourcesProvider>
+          <BuildUnitsProvider>
+            <PlayerResourcesProvider>
+              <GamePage />
+            </PlayerResourcesProvider>
+          </BuildUnitsProvider>
         </ResearchProvider>
       </PlayerProvider>
     </GameInfoProvider>

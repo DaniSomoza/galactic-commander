@@ -1,7 +1,9 @@
 import { IBonus } from 'game-engine/dist/types/IBonus'
 
-import { PlayerResearchType } from './Player'
+import { PlayerResearchType, PlayerType } from './Player'
 import { SpecialType } from './Special'
+import { PlanetCoordinatesType } from './Planet'
+import { StartBuildUnitsTaskType, TaskType } from './Task'
 
 type UnitTroopType = 'TROOP'
 type UnitSpaceshipType = 'SPACESHIP'
@@ -46,7 +48,13 @@ export type BuildUnitsType = {
   unitId: string
   unitType: UnitTypes
   amount: number
+  executeTaskAt: number
   taskId: string
+}
+
+export type BuildUnitsQueueType = {
+  unitName: string
+  amount: number
 }
 
 export type UnitType = {
@@ -81,3 +89,25 @@ export type UnitType = {
 
   bonus: IBonus
 }
+
+export type StartBuildUnitsData = {
+  unitName: string
+  unitType: UnitTypes
+  amount: number
+  planetCoordinates: PlanetCoordinatesType
+
+  universeName: string
+
+  executeTaskAt?: number
+}
+
+export type updateBuildUnitsQueueData = {
+  buildUnitsQueue: { unitName: string; amount: number }[]
+  planetCoordinates: PlanetCoordinatesType
+  unitType: UnitTypes
+
+  universeName: string
+}
+
+export type startBuildUnitsResponseType = { task: TaskType<StartBuildUnitsTaskType> }
+export type updateBuildUnitsQueueResponseType = { player: PlayerType }

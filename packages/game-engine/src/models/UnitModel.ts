@@ -9,7 +9,16 @@ export const BuildUnitsSchema = new Schema(
     unitId: { type: String, required: true },
     unitType: { type: String, required: true },
     amount: { type: Number, required: true },
+    executeTaskAt: { type: Number, required: true },
     taskId: { type: String, required: true }
+  },
+  { _id: false }
+)
+
+export const BuildUnitsQueueSchema = new Schema(
+  {
+    unitName: { type: String, required: true },
+    amount: { type: Number, required: true }
   },
   { _id: false }
 )
