@@ -47,4 +47,5 @@ export interface IPlayer {
   perks: IPlayerPerk[]
   researches: IPlayerResearches
   fleets: IFleet[]
+  // TODO: ADD pendingTasksHere ???
 }

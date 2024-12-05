@@ -47,6 +47,7 @@ function GameTroopsPage() {
     console.log('amount: ', amount)
     console.log('planetCoordinates: ', selectedPlanet?.coordinates)
     // TODO: implement performUpdateBuildUnitsQueue
+    await starBuildUnits(unitName, amount, 'TROOP')
     setIsLoading(false)
     setAmount(0)
   }
@@ -105,6 +106,30 @@ function GameTroopsPage() {
                       border
                     />
 
+                    {/* Unit name */}
+                    <Box
+                      position={'absolute'}
+                      top={20}
+                      padding={1}
+                      maxWidth={'230px'}
+                      sx={{ transform: 'translate(0, -50%)' }}
+                    >
+                      <Paper variant="outlined">
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          padding={0.4}
+                          paddingLeft={0.8}
+                          paddingRight={0.8}
+                          overflow={'hidden'}
+                          textOverflow="ellipsis"
+                        >
+                          {translate(unit.name)}
+                        </Typography>
+                      </Paper>
+                    </Box>
+
                     {/* Build unit time */}
                     <Box position={'absolute'} left={0} bottom={0} padding={1}>
                       <Paper variant="outlined">
@@ -134,10 +159,6 @@ function GameTroopsPage() {
 
               {/* Text Part */}
               <Stack padding={1.5} flexGrow={1}>
-                <Typography component="h2" variant="h6" fontSize={'1rem'} gutterBottom>
-                  {translate(unit.name)}
-                </Typography>
-
                 <Typography variant="body2" gutterBottom>
                   {translate(unit.description)}
                 </Typography>
@@ -170,14 +191,6 @@ function GameTroopsPage() {
                   )}
                 </Typography>
 
-                {/* TODO: Amount input */}
-                <TextField
-                  value={amount}
-                  // label={translate('AMOUNT_BUILD_UNITS_INPUT_LABEL')}
-                  label={'Amount'}
-                  onChange={(event) => setAmount(Number(event.target.value))}
-                />
-
                 {/* TODO: Unit Bonus Part */}
 
                 {/* TODO: Unit Requirements Part */}
@@ -190,6 +203,14 @@ function GameTroopsPage() {
                   alignItems={'flex-end'}
                   gap={1}
                 >
+                  {/* TODO: Amount input */}
+                  <TextField
+                    value={amount}
+                    // label={translate('AMOUNT_BUILD_UNITS_INPUT_LABEL')}
+                    label={'Amount'}
+                    onChange={(event) => setAmount(Number(event.target.value))}
+                  />
+
                   <Button variant="outlined" disabled={isLoading} size="small">
                     {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
                   </Button>

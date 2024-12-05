@@ -53,11 +53,12 @@ export type FinishBuildUnitsTaskData = {
   planetId: string
   build: {
     unitId: string
+    unitType: UnitTypes
     amount: number
+    energy?: number
+    duration: number
+    resourceCost: number
   }
-  buildUnitType: UnitTypes
-  buildUnitsDuration: number
-  buildUnitsResourceCost: number
 }
 
 // const EXPLORE_PLANET_TASK_TYPE = 'ExplorePlanetTask'

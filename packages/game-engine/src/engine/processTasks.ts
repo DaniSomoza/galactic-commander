@@ -11,7 +11,9 @@ import {
   StartResearchTaskData,
   TaskData,
   FINISH_BUILD_UNITS_TASK_TYPE,
-  START_BUILD_UNITS_TASK_TYPE
+  START_BUILD_UNITS_TASK_TYPE,
+  FinishBuildUnitsTaskData,
+  StartBuildUnitsTaskData
 } from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
@@ -190,6 +192,10 @@ async function processResourceProduction(
 
 function isPlayerTaskData(
   taskData: TaskData<TaskType>
-): taskData is StartResearchTaskData | FinishResearchTaskData {
-  return 'player' in taskData
+): taskData is
+  | StartResearchTaskData
+  | FinishResearchTaskData
+  | StartBuildUnitsTaskData
+  | FinishBuildUnitsTaskData {
+  return 'playerId' in taskData
 }

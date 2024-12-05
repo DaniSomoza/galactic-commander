@@ -69,6 +69,8 @@ export type BuildUnitsType = {
   amount: number
   taskId: string
   executeTaskAt: number
+  energy: number
+  resourceCost: number
 }
 
 export type BuildUnitsQueueType = {

@@ -54,10 +54,11 @@ export type FinishBuildUnitsTaskData = {
   build: {
     unitId: string
     amount: number
+    unitType: UnitTypes
+    duration: number
+    resourceCost: number
+    energy?: number
   }
-  buildUnitType: UnitTypes
-  buildUnitsDuration: number
-  buildUnitsResourceCost: number
 }
 
 export type TaskTypesTypes =

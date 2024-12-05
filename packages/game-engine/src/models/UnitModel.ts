@@ -10,7 +10,9 @@ export const BuildUnitsSchema = new Schema(
     unitType: { type: String, required: true },
     amount: { type: Number, required: true },
     executeTaskAt: { type: Number, required: true },
-    taskId: { type: String, required: true }
+    taskId: { type: String, required: true },
+    energy: { type: Number, required: true },
+    resourceCost: { type: Number, required: true }
   },
   { _id: false }
 )

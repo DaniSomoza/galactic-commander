@@ -305,6 +305,29 @@ function GameResearchPage() {
                       border
                     />
 
+                    <Box
+                      position={'absolute'}
+                      top={20}
+                      padding={1}
+                      maxWidth={'230px'}
+                      sx={{ transform: 'translate(0, -50%)' }}
+                    >
+                      <Paper variant="outlined">
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          padding={0.4}
+                          paddingLeft={0.8}
+                          paddingRight={0.8}
+                          overflow={'hidden'}
+                          textOverflow="ellipsis"
+                        >
+                          {translate(raceResearch.name)}
+                        </Typography>
+                      </Paper>
+                    </Box>
+
                     {/* Research time */}
                     <Box position={'absolute'} left={0} bottom={0} padding={1}>
                       <Paper variant="outlined">
@@ -372,10 +395,6 @@ function GameResearchPage() {
 
               {/* Text Part */}
               <Stack padding={1.5} flexGrow={1}>
-                <Typography component="h2" variant="h6" fontSize={'1rem'} gutterBottom>
-                  {translate(raceResearch.name)}
-                </Typography>
-
                 <Typography variant="body2" gutterBottom>
                   {translate(raceResearch.description)}
                 </Typography>

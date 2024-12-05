@@ -82,6 +82,8 @@ async function processStartBuildUnitsTask(
   }
 
   const resourceCost = unit.resourceCost * task.data.build.amount
+  const unitEnergyCost = unit.energyCost || 0
+  const energy = unitEnergyCost * task.data.build.amount
 
   const hasEnoughResources = planet.resources >= resourceCost
 
@@ -101,21 +103,25 @@ async function processStartBuildUnitsTask(
   }
 
   const buildUnitsBonus = computedBonus(player.perks, buildUnitsBono[unit.type])
-  const buildUnitsDuration = task.data.build.amount * unit.buildBaseTime * (100 / buildUnitsBonus)
+  const duration = task.data.build.amount * unit.buildBaseTime * (100 / buildUnitsBonus)
 
-  const executeTaskAt = getSecond(second + buildUnitsDuration)
+  const executeTaskAt = getSecond(second + duration)
 
   // TODO: implement createBaseTask helper function
   const finishBuildUnitsTask: ITask<FinishBuildUnitsTaskType> = {
     type: FINISH_BUILD_UNITS_TASK_TYPE,
     universeId: player.universeId,
     data: {
-      build: task.data.build,
       playerId: player._id.toString(),
       planetId: planet._id.toString(),
-      buildUnitType: unit.type,
-      buildUnitsDuration: buildUnitsDuration,
-      buildUnitsResourceCost: resourceCost
+      build: {
+        unitId: task.data.build.unitId,
+        amount: task.data.build.amount,
+        unitType: unit.type,
+        duration,
+        resourceCost,
+        energy
+      }
     },
     status: PENDING_TASK_STATUS,
     isCancellable: true,
@@ -144,7 +150,9 @@ async function processStartBuildUnitsTask(
     unitType: unit.type,
     amount: task.data.build.amount,
     taskId: newTask._id.toString(),
-    executeTaskAt
+    executeTaskAt,
+    energy,
+    resourceCost
   }
 
   planet.resources -= resourceCost

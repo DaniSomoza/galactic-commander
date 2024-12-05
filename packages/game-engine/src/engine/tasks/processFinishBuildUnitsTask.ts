@@ -101,7 +101,7 @@ async function processFinishBuildUnitsTask(
   const point: IPoint = {
     playerId: player._id.toString(),
     taskId: task._id.toString(),
-    points: task.data.buildUnitsResourceCost,
+    points: task.data.build.resourceCost,
     sourceId: task.data.build.unitId,
     sourceName: unit.name,
     type: 'Unit',
