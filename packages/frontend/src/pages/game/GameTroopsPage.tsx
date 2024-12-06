@@ -183,14 +183,6 @@ function GameTroopsPage() {
                   </Typography>
                 </Tooltip>
 
-                {/* Resource cost Part */}
-                <Typography variant="body2" gutterBottom>
-                  {translate(
-                    'GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST',
-                    formatNumber(unit.resourceCost * amount, true)
-                  )}
-                </Typography>
-
                 {/* TODO: Unit Bonus Part */}
 
                 {/* TODO: Unit Requirements Part */}
@@ -211,29 +203,59 @@ function GameTroopsPage() {
                     onChange={(event) => setAmount(Number(event.target.value))}
                   />
 
-                  <Button variant="outlined" disabled={isLoading} size="small">
-                    {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
-                  </Button>
+                  <Stack flexGrow={1}>
+                    <Stack flexGrow={1} direction={'row'} gap={1}>
+                      {/* Resource cost Part */}
+                      <Typography variant="body2" gutterBottom>
+                        {translate(
+                          'GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST',
+                          formatNumber(unit.resourceCost * amount, true)
+                        )}
+                      </Typography>
 
-                  {activeBuildUnits ? (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      disabled={isLoading}
-                      onClick={() => performUpdateBuildUnitsQueue(unit.name, amount)}
+                      {/* Energy Part */}
+                      {!!unit.energyCost && (
+                        <Typography variant="body2" gutterBottom>
+                          {translate(
+                            'GAME_BUILD_UNITS_PAGE_BUILD_ENERGY',
+                            formatNumber(unit.energyCost * amount, true)
+                          )}
+                        </Typography>
+                      )}
+                    </Stack>
+
+                    <Stack
+                      flexGrow={1}
+                      direction={'row'}
+                      justifyContent={'flex-end'}
+                      alignItems={'flex-end'}
+                      gap={1}
                     >
-                      {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_QUEUE_BUTTON')}
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      // disabled={isLoading || !hasEnoughResources || !isUnitAvailable}
-                      onClick={() => performStartBuildUnits(unit.name, amount)}
-                    >
-                      {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}
-                    </Button>
-                  )}
+                      <Button variant="outlined" disabled={isLoading} size="small">
+                        {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
+                      </Button>
+
+                      {activeBuildUnits ? (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          disabled={isLoading}
+                          onClick={() => performUpdateBuildUnitsQueue(unit.name, amount)}
+                        >
+                          {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_QUEUE_BUTTON')}
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          // disabled={isLoading || !hasEnoughResources || !isUnitAvailable}
+                          onClick={() => performStartBuildUnits(unit.name, amount)}
+                        >
+                          {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}
+                        </Button>
+                      )}
+                    </Stack>
+                  </Stack>
                 </Stack>
               </Stack>
             </Stack>
