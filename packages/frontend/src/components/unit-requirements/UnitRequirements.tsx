@@ -17,7 +17,7 @@ type UnitRequirementsProps = {
   isUnitAvailable: boolean
 }
 
-// TODO: ADD TRANSLATIONS
+// TODO: ADD TRANSLATIONS 2
 
 function UnitRequirements({ requirements, isUnitAvailable }: UnitRequirementsProps) {
   const { translate } = useTranslations()
