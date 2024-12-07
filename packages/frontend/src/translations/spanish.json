@@ -129,12 +129,14 @@
   "FLEET_BOMBER_CAPTURE_BONUS": "Activa la captura de bomberos planetarios enemigos en un {0}",
   "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activa la captura de estaciones de combate espaciales enemigas en un {0}",
 
-  "ATTACK_UNIT_TOOLTIP": "Ataque: {1} (Base: {0})",
-  "ATTACK_UNIT_LABEL": "Ataque: {0}",
-  "SHIELD_UNIT_TOOLTIP": "Escudos: {1} (Base: {0})",
-  "SHIELD_UNIT_LABEL": "Escudos: {0}",
-  "HEALTH_UNIT_TOOLTIP": "Vida: {1} (Base: {0})",
-  "HEALTH_UNIT_LABEL": "Vida: {0}",
+  "ATTACK_UNIT_TOOLTIP": "Ataque: {0} (Base: {1})",
+  "SHIELD_UNIT_TOOLTIP": "Escudos: {0} (Base: {1})",
+  "HEALTH_UNIT_TOOLTIP": "Vida: {0} (Base: {1})",
+  "SPEED_UNIT_TOOLTIP": "Velocidad: {0} (Base: {1})",
+  "CARGO_UNIT_TOOLTIP": "Capacidad de transporte de recursos: {0} (Base: {1})",
+  "STARFIGHER_CAPACITY_UNIT_TOOLTIP": "Capacidad de carga de cazas estelares: {0} (Base: {1})",
+  "TROOPS_CAPACITY_UNIT_TOOLTIP": "Capacidad de carga de tropas: {0} (Base: {1})",
+
   "GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST": "Coste: {0} recursos",
 
   "GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON": "Programar",

@@ -5,10 +5,12 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 
+import { UnitType } from 'game-api-microservice/src/types/Unit'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
+import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
@@ -19,21 +21,23 @@ import formatTimer from '../../utils/formatTimer'
 import formatNumber from '../../utils/formatNumber'
 import millisToSeconds from '../../utils/millisToSeconds'
 import { useBuildUnits } from '../../store/buildUnitsContext'
+import UnitStats from '../../components/unit-stats/UnitStats'
+import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
+import BonusCards from '../../components/bonus-cards/BonusCards'
+import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
 
 function GameTroopsPage() {
   const { translate } = useTranslations()
 
+  const [unitToBuild, setUnitToBuild] = useState<UnitType>()
+
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
 
-  const { buildTroopsQueue, activeBuildTroopsCountdown, activeBuildTroops, starBuildUnits } =
-    useBuildUnits()
+  const { buildTroopsQueue, activeBuildTroopsCountdown, activeBuildTroops } = useBuildUnits()
 
   console.log('buildTroopsQueue: ', buildTroopsQueue)
   console.log('activeBuildTroopsCountdown: ', activeBuildTroopsCountdown)
   console.log('activeBuildTroops: ', activeBuildTroops)
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [amount, setAmount] = useState(0)
 
   const units = player && selectedPlanet ? [...selectedPlanet.units, ...player.race.units] : []
 
@@ -41,206 +45,179 @@ function GameTroopsPage() {
     return <Loader isLoading />
   }
 
-  async function performUpdateBuildUnitsQueue(unitName: string, amount: number) {
-    setIsLoading(true)
-    console.log('unitName: ', unitName)
-    console.log('amount: ', amount)
-    console.log('planetCoordinates: ', selectedPlanet?.coordinates)
-    // TODO: implement performUpdateBuildUnitsQueue
-    await starBuildUnits(unitName, amount, 'TROOP')
-    setIsLoading(false)
-    setAmount(0)
-  }
-
-  async function performStartBuildUnits(unitName: string, amount: number) {
-    setIsLoading(true)
-    console.log('unitName: ', unitName)
-    console.log('amount: ', amount)
-    console.log('planetCoordinates: ', selectedPlanet?.coordinates)
-    // TODO: implement performStartBuildUnits
-    await starBuildUnits(unitName, amount, 'TROOP')
-    setIsLoading(false)
-    setAmount(0)
-  }
-
   const activeBuildUnits = selectedPlanet.unitBuild.troops.activeBuild
 
   return (
-    <Stack direction={'column'} gap={2}>
-      {/* unitList */}
-      {units.map((unit) => {
-        // TODO: build unit time
-        const buildUnitBonus = computedBonus(player.perks, 'TROOPS_TRAINING_BONUS')
+    <>
+      <Stack direction={'column'} gap={2}>
+        {units.map((unit) => {
+          const buildUnitBonus = computedBonus(player.perks, 'TROOPS_TRAINING_BONUS')
 
-        const buildUnitDuration = millisToSeconds(unit.buildBaseTime * (100 / buildUnitBonus))
+          const buildUnitDuration = millisToSeconds(unit.buildBaseTime * (100 / buildUnitBonus))
 
-        const attackBonus = computedBonus(player.perks, 'TROOPS_ATTACK_BONUS')
-        const attack = unit.stats.attack * (attackBonus / 100)
+          const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
 
-        const shieldBonus = computedBonus(player.perks, 'TROOPS_SHIELD_BONUS')
-        const shield = unit.stats.shield * (shieldBonus / 100)
+          const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(player, selectedPlanet, unit)
 
-        const healthBonus = computedBonus(player.perks, 'TROOPS_HEALTH_BONUS')
-        const health = unit.stats.health * (healthBonus / 100)
+          return (
+            <Paper key={unit.name} variant="outlined">
+              <Stack direction={'row'}>
+                {/* Image Part */}
+                <Box>
+                  <Box sx={{ position: 'relative' }}>
+                    <Stack justifyContent="center" alignItems="center">
+                      <Image
+                        src={getUnitImage(unit.name)}
+                        alt={translate(unit.name)}
+                        height={'230px'}
+                        width={'230px'}
+                        border
+                      />
 
-        const hasEnoughResources = amount * unit.resourceCost <= selectedPlanet.resources
-
-        const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
-
-        console.log('hasEnoughResources: ', hasEnoughResources)
-        console.log('isUnitAvailable: ', isUnitAvailable)
-        console.log('requirements: ', requirements)
-
-        return (
-          <Paper key={unit.name} variant="outlined">
-            <Stack direction={'row'}>
-              {/* Image Part */}
-              <Box>
-                <Box sx={{ position: 'relative' }}>
-                  <Stack justifyContent="center" alignItems="center">
-                    <Image
-                      src={getUnitImage(unit.name)}
-                      alt={translate(unit.name)}
-                      height={'230px'}
-                      width={'230px'}
-                      border
-                    />
-
-                    {/* Unit name */}
-                    <Box
-                      position={'absolute'}
-                      top={20}
-                      padding={1}
-                      maxWidth={'230px'}
-                      sx={{ transform: 'translate(0, -50%)' }}
-                    >
-                      <Paper variant="outlined">
-                        <Typography
-                          variant="body1"
-                          fontSize={12}
-                          fontWeight={500}
-                          padding={0.4}
-                          paddingLeft={0.8}
-                          paddingRight={0.8}
-                          overflow={'hidden'}
-                          textOverflow="ellipsis"
-                        >
-                          {translate(unit.name)}
-                        </Typography>
-                      </Paper>
-                    </Box>
-
-                    {/* Build unit time */}
-                    <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                      <Paper variant="outlined">
-                        <Tooltip
-                          title={translate(
-                            'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
-                            formatTimer(buildUnitDuration)
-                          )}
-                          arrow
-                        >
+                      {/* Unit name */}
+                      <Box
+                        position={'absolute'}
+                        top={20}
+                        padding={1}
+                        maxWidth={'230px'}
+                        sx={{ transform: 'translate(0, -50%)' }}
+                      >
+                        <Paper variant="outlined">
                           <Typography
                             variant="body1"
-                            fontSize={13}
+                            fontSize={12}
                             fontWeight={500}
                             padding={0.4}
                             paddingLeft={0.8}
                             paddingRight={0.8}
+                            overflow={'hidden'}
+                            textOverflow="ellipsis"
                           >
-                            {formatTimer(buildUnitDuration)}
+                            {translate(unit.name)}
                           </Typography>
-                        </Tooltip>
-                      </Paper>
+                        </Paper>
+                      </Box>
+
+                      {/* Build unit time */}
+                      <Box position={'absolute'} left={0} bottom={0} padding={1}>
+                        <Paper variant="outlined">
+                          <Tooltip
+                            title={translate(
+                              'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
+                              formatTimer(buildUnitDuration)
+                            )}
+                            arrow
+                          >
+                            <Typography
+                              variant="body1"
+                              fontSize={13}
+                              fontWeight={500}
+                              padding={0.4}
+                              paddingLeft={0.8}
+                              paddingRight={0.8}
+                            >
+                              {formatTimer(buildUnitDuration)}
+                            </Typography>
+                          </Tooltip>
+                        </Paper>
+                      </Box>
+
+                      {/* Amount of units in this planet */}
+                      <Box position={'absolute'} right={0} bottom={0} padding={1}>
+                        <Paper variant="outlined">
+                          <Stack
+                            direction={'row'}
+                            alignItems={'center'}
+                            padding={0.4}
+                            paddingLeft={0}
+                            paddingRight={0.8}
+                          >
+                            {unit.isHero && <MilitaryTechIcon fontSize="small" />}
+                            <Tooltip
+                              title={translate(
+                                'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
+                                formatNumber(troopsInThisPlanet, true)
+                              )}
+                              arrow
+                            >
+                              <Typography
+                                paddingLeft={unit.isHero ? 0 : 0.8}
+                                variant="body1"
+                                fontSize={13}
+                                fontWeight={500}
+                              >
+                                {formatNumber(troopsInThisPlanet)}
+                              </Typography>
+                            </Tooltip>
+                          </Stack>
+                        </Paper>
+                      </Box>
+                    </Stack>
+                  </Box>
+                </Box>
+
+                <Stack padding={1} flexGrow={1}>
+                  <Stack direction={'row'} gap={1}>
+                    {/* Stats Part */}
+                    <Box flexBasis={'50%'}>
+                      <UnitStats unit={unit} player={player} />
+                    </Box>
+
+                    {/* Unit Requirements Part */}
+                    <Box flexBasis={'50%'}>
+                      <UnitRequirements
+                        requirements={requirements}
+                        isUnitAvailable={isUnitAvailable}
+                      />
                     </Box>
                   </Stack>
-                </Box>
-              </Box>
 
-              {/* Text Part */}
-              <Stack padding={1.5} flexGrow={1}>
-                <Typography variant="body2" gutterBottom>
-                  {translate(unit.description)}
-                </Typography>
+                  <Stack
+                    flexGrow={1}
+                    direction={'row'}
+                    justifyContent={'flex-end'}
+                    alignItems={'flex-end'}
+                    gap={1}
+                  >
+                    {/* Unit bonus */}
+                    <Stack flexGrow={1} direction={'row'} gap={1}>
+                      <BonusCards bonus={unit.bonus} />
+                    </Stack>
 
-                {/* TODO: CREATE A UNIT STAT COMPONENT */}
-                {/* Stats Part */}
-                <Tooltip title={translate('ATTACK_UNIT_TOOLTIP', unit.stats.attack, attack)}>
-                  <Typography variant="body2" gutterBottom>
-                    {translate('ATTACK_UNIT_LABEL', attack)}
-                  </Typography>
-                </Tooltip>
-
-                <Tooltip title={translate('SHIELD_UNIT_TOOLTIP', unit.stats.shield, shield)}>
-                  <Typography variant="body2" gutterBottom>
-                    {translate('SHIELD_UNIT_LABEL', shield)}
-                  </Typography>
-                </Tooltip>
-
-                <Tooltip title={translate('HEALTH_UNIT_TOOLTIP', unit.stats.health, health)}>
-                  <Typography variant="body2" gutterBottom>
-                    {translate('HEALTH_UNIT_LABEL', health)}
-                  </Typography>
-                </Tooltip>
-
-                {/* Resource cost Part */}
-                <Typography variant="body2" gutterBottom>
-                  {translate(
-                    'GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST',
-                    formatNumber(unit.resourceCost * amount, true)
-                  )}
-                </Typography>
-
-                {/* TODO: Unit Bonus Part */}
-
-                {/* TODO: Unit Requirements Part */}
-
-                {/* Action Buttons Part */}
-                <Stack
-                  flexGrow={1}
-                  direction={'row'}
-                  justifyContent={'flex-end'}
-                  alignItems={'flex-end'}
-                  gap={1}
-                >
-                  {/* TODO: Amount input */}
-                  <TextField
-                    value={amount}
-                    // label={translate('AMOUNT_BUILD_UNITS_INPUT_LABEL')}
-                    label={'Amount'}
-                    onChange={(event) => setAmount(Number(event.target.value))}
-                  />
-
-                  <Button variant="outlined" disabled={isLoading} size="small">
-                    {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
-                  </Button>
-
-                  {activeBuildUnits ? (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      disabled={isLoading}
-                      onClick={() => performUpdateBuildUnitsQueue(unit.name, amount)}
-                    >
-                      {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_QUEUE_BUTTON')}
+                    <Button variant="outlined" size="small">
+                      {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
                     </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      // disabled={isLoading || !hasEnoughResources || !isUnitAvailable}
-                      onClick={() => performStartBuildUnits(unit.name, amount)}
-                    >
-                      {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}
-                    </Button>
-                  )}
+
+                    {activeBuildUnits ? (
+                      <Button variant="contained" size="small" onClick={() => setUnitToBuild(unit)}>
+                        {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_QUEUE_BUTTON')}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={!isUnitAvailable}
+                        onClick={() => setUnitToBuild(unit)}
+                      >
+                        {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}
+                      </Button>
+                    )}
+                  </Stack>
                 </Stack>
               </Stack>
-            </Stack>
-          </Paper>
-        )
-      })}
-    </Stack>
+            </Paper>
+          )
+        })}
+      </Stack>
+
+      {unitToBuild && (
+        <BuildUnitsDialog
+          unitToBuild={unitToBuild}
+          setUnitToBuild={setUnitToBuild}
+          isOpen={!!unitToBuild}
+        />
+      )}
+    </>
   )
 }
 

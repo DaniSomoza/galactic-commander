@@ -130,11 +130,13 @@
   "FLEET_SPACE_BATTLE_STATION_CAPTURE_BONUS": "Activates the capture of enemy space battle stations at a {0}",
 
   "ATTACK_UNIT_TOOLTIP": "Attack: {1} (Base: {0})",
-  "ATTACK_UNIT_LABEL": "Attack: {0}",
   "SHIELD_UNIT_TOOLTIP": "Shield: {1} (Base: {0})",
-  "SHIELD_UNIT_LABEL": "Shield: {0}",
   "HEALTH_UNIT_TOOLTIP": "Health: {1} (Base: {0})",
-  "HEALTH_UNIT_LABEL": "Health: {0}",
+  "SPEED_UNIT_TOOLTIP": "Speed: {1} (Base: {0})",
+  "CARGO_UNIT_TOOLTIP": "Cargo resources: {1} (Base: {0})",
+  "STARFIGHTER_CAPACITY_UNIT_TOOLTIP": "Starfighter cargo: {1} (Base: {0})",
+  "TROOPS_CAPACITY_UNIT_TOOLTIP": "Troops cargo: {1} (Base: {0})",
+
   "GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST": "Cost: {0} resources",
 
   "GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON": "Schedule",

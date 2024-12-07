@@ -33,7 +33,7 @@ const pirateCadet: IUnit = {
 
   isHero: false,
   isInvisible: false,
-  isOrganic: true,
+  isOrganic: false,
   isCapturable: true,
   isKamikaze: false,
   isAirborne: false,
