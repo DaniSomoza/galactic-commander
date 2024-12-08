@@ -61,9 +61,9 @@ function GameActiveResearchSection() {
             )}
             <Box
               position={'absolute'}
-              top={24}
+              top={20}
               padding={1}
-              maxWidth={'192px'}
+              maxWidth={'230px'}
               sx={{ transform: 'translate(0, -50%)' }}
             >
               {isResearchLoading ? (

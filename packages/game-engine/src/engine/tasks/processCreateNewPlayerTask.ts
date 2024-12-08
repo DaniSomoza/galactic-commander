@@ -1,26 +1,27 @@
 import { Document } from 'mongoose'
 
 import getRandomPlanet from '../../helpers/getRandomPlanet'
-import PlayerModel, { IPlayer } from '../../models/PlayerModel'
+import PlayerModel from '../../models/PlayerModel'
 import planetRepository from '../../repositories/planetRepository'
 import raceRepository from '../../repositories/raceRepository'
-import { ITaskTypeDocument, NewPlayerTaskType } from '../../models/TaskModel'
+import { ITaskTypeDocument } from '../../models/TaskModel'
 import GameEngineError from '../errors/GameEngineError'
 import universeRepository from '../../repositories/universeRepository'
 import playerRepository from '../../repositories/playerRepository'
 import getPlanetImgUrl from '../../helpers/getPlanetImgUrl'
+import { NewPlayerTaskType } from '../../types/ITask'
+import { IPlayer } from '../../types/IPlayer'
 
-// TODO: rename to processCreateNewPlayerTask
-async function processNewPlayerTask(
+async function processCreateNewPlayerTask(
   task: ITaskTypeDocument<NewPlayerTaskType>,
   second: number
 ): Promise<Document[]> {
   // get all the required data from DB
-  const [availablePrincipalPlanets, race, universe, player] = await Promise.all([
+  const [availablePrincipalPlanets, race, universe, playerAlreadyExists] = await Promise.all([
     planetRepository.findAvailablePrincipalPlanets(),
-    raceRepository.findRaceById(task.data.race),
-    universeRepository.findUniverseById(task.universe),
-    playerRepository.findPlayerByUsername(task.data.username, task.universe)
+    raceRepository.findRaceById(task.data.raceId),
+    universeRepository.findUniverseById(task.universeId),
+    playerRepository.findPlayerByUsername(task.data.username, task.universeId)
   ])
 
   if (availablePrincipalPlanets.length === 0) {
@@ -35,7 +36,7 @@ async function processNewPlayerTask(
     throw new GameEngineError('invalid universe')
   }
 
-  if (player) {
+  if (playerAlreadyExists) {
     throw new GameEngineError('player already created')
   }
 
@@ -47,56 +48,40 @@ async function processNewPlayerTask(
       email: task.data.email
     },
 
-    universe: universe._id,
+    universeId: universe._id.toString(),
 
-    race: race._id,
+    race,
 
     planets: {
-      principal: principalPlanet._id,
-      colonies: [principalPlanet._id],
-      explored: [principalPlanet._id]
+      principal: principalPlanet,
+      colonies: [principalPlanet]
     },
 
     perks: [
       {
         bonus: race.bonus,
-        source: race._id,
+        sourceId: race._id.toString(),
         sourceName: race.name,
         type: 'Race'
       }
     ],
-
-    points: [],
 
     researches: {
       researched: [],
       queue: []
     },
 
-    units: {
-      troops: {
-        population: 0
-      },
-
-      fleets: {
-        energy: 0
-      },
-
-      defenses: {
-        structures: 0
-      }
-    }
+    fleets: []
   }
 
   const newPlayer = new PlayerModel(newPlayerData)
 
-  principalPlanet.owner = newPlayer._id
+  principalPlanet.ownerId = newPlayer._id.toString()
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second
   principalPlanet.resources = race.baseResources
   principalPlanet.resourceQuality = 100 // max value for principal planets by default
-  // TODO: create specific principal planet image ???
   principalPlanet.imgUrl = getPlanetImgUrl(principalPlanet.resourceQuality)
   principalPlanet.lastResourceProductionTime = second
 
@@ -106,4 +91,4 @@ async function processNewPlayerTask(
   return Promise.all([principalPlanet.save()])
 }
 
-export default processNewPlayerTask
+export default processCreateNewPlayerTask

@@ -1,4 +1,4 @@
-import { IResearch } from '../../models/ResearchModel'
+import { IResearch } from '../../types/IResearch'
 
 const RESEARCH_COST_FACTOR = 3
 

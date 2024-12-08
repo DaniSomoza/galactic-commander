@@ -26,16 +26,17 @@ function handleErrorResponse(error: unknown): ErrorResponse {
     }
   }
 
-  if (error instanceof MongoServerError) {
+  if (error?.constructor?.name === 'MongoServerError') {
     // handle duplicated key error.code === 11000 || error.code === 11001
+    const mongoError = error as MongoServerError
     return {
       code: CONFLICT,
       body: {
-        error: error.message,
+        error: mongoError.message,
         details: {
           // TODO: improve this
-          keyPattern: error.keyPattern,
-          keyValue: error.keyValue
+          keyPattern: mongoError.keyPattern,
+          keyValue: mongoError.keyValue
         }
         // code: error.code,
         // keyPattern: error.keyPattern,

@@ -1,6 +1,8 @@
 import { IRaceDocument } from 'game-engine/models/RaceModel'
 
 import { RaceType } from '../types/Race'
+import cleanUnitFields from './cleanUnitFields'
+import cleanResearchFields from './cleanResearchFields'
 
 function cleanRaceFields(race: IRaceDocument): RaceType {
   const {
@@ -14,7 +16,9 @@ function cleanRaceFields(race: IRaceDocument): RaceType {
     resourceName,
     intergalacticTravelThreshold,
     researches,
-    bonus
+    bonus,
+    specials,
+    units
   } = race
 
   return {
@@ -27,7 +31,9 @@ function cleanRaceFields(race: IRaceDocument): RaceType {
     baseResources,
     resourceName,
     intergalacticTravelThreshold,
-    researches,
+    researches: researches.map(cleanResearchFields),
+    units: units.map(cleanUnitFields),
+    specials,
     bonus
   }
 }

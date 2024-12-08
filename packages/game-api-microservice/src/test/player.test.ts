@@ -6,7 +6,7 @@ import UNIVERSE_TEST_MOCK from 'game-engine/dist/test/mocks/universeMocks'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
-import { NEW_PLAYER_TASK_TYPE, PENDING_TASK_STATUS } from 'game-engine/dist/models/TaskModel'
+import { NEW_PLAYER_TASK_TYPE, PENDING_TASK_STATUS } from 'game-engine/dist/types/ITask'
 import { PLAYER_TEST_1_PIRATE } from 'game-engine/dist/test/mocks/playerMocks'
 
 import { testServer } from './helpers/testServer'
@@ -51,7 +51,7 @@ describe('players task', () => {
 
     expect(taskCreated.data.username).toEqual(userData.username)
     expect(taskCreated.data.email).toEqual(userData.email)
-    expect(taskCreated.data.race).toEqual(race!._id.toString())
+    expect(taskCreated.data.raceId).toEqual(race!._id.toString())
 
     const newPlayerTask = await taskRepository.findNewPlayerTaskByUsername(
       userData.username,

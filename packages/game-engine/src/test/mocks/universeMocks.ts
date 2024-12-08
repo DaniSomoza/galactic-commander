@@ -1,4 +1,4 @@
-import { IUniverse } from '../../models/UniverseModel'
+import { IUniverse } from '../../types/IUniverse'
 
 const UNIVERSE_TEST_MOCK: IUniverse = {
   name: 'universe-test',

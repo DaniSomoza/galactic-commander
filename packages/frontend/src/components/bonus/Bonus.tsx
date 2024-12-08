@@ -10,7 +10,7 @@ import {
   numericBonusType,
   activatableBonusType
 } from 'game-engine/src/engine/bonus/computedBonus'
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { useTranslations } from '../../store/TranslationContext'
 import getBonusImage from '../../utils/getBonusImage'
