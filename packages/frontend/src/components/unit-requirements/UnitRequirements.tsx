@@ -23,7 +23,7 @@ function UnitRequirements({ requirements, isUnitAvailable }: UnitRequirementsPro
   const { translate } = useTranslations()
 
   return (
-    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }} variant="outlined">
       <Box paddingTop={1} paddingBottom={1} flexGrow={1}>
         <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
           {requirements.map(({ research, playerResearchLevel, level }) => {

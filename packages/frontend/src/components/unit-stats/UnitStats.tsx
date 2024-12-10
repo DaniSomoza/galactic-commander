@@ -53,7 +53,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
   const cargo = unit.stats.cargo * (cargoBonus / 100)
 
   return (
-    <Paper>
+    <Paper variant="outlined">
       <Stack direction={'row'} gap={1}>
         <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexBasis: '50%' }}>
           {/* Attack */}
@@ -94,10 +94,24 @@ function UnitStats({ unit, player }: UnitStatsProps) {
             </Tooltip>
           </ListItem>
 
+          <ListItem disablePadding>
+            <Tooltip
+              title={translate('GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST', unit.resourceCost)}
+              arrow
+            >
+              <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
+                <MonetizationOn fontSize="small" />
+                <Typography fontSize={14}>{formatNumber(unit.resourceCost)}</Typography>
+              </Stack>
+            </Tooltip>
+          </ListItem>
+        </List>
+
+        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexBasis: '50%' }}>
           {/* Speed */}
           <ListItem disablePadding>
             <Tooltip title={translate('SPEED_UNIT_TOOLTIP', speed, unit.stats.speed)} arrow>
-              <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
+              <Stack direction={'row'} gap={1} paddingRight={1} alignItems={'center'}>
                 <SpeedIcon
                   fontSize="small"
                   color={unit.type === 'SPACESHIP' ? 'inherit' : 'disabled'}
@@ -111,9 +125,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
               </Stack>
             </Tooltip>
           </ListItem>
-        </List>
 
-        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexBasis: '50%' }}>
           {/* Cargo */}
           <ListItem disablePadding>
             <Tooltip title={translate('CARGO_UNIT_TOOLTIP', cargo, unit.stats.cargo)} arrow>
@@ -188,18 +200,6 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                 >
                   {formatNumber(unit.stats.troopsCapacity, true)}
                 </Typography>
-              </Stack>
-            </Tooltip>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Tooltip
-              title={translate('GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST', unit.resourceCost)}
-              arrow
-            >
-              <Stack direction={'row'} gap={1} paddingRight={1} alignItems={'center'}>
-                <MonetizationOn fontSize="small" />
-                <Typography fontSize={14}>{formatNumber(unit.resourceCost)}</Typography>
               </Stack>
             </Tooltip>
           </ListItem>

@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
 import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
@@ -37,6 +38,9 @@ import UnitStats from '../unit-stats/UnitStats'
 import UnitRequirements from '../unit-requirements/UnitRequirements'
 import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
 import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
+import { usePlayerResources } from '../../store/PlayerResourcesContext'
+import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
+import { useTheme } from '../../store/ThemeContext'
 
 type BuildUnitDialogProps = {
   unitToBuild: UnitType
@@ -44,20 +48,40 @@ type BuildUnitDialogProps = {
   isOpen: boolean
 }
 
+const MAX_INPUT_AMOUNT = 10_000_000
+
 function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDialogProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
+
+  const { theme } = useTheme()
 
   const { translate } = useTranslations()
 
   const { selectedPlanet, player } = usePlayer()
 
+  const { resources } = usePlayerResources()
+
   // const { buildTroopsQueue, activeBuildTroopsCountdown, activeBuildTroops, starBuildUnits } =
   //   useBuildUnits()
 
-  const { starBuildUnits } = useBuildUnits()
+  const { starBuildUnits, activeBuildTroops } = useBuildUnits()
 
-  const hasEnoughResources = amount * unitToBuild.resourceCost <= selectedPlanet!.resources
+  const resourceCost = amount * unitToBuild.resourceCost
+  const currentPopulation = calculateCurrentPlayerPopulation(player!)
+  const predictedPopulation = currentPopulation + amount
+  const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
+  const currentEnergy = calculateCurrentPlayerEnergy(player!)
+  const predictedEnergy = currentEnergy * amount
+  const maxPlayerEnergy = calculateMaxPlayerEnergy(player!)
+
+  const selectedPlanetLabel = formatCoordinatesLabel(selectedPlanet!.coordinates)
+  const planetResources = resources[selectedPlanetLabel]
+
+  const isValidAmount = unitToBuild.isHero ? amount === 1 : amount >= 1
+  const hasEnoughResources = planetResources >= resourceCost
+  const isValidPopulation = maxPlayerPopulation >= predictedPopulation
+  const isValidEnergy = maxPlayerEnergy >= predictedEnergy
 
   // async function performUpdateBuildUnitsQueue() {
   //   setIsLoading(true)
@@ -98,8 +122,14 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
     unitToBuild
   )
 
-  // TODO: create a isValidAmount and only call setAmount if is valid
-  const isValidAmount = unitToBuild.isHero ? amount === 1 : amount >= 1
+  const error = getErrorLabel({
+    isValidAmount,
+    hasEnoughResources,
+    isValidPopulation,
+    isValidEnergy
+  })
+
+  const showErrorLabel = !!amount && !!error
 
   return (
     <Dialog onClose={handleClose} open={isOpen}>
@@ -122,94 +152,96 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
       <DialogContent dividers>
         <Stack direction={'row'} justifyContent={'center'}>
           <Box sx={{ position: 'relative' }}>
-            <Stack justifyContent="center" alignItems="center">
-              <Image
-                src={getUnitImage(unitToBuild.name)}
-                alt={translate(unitToBuild.name)}
-                height={'230px'}
-                width={'230px'}
-                border
-              />
+            <Paper variant="outlined">
+              <Stack justifyContent="center" alignItems="center">
+                <Image
+                  src={getUnitImage(unitToBuild.name)}
+                  alt={translate(unitToBuild.name)}
+                  height={'230px'}
+                  width={'230px'}
+                  border
+                />
 
-              {/* Unit name */}
-              <Box
-                position={'absolute'}
-                top={20}
-                padding={1}
-                maxWidth={'230px'}
-                sx={{ transform: 'translate(0, -50%)' }}
-              >
-                <Paper variant="outlined">
-                  <Typography
-                    variant="body1"
-                    fontSize={12}
-                    fontWeight={500}
-                    padding={0.4}
-                    paddingLeft={0.8}
-                    paddingRight={0.8}
-                    overflow={'hidden'}
-                    textOverflow="ellipsis"
-                  >
-                    {translate(unitToBuild.name)}
-                  </Typography>
-                </Paper>
-              </Box>
-
-              {/* Build unit time */}
-              <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                <Paper variant="outlined">
-                  <Tooltip
-                    title={translate(
-                      'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
-                      formatTimer(buildUnitDuration)
-                    )}
-                    arrow
-                  >
+                {/* Unit name */}
+                <Box
+                  position={'absolute'}
+                  top={20}
+                  padding={1}
+                  maxWidth={'230px'}
+                  sx={{ transform: 'translate(0, -50%)' }}
+                >
+                  <Paper variant="outlined">
                     <Typography
                       variant="body1"
-                      fontSize={13}
+                      fontSize={12}
                       fontWeight={500}
                       padding={0.4}
                       paddingLeft={0.8}
                       paddingRight={0.8}
+                      overflow={'hidden'}
+                      textOverflow="ellipsis"
                     >
-                      {formatTimer(buildUnitDuration)}
+                      {translate(unitToBuild.name)}
                     </Typography>
-                  </Tooltip>
-                </Paper>
-              </Box>
+                  </Paper>
+                </Box>
 
-              {/* Amount of units in this planet */}
-              <Box position={'absolute'} right={0} bottom={0} padding={1}>
-                <Paper variant="outlined">
-                  <Stack
-                    direction={'row'}
-                    alignItems={'center'}
-                    padding={0.4}
-                    paddingLeft={0}
-                    paddingRight={0.8}
-                  >
-                    {unitToBuild.isHero && <MilitaryTechIcon fontSize="small" />}
+                {/* Build unit time */}
+                <Box position={'absolute'} left={0} bottom={0} padding={1}>
+                  <Paper variant="outlined">
                     <Tooltip
                       title={translate(
-                        'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
-                        formatNumber(troopsInThisPlanet, true)
+                        'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
+                        formatTimer(buildUnitDuration)
                       )}
                       arrow
                     >
                       <Typography
-                        paddingLeft={unitToBuild.isHero ? 0 : 0.8}
                         variant="body1"
                         fontSize={13}
                         fontWeight={500}
+                        padding={0.4}
+                        paddingLeft={0.8}
+                        paddingRight={0.8}
                       >
-                        {formatNumber(troopsInThisPlanet)}
+                        {formatTimer(buildUnitDuration)}
                       </Typography>
                     </Tooltip>
-                  </Stack>
-                </Paper>
-              </Box>
-            </Stack>
+                  </Paper>
+                </Box>
+
+                {/* Amount of units in this planet */}
+                <Box position={'absolute'} right={0} bottom={0} padding={1}>
+                  <Paper variant="outlined">
+                    <Stack
+                      direction={'row'}
+                      alignItems={'center'}
+                      padding={0.4}
+                      paddingLeft={0}
+                      paddingRight={0.8}
+                    >
+                      {unitToBuild.isHero && <MilitaryTechIcon fontSize="small" />}
+                      <Tooltip
+                        title={translate(
+                          'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
+                          formatNumber(troopsInThisPlanet, true)
+                        )}
+                        arrow
+                      >
+                        <Typography
+                          paddingLeft={unitToBuild.isHero ? 0 : 0.8}
+                          variant="body1"
+                          fontSize={13}
+                          fontWeight={500}
+                        >
+                          {formatNumber(troopsInThisPlanet)}
+                        </Typography>
+                      </Tooltip>
+                    </Stack>
+                  </Paper>
+                </Box>
+              </Stack>
+            </Paper>
           </Box>
         </Stack>
 
@@ -227,121 +259,257 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
           </Box>
         </Stack>
 
-          <Stack
-            direction={'row'}
-            gap={2}
-            padding={1}
-            paddingTop={2}
-            justifyContent={'center'}
-            alignItems={'flex-end'}
-          >
-            <Box flexBasis={'20%'}>
-              <Paper variant='outlined'>
-                <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                  <MonetizationOn fontSize="small" />
+        <Stack direction={'row'} justifyContent={'space-between'} paddingTop={1} gap={1}>
+          <Box flexBasis={'50%'}>
+            <Paper>
+              <Box padding={1} paddingBottom={0} paddingTop={'10px'} minHeight={89}>
+                <TextField
+                  label={'Amount of units to build'}
+                  helperText={showErrorLabel ? error : ''}
+                  fullWidth
+                  placeholder="type the amount"
+                  error={showErrorLabel}
+                  value={amount || ''}
+                  onChange={(event) => {
+                    const value = Number(event.target.value)
+                    const isNaN = Number.isNaN(value)
 
-                  <Typography
-                    variant="body1"
-                    fontSize={12}
-                    padding={0.4}
-                    overflow={'hidden'}
-                    textOverflow="ellipsis"
-                    textAlign="center"
+                    if (!isNaN) {
+                      const isMax = value >= MAX_INPUT_AMOUNT
+
+                      setAmount(isMax ? MAX_INPUT_AMOUNT : value)
+                    }
+                  }}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <GroupIcon />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title={'max amount of units'} arrow placement="top">
+                            <Button
+                              aria-label={'max amount of units'}
+                              onClick={() =>
+                                setAmount(
+                                  getMaxAmountOfUnits({
+                                    unit: unitToBuild,
+                                    currentPopulation,
+                                    currentEnergy,
+                                    maxPlayerPopulation,
+                                    maxPlayerEnergy,
+                                    planetResources
+                                  })
+                                )
+                              }
+                              size="small"
+                            >
+                              MAX
+                            </Button>
+                          </Tooltip>
+                        </InputAdornment>
+                      )
+                    }
+                  }}
+                />
+              </Box>
+            </Paper>
+          </Box>
+
+          <Box flexBasis={'50%'}>
+            <Paper>
+              <Stack direction={'row'} justifyContent={'center'} padding={1} gap={0.5}>
+                <Stack flexBasis={'50%'} gap={0.5}>
+                  <Paper
+                    variant="outlined"
+                    sx={{ borderColor: isValidPopulation ? undefined : theme.palette.error.main }}
                   >
-                    {formatNumber(unitToBuild.resourceCost * amount, true)}
-                  </Typography>
-                </Stack>
-              </Paper>
-            </Box>
+                    <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+                      <GroupIcon fontSize="small" color={isValidPopulation ? 'inherit' : 'error'} />
 
-            <Box flexBasis={'20%'}>
-              <Paper>
-                <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                  <GroupIcon fontSize="small" />
+                      <Typography
+                        variant="body1"
+                        fontSize={12}
+                        padding={0.4}
+                        overflow={'hidden'}
+                        textOverflow="ellipsis"
+                        textAlign="center"
+                        color={isValidPopulation ? 'textPrimary' : 'error'}
+                      >
+                        {calculateCurrentPlayerPopulation(player!) + amount} /
+                        {formatNumber(calculateMaxPlayerPopulation(player!))}
+                      </Typography>
+                    </Stack>
+                  </Paper>
 
-                  <Typography
-                    variant="body1"
-                    fontSize={12}
-                    padding={0.4}
-                    overflow={'hidden'}
-                    textOverflow="ellipsis"
-                    textAlign="center"
+                  <Paper
+                    variant="outlined"
+                    sx={{ borderColor: isValidEnergy ? undefined : theme.palette.error.main }}
                   >
-                    {calculateCurrentPlayerPopulation(player!) + amount} /
-                    {formatNumber(calculateMaxPlayerPopulation(player!))}
-                  </Typography>
+                    <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+                      <BoltRoundedIcon
+                        fontSize="small"
+                        color={isValidEnergy ? 'inherit' : 'error'}
+                      />
+
+                      <Typography
+                        variant="body1"
+                        fontSize={12}
+                        padding={0.4}
+                        overflow={'hidden'}
+                        textOverflow="ellipsis"
+                        textAlign="center"
+                        color={isValidEnergy ? 'textPrimary' : 'error'}
+                      >
+                        {calculateCurrentPlayerEnergy(player!) + amount * unitToBuild.energyCost} /
+                        {formatNumber(calculateMaxPlayerEnergy(player!))}
+                      </Typography>
+                    </Stack>
+                  </Paper>
                 </Stack>
-              </Paper>
-            </Box>
 
-            <Box flexBasis={'20%'}>
-              <Paper>
-                <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                  <BoltRoundedIcon fontSize="small" />
-
-                  <Typography
-                    variant="body1"
-                    fontSize={12}
-                    padding={0.4}
-                    overflow={'hidden'}
-                    textOverflow="ellipsis"
-                    textAlign="center"
-                  >
-                    {calculateCurrentPlayerEnergy(player!) + amount * unitToBuild.energyCost} /
-                    {formatNumber(calculateMaxPlayerEnergy(player!))}
-                  </Typography>
-                </Stack>
-              </Paper>
-            </Box>
-
-            <Box flexBasis={'20%'}>
-              <Paper>
-                <Tooltip
-                  title={translate(
-                    'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
-                    formatTimer(buildUnitDuration * amount)
-                  )}
-                  arrow
-                >
-                  <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                    <AlarmIcon fontSize="small" />
-
-                    <Typography
-                      variant="body1"
-                      fontSize={12}
-                      padding={0.4}
-                      overflow={'hidden'}
-                      textOverflow="ellipsis"
-                      textAlign="center"
+                <Stack flexBasis={'50%'} gap={0.5}>
+                  <Paper variant="outlined">
+                    <Tooltip
+                      title={translate(
+                        'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
+                        formatTimer(buildUnitDuration * amount)
+                      )}
+                      arrow
                     >
-                      {formatTimer(buildUnitDuration * amount)}
-                    </Typography>
-                  </Stack>
-                </Tooltip>
-              </Paper>
-            </Box>
+                      <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+                        <AlarmIcon fontSize="small" />
 
-            <Box flexBasis={'20%'}>
-              <TextField
-                label={'Amount'}
-                value={amount}
-                onChange={(event) => setAmount(Number(event.target.value))}
-              />
-            </Box>
-          </Stack>
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          padding={0.4}
+                          overflow={'hidden'}
+                          textOverflow="ellipsis"
+                          textAlign="center"
+                        >
+                          {formatTimer(buildUnitDuration * amount)}
+                        </Typography>
+                      </Stack>
+                    </Tooltip>
+                  </Paper>
+
+                  <Paper
+                    variant="outlined"
+                    sx={{ borderColor: hasEnoughResources ? undefined : theme.palette.error.main }}
+                  >
+                    <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+                      <MonetizationOn
+                        fontSize="small"
+                        color={hasEnoughResources ? 'inherit' : 'error'}
+                      />
+
+                      <Typography
+                        variant="body1"
+                        fontSize={12}
+                        padding={0.4}
+                        overflow={'hidden'}
+                        textOverflow="ellipsis"
+                        textAlign="center"
+                        color={hasEnoughResources ? 'textPrimary' : 'error'}
+                      >
+                        {formatNumber(unitToBuild.resourceCost * amount, true)}
+                      </Typography>
+                    </Stack>
+                  </Paper>
+                </Stack>
+              </Stack>
+            </Paper>
+          </Box>
+        </Stack>
       </DialogContent>
 
       <DialogActions>
-        <Button
-          disabled={isLoading || !hasEnoughResources || !isValidAmount}
-          autoFocus
-          onClick={performStartBuildUnits}
-        >
-          Build Units
-        </Button>
+        <Tooltip title={'Add units to planet queue'} arrow>
+          <Button disabled={isLoading || !!error} autoFocus onClick={performStartBuildUnits}>
+            {activeBuildTroops ? 'Queue units' : 'Build Units'}
+          </Button>
+        </Tooltip>
       </DialogActions>
     </Dialog>
   )
 }
 
 export default BuildUnitsDialog
+
+function getErrorLabel({
+  isValidAmount,
+  hasEnoughResources,
+  isValidPopulation,
+  isValidEnergy
+}: {
+  isValidAmount: boolean
+  hasEnoughResources: boolean
+  isValidPopulation: boolean
+  isValidEnergy: boolean
+}): string {
+  if (!isValidAmount) {
+    return 'invalid amount'
+  }
+
+  if (!hasEnoughResources) {
+    return 'no enough resources'
+  }
+
+  if (!isValidPopulation) {
+    return 'no enough population'
+  }
+
+  if (!isValidEnergy) {
+    return 'no enough energy'
+  }
+
+  return ''
+}
+
+function getMaxAmountOfUnits({
+  unit,
+  currentPopulation,
+  currentEnergy,
+  maxPlayerPopulation,
+  maxPlayerEnergy,
+  planetResources
+}: {
+  unit: UnitType
+  currentPopulation: number
+  currentEnergy: number
+  maxPlayerPopulation: number
+  maxPlayerEnergy: number
+  planetResources: number
+}): number {
+  const { resourceCost, type, isHero, energyCost } = unit
+
+  if (isHero) {
+    return 1
+  }
+
+  const maxAmountOfUnitsBasedOnResources = planetResources / resourceCost
+
+  const hasEnergy = energyCost !== 0
+  const maxAmountOfUnitsBasedOnEnergy = hasEnergy
+    ? MAX_INPUT_AMOUNT
+    : maxPlayerEnergy / currentEnergy
+
+  const isTroop = type === 'TROOP'
+
+  if (isTroop) {
+    const maxAmountOfUnitsBasedOnPopulation = maxPlayerPopulation - currentPopulation
+
+    return Math.floor(
+      Math.min(
+        maxAmountOfUnitsBasedOnPopulation,
+        maxAmountOfUnitsBasedOnEnergy,
+        maxAmountOfUnitsBasedOnResources
+      )
+    )
+  }
+
+  return Math.floor(Math.min(maxAmountOfUnitsBasedOnEnergy, maxAmountOfUnitsBasedOnResources))
+}

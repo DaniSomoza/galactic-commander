@@ -17,7 +17,7 @@ function EnergyLabel() {
   const { player } = usePlayer()
 
   return (
-    <Paper>
+    <Paper variant="outlined">
       <Tooltip
         title={
           player
