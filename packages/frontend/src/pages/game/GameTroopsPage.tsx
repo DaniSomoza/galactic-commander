@@ -8,7 +8,6 @@ import Button from '@mui/material/Button'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
-import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 
@@ -17,14 +16,12 @@ import { useTranslations } from '../../store/TranslationContext'
 import Image from '../../components/image/Image'
 import Loader from '../../components/loader/Loader'
 import getUnitImage from '../../utils/getUnitImage'
-import formatTimer from '../../utils/formatTimer'
 import formatNumber from '../../utils/formatNumber'
-import millisToSeconds from '../../utils/millisToSeconds'
 import { useBuildUnits } from '../../store/buildUnitsContext'
 import UnitStats from '../../components/unit-stats/UnitStats'
-import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
-import BonusCards from '../../components/bonus-cards/BonusCards'
 import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
+import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
+import UnitBonus from '../../components/unit-bonus/UnitBonus'
 
 function GameTroopsPage() {
   const { translate } = useTranslations()
@@ -51,10 +48,6 @@ function GameTroopsPage() {
     <>
       <Stack direction={'column'} gap={2}>
         {units.map((unit) => {
-          const buildUnitBonus = computedBonus(player.perks, 'TROOPS_TRAINING_BONUS')
-
-          const buildUnitDuration = millisToSeconds(unit.buildBaseTime * (100 / buildUnitBonus))
-
           const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
 
           const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(player, selectedPlanet, unit)
@@ -98,30 +91,6 @@ function GameTroopsPage() {
                         </Paper>
                       </Box>
 
-                      {/* Build unit time */}
-                      <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                        <Paper variant="outlined">
-                          <Tooltip
-                            title={translate(
-                              'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
-                              formatTimer(buildUnitDuration)
-                            )}
-                            arrow
-                          >
-                            <Typography
-                              variant="body1"
-                              fontSize={13}
-                              fontWeight={500}
-                              padding={0.4}
-                              paddingLeft={0.8}
-                              paddingRight={0.8}
-                            >
-                              {formatTimer(buildUnitDuration)}
-                            </Typography>
-                          </Tooltip>
-                        </Paper>
-                      </Box>
-
                       {/* Amount of units in this planet */}
                       <Box position={'absolute'} right={0} bottom={0} padding={1}>
                         <Paper variant="outlined">
@@ -154,21 +123,31 @@ function GameTroopsPage() {
                       </Box>
                     </Stack>
                   </Box>
+
+                  <Box maxWidth={'230px'}>
+                    <Typography fontSize={12} padding={0.5}>
+                      {translate(unit.description)}
+                    </Typography>
+                  </Box>
                 </Box>
 
-                <Stack padding={1} flexGrow={1}>
+                <Stack padding={1} flexGrow={1} gap={1}>
                   <Stack direction={'row'} gap={1}>
                     {/* Stats Part */}
-                    <Box flexBasis={'50%'}>
+                    <Box flexBasis={'70%'}>
                       <UnitStats unit={unit} player={player} />
                     </Box>
+                  </Stack>
 
-                    {/* Unit Requirements Part */}
-                    <Box flexBasis={'50%'}>
-                      <UnitRequirements
-                        requirements={requirements}
-                        isUnitAvailable={isUnitAvailable}
-                      />
+                  <Stack direction={'row'} gap={1} justifyContent={'center'}>
+                    {/* Requirements Part */}
+                    <Box flexGrow={1}>
+                      <UnitRequirements requirements={requirements} />
+                    </Box>
+
+                    <Box flexGrow={1}>
+                      {/* Unit bonus */}
+                      <UnitBonus bonus={unit.bonus} />
                     </Box>
                   </Stack>
 
@@ -178,12 +157,8 @@ function GameTroopsPage() {
                     justifyContent={'flex-end'}
                     alignItems={'flex-end'}
                     gap={1}
+                    paddingTop={1}
                   >
-                    {/* Unit bonus */}
-                    <Stack flexGrow={1} direction={'row'} gap={1}>
-                      <BonusCards bonus={unit.bonus} />
-                    </Stack>
-
                     <Button variant="outlined" size="small">
                       {translate('GAME_BUILD_UNITS_PAGE_BUILD_UNITS_SCHEDULE_BUTTON')}
                     </Button>

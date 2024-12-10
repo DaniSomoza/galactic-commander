@@ -14,18 +14,23 @@ import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive'
 import AirplanemodeInactiveIcon from '@mui/icons-material/AirplanemodeInactive'
 import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import MonetizationOn from '@mui/icons-material/MonetizationOn'
+import DiamondIcon from '@mui/icons-material/Diamond'
 import BugReportIcon from '@mui/icons-material/BugReport'
-import ChurchIcon from '@mui/icons-material/Church'
 import ParaglidingIcon from '@mui/icons-material/Paragliding'
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice'
+import GroupIcon from '@mui/icons-material/Group'
+import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
+import AlarmIcon from '@mui/icons-material/Alarm'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import { PlayerType } from 'game-api-microservice/src/types/Player'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 
 import { useTranslations } from '../../store/TranslationContext'
+import { useTheme } from '../../store/ThemeContext'
 import formatNumber from '../../utils/formatNumber'
+import formatTimer from '../../utils/formatTimer'
+import millisToSeconds from '../../utils/millisToSeconds'
 
 type UnitStatsProps = {
   unit: UnitType
@@ -36,6 +41,7 @@ type UnitStatsProps = {
 
 function UnitStats({ unit, player }: UnitStatsProps) {
   const { translate } = useTranslations()
+  const { theme } = useTheme()
 
   const attackBonus = computedBonus(player.perks, 'TROOPS_ATTACK_BONUS')
   const attack = unit.stats.attack * (attackBonus / 100)
@@ -52,16 +58,20 @@ function UnitStats({ unit, player }: UnitStatsProps) {
   const cargoBonus = computedBonus(player.perks, 'FLEET_CARGO_BONUS')
   const cargo = unit.stats.cargo * (cargoBonus / 100)
 
+  const buildUnitBonus = computedBonus(player!.perks, 'TROOPS_TRAINING_BONUS')
+
+  const buildUnitDuration = millisToSeconds(unit.buildBaseTime * (100 / buildUnitBonus))
+
   return (
     <Paper variant="outlined">
       <Stack direction={'row'} gap={1}>
-        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexBasis: '50%' }}>
+        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexGrow: 1 }}>
           {/* Attack */}
           <ListItem disablePadding>
             <Tooltip title={translate('ATTACK_UNIT_TOOLTIP', attack, unit.stats.attack)} arrow>
               <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
                 <GpsFixedIcon fontSize="small" />
-                <Typography fontSize={14}>{formatNumber(attack, true)}</Typography>
+                <Typography fontSize={12}>{formatNumber(attack, true)}</Typography>
               </Stack>
             </Tooltip>
           </ListItem>
@@ -71,7 +81,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
             <Tooltip title={translate('HEALTH_UNIT_TOOLTIP', health, unit.stats.health)} arrow>
               <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
                 <FavoriteIcon fontSize="small" />
-                <Typography fontSize={14}>{formatNumber(health, true)}</Typography>
+                <Typography fontSize={12}>{formatNumber(health, true)}</Typography>
               </Stack>
             </Tooltip>
           </ListItem>
@@ -85,7 +95,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                   color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
                 />
                 <Typography
-                  fontSize={14}
+                  fontSize={12}
                   color={unit.type === 'SPACESHIP' && unit.stats.shield ? 'action' : '#ffffff4d'}
                 >
                   {formatNumber(shield, true)}
@@ -94,30 +104,16 @@ function UnitStats({ unit, player }: UnitStatsProps) {
             </Tooltip>
           </ListItem>
 
-          <ListItem disablePadding>
-            <Tooltip
-              title={translate('GAME_BUILD_UNITS_PAGE_BUILD_RESOURCE_COST', unit.resourceCost)}
-              arrow
-            >
-              <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
-                <MonetizationOn fontSize="small" />
-                <Typography fontSize={14}>{formatNumber(unit.resourceCost)}</Typography>
-              </Stack>
-            </Tooltip>
-          </ListItem>
-        </List>
-
-        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1, flexBasis: '50%' }}>
           {/* Speed */}
           <ListItem disablePadding>
             <Tooltip title={translate('SPEED_UNIT_TOOLTIP', speed, unit.stats.speed)} arrow>
-              <Stack direction={'row'} gap={1} paddingRight={1} alignItems={'center'}>
+              <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
                 <SpeedIcon
                   fontSize="small"
                   color={unit.type === 'SPACESHIP' ? 'inherit' : 'disabled'}
                 />
                 <Typography
-                  fontSize={14}
+                  fontSize={12}
                   color={unit.type === 'SPACESHIP' && unit.stats.speed ? 'action' : '#ffffff4d'}
                 >
                   {formatNumber(speed, true)}
@@ -125,7 +121,16 @@ function UnitStats({ unit, player }: UnitStatsProps) {
               </Stack>
             </Tooltip>
           </ListItem>
+        </List>
 
+        <List
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            flexGrow: 1
+          }}
+        >
           {/* Cargo */}
           <ListItem disablePadding>
             <Tooltip title={translate('CARGO_UNIT_TOOLTIP', cargo, unit.stats.cargo)} arrow>
@@ -135,7 +140,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                   color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
                 />
                 <Typography
-                  fontSize={14}
+                  fontSize={12}
                   color={unit.type === 'SPACESHIP' && unit.stats.cargo ? 'action' : '#ffffff4d'}
                 >
                   {formatNumber(cargo, true)}
@@ -164,7 +169,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                   />
                 )}
                 <Typography
-                  fontSize={14}
+                  fontSize={12}
                   color={
                     unit.type === 'SPACESHIP' && unit.stats.starFighterCapacity
                       ? 'action'
@@ -193,7 +198,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                   color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
                 />
                 <Typography
-                  fontSize={14}
+                  fontSize={12}
                   color={
                     unit.type === 'SPACESHIP' && unit.stats.troopsCapacity ? 'action' : '#ffffff4d'
                   }
@@ -204,39 +209,108 @@ function UnitStats({ unit, player }: UnitStatsProps) {
             </Tooltip>
           </ListItem>
         </List>
+
+        {/* Special traits */}
+        <List
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            paddingRight: 1,
+            paddingLeft: 1,
+            borderLeft: `1px solid ${theme.palette.divider}`
+          }}
+        >
+          <ListItem disablePadding>
+            <Tooltip title={translate('INVISIBLE_UNIT_TOOLTIP')} arrow>
+              <VisibilityOffIcon
+                fontSize="small"
+                color={unit.isInvisible ? 'success' : 'disabled'}
+              />
+            </Tooltip>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Tooltip title={translate('ORGANIC_UNIT_TOOLTIP')} arrow>
+              <BugReportIcon fontSize="small" color={unit.isOrganic ? 'success' : 'disabled'} />
+            </Tooltip>
+          </ListItem>
+
+          {/* <ListItem disablePadding>
+            <Tooltip title={translate('NO_CAPTURABLE_UNIT_TOOLTIP')} arrow>
+              <ChurchIcon fontSize="small" color={!unit.isCapturable ? 'success' : 'disabled'} />
+            </Tooltip>
+          </ListItem> */}
+
+          <ListItem disablePadding>
+            <Tooltip title={translate('AIRBORNE_UNIT_TOOLTIP')} arrow>
+              <ParaglidingIcon fontSize="small" color={unit.isAirborne ? 'success' : 'disabled'} />
+            </Tooltip>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <Tooltip title={translate('SHIELD_PIERCING_UNIT_TOOLTIP')} arrow>
+              <LocalPoliceIcon
+                fontSize="small"
+                color={unit.hasShieldPiercing ? 'success' : 'disabled'}
+              />
+            </Tooltip>
+          </ListItem>
+        </List>
       </Stack>
 
       <Divider />
 
-      {/* Special traits */}
-      <Stack direction={'row'} gap={1} padding={1}>
-        {hasSpecialTraits(unit) ? (
-          <>
-            {unit.isInvisible && <VisibilityOffIcon fontSize="small" />}
-            {unit.isOrganic && <BugReportIcon fontSize="small" />}
-            {!unit.isCapturable && <ChurchIcon fontSize="small" />}
-            {unit.isAirborne && <ParaglidingIcon fontSize="small" />}
-            {unit.hasShieldPiercing && <LocalPoliceIcon fontSize="small" />}
-          </>
-        ) : (
-          <Typography variant="caption" color="#ffffff4d">
-            {/* TODO: Add translations and tooltip */}
-            Unit with no especial traits.
-          </Typography>
-        )}
-      </Stack>
+      {/* Unit Cost */}
+      <List
+        sx={{ display: 'flex', flexDirection: 'row', padding: 1, justifyContent: 'space-between' }}
+      >
+        {/* Population cost */}
+        <ListItem disablePadding sx={{ width: 'auto' }}>
+          <Tooltip title={translate('TROOP_UNIT_POPULATION_COST_TOOLTIP')} arrow>
+            <Stack direction={'row'} gap={0.5} alignItems={'center'}>
+              <GroupIcon fontSize="small" color={unit.type == 'TROOP' ? 'action' : 'disabled'} />
+              <Typography fontSize={12} color={unit.type == 'TROOP' ? 'action' : '#ffffff4d'}>
+                {unit.type == 'TROOP' ? 1 : 0}
+              </Typography>
+            </Stack>
+          </Tooltip>
+        </ListItem>
+
+        {/* Energy cost */}
+        <ListItem disablePadding sx={{ width: 'auto' }}>
+          <Tooltip title={translate('TROOP_UNIT_ENERGY_COST_TOOLTIP')} arrow>
+            <Stack direction={'row'} gap={0.5} paddingLeft={1} alignItems={'center'}>
+              <BoltRoundedIcon fontSize="small" color={unit.energyCost ? 'action' : 'disabled'} />
+              <Typography fontSize={12} color={unit.energyCost ? 'action' : '#ffffff4d'}>
+                {formatNumber(unit.energyCost, true)}
+              </Typography>
+            </Stack>
+          </Tooltip>
+        </ListItem>
+
+        {/* Resource cost */}
+        <ListItem disablePadding sx={{ width: 'auto' }}>
+          <Tooltip title={translate('TROOP_UNIT_RESOURCES_COST_TOOLTIP')} arrow>
+            <Stack direction={'row'} gap={0.5} paddingLeft={1} alignItems={'center'}>
+              <DiamondIcon fontSize="small" />
+              <Typography fontSize={12}>{formatNumber(unit.resourceCost, true)}</Typography>
+            </Stack>
+          </Tooltip>
+        </ListItem>
+
+        {/* Time */}
+        <ListItem disablePadding sx={{ width: 'auto' }}>
+          <Tooltip title={translate('TROOP_UNIT_TIME_COST_TOOLTIP')} arrow>
+            <Stack direction={'row'} gap={0.5} paddingLeft={1} alignItems={'center'}>
+              <AlarmIcon fontSize="small" />
+              <Typography fontSize={12}>{formatTimer(buildUnitDuration)}</Typography>
+            </Stack>
+          </Tooltip>
+        </ListItem>
+      </List>
     </Paper>
   )
 }
 
 export default UnitStats
-
-function hasSpecialTraits(unit: UnitType) {
-  return (
-    unit.isInvisible ||
-    unit.isOrganic ||
-    !unit.isCapturable ||
-    unit.isAirborne ||
-    unit.hasShieldPiercing
-  )
-}

@@ -4,7 +4,6 @@ import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 
@@ -14,12 +13,11 @@ import { useTranslations } from '../../store/TranslationContext'
 
 type UnitRequirementsProps = {
   requirements: UnitRequirement[]
-  isUnitAvailable: boolean
 }
 
 // TODO: ADD TRANSLATIONS 2
 
-function UnitRequirements({ requirements, isUnitAvailable }: UnitRequirementsProps) {
+function UnitRequirements({ requirements }: UnitRequirementsProps) {
   const { translate } = useTranslations()
 
   return (
@@ -48,19 +46,6 @@ function UnitRequirements({ requirements, isUnitAvailable }: UnitRequirementsPro
           })}
         </List>
       </Box>
-
-      <Divider />
-
-      <Stack direction={'row'} gap={1} padding={1}>
-        <Typography
-          lineHeight={'auto'}
-          variant="caption"
-          color={isUnitAvailable ? 'success' : 'error'}
-        >
-          {/* TODO: Add translations and tooltip */}
-          {isUnitAvailable ? 'Unit available' : 'Unit not available'}
-        </Typography>
-      </Stack>
     </Paper>
   )
 }

@@ -16,13 +16,12 @@ import InputAdornment from '@mui/material/InputAdornment'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
-import MonetizationOn from '@mui/icons-material/MonetizationOn'
+import DiamondIcon from '@mui/icons-material/Diamond'
 import GroupIcon from '@mui/icons-material/Group'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
-import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculateCurrentPlayerEnergy'
 
@@ -35,7 +34,6 @@ import formatNumber from '../../utils/formatNumber'
 import millisToSeconds from '../../utils/millisToSeconds'
 import Image from '../image/Image'
 import UnitStats from '../unit-stats/UnitStats'
-import UnitRequirements from '../unit-requirements/UnitRequirements'
 import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
 import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
@@ -109,8 +107,6 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   function handleClose() {
     setUnitToBuild(undefined)
   }
-
-  const { isUnitAvailable, requirements } = checkUnitRequirements(unitToBuild, player!)
 
   const buildUnitBonus = computedBonus(player!.perks, 'TROOPS_TRAINING_BONUS')
 
@@ -247,15 +243,10 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
         <Typography paddingTop={2}>{translate(unitToBuild.description)}</Typography>
 
-        <Stack direction={'row'} gap={1} paddingTop={2}>
+        <Stack direction={'row'} gap={1} paddingTop={2} justifyContent={'center'}>
           {/* Stats Part */}
           <Box flexBasis={'50%'}>
             <UnitStats unit={unitToBuild} player={player!} />
-          </Box>
-
-          {/* Unit Requirements Part */}
-          <Box flexBasis={'50%'}>
-            <UnitRequirements requirements={requirements} isUnitAvailable={isUnitAvailable} />
           </Box>
         </Stack>
 
@@ -401,7 +392,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                     sx={{ borderColor: hasEnoughResources ? undefined : theme.palette.error.main }}
                   >
                     <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                      <MonetizationOn
+                      <DiamondIcon
                         fontSize="small"
                         color={hasEnoughResources ? 'inherit' : 'error'}
                       />
