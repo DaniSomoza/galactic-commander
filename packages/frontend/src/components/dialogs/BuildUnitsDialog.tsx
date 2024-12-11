@@ -274,6 +274,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           <Tooltip title={'max amount of units'} arrow placement="top">
                             <Button
                               aria-label={'max amount of units'}
+                              variant="outlined"
                               onClick={() =>
                                 setAmount(
                                   getMaxAmountOfUnits({
