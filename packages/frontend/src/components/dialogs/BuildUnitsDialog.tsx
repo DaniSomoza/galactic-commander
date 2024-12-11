@@ -24,6 +24,9 @@ import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculateCurrentPlayerEnergy'
+import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
+import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
+import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
 
 import { useBuildUnits } from '../../store/buildUnitsContext'
 import { usePlayer } from '../../store/PlayerContext'
@@ -34,11 +37,11 @@ import formatNumber from '../../utils/formatNumber'
 import millisToSeconds from '../../utils/millisToSeconds'
 import Image from '../image/Image'
 import UnitStats from '../unit-stats/UnitStats'
-import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
-import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 import { useTheme } from '../../store/ThemeContext'
+import UnitRequirements from '../unit-requirements/UnitRequirements'
+import UnitBonus from '../unit-bonus/UnitBonus'
 
 type BuildUnitDialogProps = {
   unitToBuild: UnitType
@@ -80,6 +83,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   const hasEnoughResources = planetResources >= resourceCost
   const isValidPopulation = maxPlayerPopulation >= predictedPopulation
   const isValidEnergy = maxPlayerEnergy >= predictedEnergy
+
+  const { requirements } = checkUnitRequirements(unitToBuild, player!)
 
   // async function performUpdateBuildUnitsQueue() {
   //   setIsLoading(true)
@@ -146,113 +151,99 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
       </IconButton>
 
       <DialogContent dividers>
-        <Stack direction={'row'} justifyContent={'center'}>
-          <Box sx={{ position: 'relative' }}>
-            <Paper variant="outlined">
-              <Stack justifyContent="center" alignItems="center">
-                <Image
-                  src={getUnitImage(unitToBuild.name)}
-                  alt={translate(unitToBuild.name)}
-                  height={'230px'}
-                  width={'230px'}
-                  border
-                />
+        <Paper sx={{ padding: 1 }}>
+          <Stack direction={'row'} justifyContent={'center'}>
+            <Box sx={{ position: 'relative' }}>
+              <Paper variant="outlined">
+                <Stack justifyContent="center" alignItems="center">
+                  <Image
+                    src={getUnitImage(unitToBuild.name)}
+                    alt={translate(unitToBuild.name)}
+                    height={'230px'}
+                    width={'230px'}
+                    border
+                  />
 
-                {/* Unit name */}
-                <Box
-                  position={'absolute'}
-                  top={20}
-                  padding={1}
-                  maxWidth={'230px'}
-                  sx={{ transform: 'translate(0, -50%)' }}
-                >
-                  <Paper variant="outlined">
-                    <Typography
-                      variant="body1"
-                      fontSize={12}
-                      fontWeight={500}
-                      padding={0.4}
-                      paddingLeft={0.8}
-                      paddingRight={0.8}
-                      overflow={'hidden'}
-                      textOverflow="ellipsis"
-                    >
-                      {translate(unitToBuild.name)}
-                    </Typography>
-                  </Paper>
-                </Box>
-
-                {/* Build unit time */}
-                <Box position={'absolute'} left={0} bottom={0} padding={1}>
-                  <Paper variant="outlined">
-                    <Tooltip
-                      title={translate(
-                        'GAME_BUILD_UNITS_PAGE_BUILD_DURATION',
-                        formatTimer(buildUnitDuration)
-                      )}
-                      arrow
-                    >
+                  {/* Unit name */}
+                  <Box
+                    position={'absolute'}
+                    top={20}
+                    padding={1}
+                    maxWidth={'230px'}
+                    sx={{ transform: 'translate(0, -50%)' }}
+                  >
+                    <Paper variant="outlined">
                       <Typography
                         variant="body1"
-                        fontSize={13}
+                        fontSize={12}
                         fontWeight={500}
                         padding={0.4}
                         paddingLeft={0.8}
                         paddingRight={0.8}
+                        overflow={'hidden'}
+                        textOverflow="ellipsis"
                       >
-                        {formatTimer(buildUnitDuration)}
+                        {translate(unitToBuild.name)}
                       </Typography>
-                    </Tooltip>
-                  </Paper>
-                </Box>
+                    </Paper>
+                  </Box>
 
-                {/* Amount of units in this planet */}
-                <Box position={'absolute'} right={0} bottom={0} padding={1}>
-                  <Paper variant="outlined">
-                    <Stack
-                      direction={'row'}
-                      alignItems={'center'}
-                      padding={0.4}
-                      paddingLeft={0}
-                      paddingRight={0.8}
-                    >
-                      {unitToBuild.isHero && <MilitaryTechIcon fontSize="small" />}
-                      <Tooltip
-                        title={translate(
-                          'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
-                          formatNumber(troopsInThisPlanet, true)
-                        )}
-                        arrow
+                  {/* Amount of units in this planet */}
+                  <Box position={'absolute'} right={0} bottom={0} padding={1}>
+                    <Paper variant="outlined">
+                      <Stack
+                        direction={'row'}
+                        alignItems={'center'}
+                        padding={0.4}
+                        paddingLeft={0}
+                        paddingRight={0.8}
                       >
-                        <Typography
-                          paddingLeft={unitToBuild.isHero ? 0 : 0.8}
-                          variant="body1"
-                          fontSize={13}
-                          fontWeight={500}
+                        {unitToBuild.isHero && <MilitaryTechIcon fontSize="small" />}
+                        <Tooltip
+                          title={translate(
+                            'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
+                            formatNumber(troopsInThisPlanet, true)
+                          )}
+                          arrow
                         >
-                          {formatNumber(troopsInThisPlanet)}
-                        </Typography>
-                      </Tooltip>
-                    </Stack>
-                  </Paper>
-                </Box>
-              </Stack>
-            </Paper>
-          </Box>
-        </Stack>
+                          <Typography
+                            paddingLeft={unitToBuild.isHero ? 0 : 0.8}
+                            variant="body1"
+                            fontSize={13}
+                            fontWeight={500}
+                          >
+                            {formatNumber(troopsInThisPlanet)}
+                          </Typography>
+                        </Tooltip>
+                      </Stack>
+                    </Paper>
+                  </Box>
+                </Stack>
+              </Paper>
+            </Box>
+          </Stack>
 
-        <Typography paddingTop={2}>{translate(unitToBuild.description)}</Typography>
+          <Typography fontSize={14} paddingTop={1}>
+            {translate(unitToBuild.description)}
+          </Typography>
 
-        <Stack direction={'row'} gap={1} paddingTop={2} justifyContent={'center'}>
-          {/* Stats Part */}
-          <Box flexBasis={'50%'}>
-            <UnitStats unit={unitToBuild} player={player!} />
-          </Box>
-        </Stack>
+          <Stack direction={'row'} gap={1} paddingTop={1} justifyContent={'center'}>
+            {/* Unit bonus */}
+            <UnitBonus bonus={unitToBuild.bonus} />
 
-        <Stack direction={'row'} justifyContent={'space-between'} paddingTop={1} gap={1}>
-          <Box flexBasis={'50%'}>
-            <Paper>
+            {/* Requirements Part */}
+            <UnitRequirements requirements={requirements} />
+          </Stack>
+
+          <Stack direction={'row'} gap={1} paddingTop={1} justifyContent={'center'}>
+            {/* Stats Part */}
+            <Box flexBasis={'50%'}>
+              <UnitStats unit={unitToBuild} player={player!} />
+            </Box>
+          </Stack>
+
+          <Stack direction={'row'} justifyContent={'space-between'} paddingTop={1} gap={1}>
+            <Box flexBasis={'50%'}>
               <Box padding={1} paddingBottom={0} paddingTop={'10px'} minHeight={89}>
                 <TextField
                   label={'Amount of units to build'}
@@ -306,11 +297,9 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                   }}
                 />
               </Box>
-            </Paper>
-          </Box>
+            </Box>
 
-          <Box flexBasis={'50%'}>
-            <Paper>
+            <Box flexBasis={'50%'}>
               <Stack direction={'row'} justifyContent={'center'} padding={1} gap={0.5}>
                 <Stack flexBasis={'50%'} gap={0.5}>
                   <Paper
@@ -389,7 +378,9 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
                   <Paper
                     variant="outlined"
-                    sx={{ borderColor: hasEnoughResources ? undefined : theme.palette.error.main }}
+                    sx={{
+                      borderColor: hasEnoughResources ? undefined : theme.palette.error.main
+                    }}
                   >
                     <Stack direction={'row'} padding={0.5} alignItems={'center'}>
                       <DiamondIcon
@@ -412,9 +403,9 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                   </Paper>
                 </Stack>
               </Stack>
-            </Paper>
-          </Box>
-        </Stack>
+            </Box>
+          </Stack>
+        </Paper>
       </DialogContent>
 
       <DialogActions>

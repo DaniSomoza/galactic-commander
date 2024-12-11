@@ -42,7 +42,7 @@ function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: Bo
         <Tooltip
           title={
             <div>
-              {translate(bono, bonusLabel)}
+              {translate(`${bono}_TOOLTIP`, bonusLabel)}
 
               {showSources && (
                 <Stack direction={'row'} gap={1} justifyContent="center" alignItems="center">

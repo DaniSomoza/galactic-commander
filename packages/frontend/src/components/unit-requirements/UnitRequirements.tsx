@@ -22,7 +22,7 @@ function UnitRequirements({ requirements }: UnitRequirementsProps) {
 
   return (
     <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }} variant="outlined">
-      <Box paddingTop={1} paddingBottom={1} flexGrow={1}>
+      <Box padding={1} flexGrow={1}>
         <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
           {requirements.map(({ research, playerResearchLevel, level }) => {
             const isResearchCompleted = playerResearchLevel >= level
@@ -34,7 +34,7 @@ function UnitRequirements({ requirements }: UnitRequirementsProps) {
             return (
               <ListItem disablePadding key={research.name}>
                 <Tooltip title={translate('ATTACK_UNIT_TOOLTIP')} arrow>
-                  <Stack direction={'row'} gap={0.5} paddingLeft={1} alignItems={'center'}>
+                  <Stack direction={'row'} gap={0.5} alignItems={'center'}>
                     {isResearchCompleted && <CheckCircleIcon fontSize="small" color={color} />}
                     <Typography fontSize={12} color={color}>
                       {label}

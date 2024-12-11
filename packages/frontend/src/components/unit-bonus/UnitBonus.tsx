@@ -10,19 +10,9 @@ type UnitBonusProps = {
 }
 
 function UnitBonus({ bonus }: UnitBonusProps) {
-  console.log('bonus: ', bonus)
-
   const { translate } = useTranslations()
 
-  const mockedBonus = {
-    'Ataque de tropas ': 10,
-    'Defensa de tropas ': 10,
-    'Escudos de tropas ': 20
-  }
-
-  // TODO: implement this!
-
-  const hasBonus = Object.keys(mockedBonus).length > 0
+  const hasBonus = Object.keys(bonus).length > 0
 
   if (!hasBonus) {
     return null
@@ -30,9 +20,9 @@ function UnitBonus({ bonus }: UnitBonusProps) {
 
   return (
     <Paper variant="outlined" sx={{ padding: 1 }}>
-      {Object.keys(mockedBonus).map((bono) => (
-        <Typography fontSize={14} color="success">
-          +{mockedBonus[bono]}% {translate(bono)}
+      {Object.keys(bonus).map((bono) => (
+        <Typography fontSize={12} fontWeight={500} color="success">
+          {translate(bono, bonus[bono as keyof UnitType['bonus']] as number)}
         </Typography>
       ))}
     </Paper>

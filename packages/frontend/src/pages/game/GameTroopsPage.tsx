@@ -124,30 +124,23 @@ function GameTroopsPage() {
                     </Stack>
                   </Box>
 
-                  <Box maxWidth={'230px'}>
-                    <Typography fontSize={12} padding={0.5}>
-                      {translate(unit.description)}
-                    </Typography>
-                  </Box>
+                  <Typography maxWidth={'230px'} fontSize={12} padding={0.5}>
+                    {translate(unit.description)}
+                  </Typography>
                 </Box>
 
-                <Stack padding={1} flexGrow={1} gap={1}>
+                <Stack padding={1} flexGrow={1}>
                   <Stack direction={'row'} gap={1}>
+                    {/* Unit bonus */}
+                    <UnitBonus bonus={unit.bonus} />
+                    {/* Requirements Part */}
+                    <UnitRequirements requirements={requirements} />
+                  </Stack>
+
+                  <Stack direction={'row'} paddingTop={1}>
                     {/* Stats Part */}
                     <Box flexBasis={'70%'}>
                       <UnitStats unit={unit} player={player} />
-                    </Box>
-                  </Stack>
-
-                  <Stack direction={'row'} gap={1} justifyContent={'center'}>
-                    {/* Requirements Part */}
-                    <Box flexGrow={1}>
-                      <UnitRequirements requirements={requirements} />
-                    </Box>
-
-                    <Box flexGrow={1}>
-                      {/* Unit bonus */}
-                      <UnitBonus bonus={unit.bonus} />
                     </Box>
                   </Stack>
 
