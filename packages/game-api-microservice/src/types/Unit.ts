@@ -46,6 +46,7 @@ type UnitSubtypes =
 
 export type BuildUnitsType = {
   unitId: string
+  unitName: string
   unitType: UnitTypes
   amount: number
   executeTaskAt: number

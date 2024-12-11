@@ -7,6 +7,7 @@ import { IResearchDocument } from './ResearchModel'
 export const BuildUnitsSchema = new Schema(
   {
     unitId: { type: String, required: true },
+    unitName: { type: String, required: true },
     unitType: { type: String, required: true },
     amount: { type: Number, required: true },
     executeTaskAt: { type: Number, required: true },

@@ -147,6 +147,7 @@ async function processStartBuildUnitsTask(
 
   planet.unitBuild[buildUnitsType[unit.type]].activeBuild = {
     unitId: unit._id.toString(),
+    unitName: unit.name,
     unitType: unit.type,
     amount: task.data.build.amount,
     taskId: newTask._id.toString(),

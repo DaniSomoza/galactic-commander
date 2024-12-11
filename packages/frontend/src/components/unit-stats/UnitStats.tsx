@@ -21,6 +21,7 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice'
 import GroupIcon from '@mui/icons-material/Group'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import { PlayerType } from 'game-api-microservice/src/types/Player'
@@ -265,6 +266,17 @@ function UnitStats({ unit, player }: UnitStatsProps) {
       <List
         sx={{ display: 'flex', flexDirection: 'row', padding: 1, justifyContent: 'space-between' }}
       >
+        {/* is Hero label */}
+        {unit.isHero && (
+          <ListItem disablePadding sx={{ width: 'auto' }}>
+            <Tooltip title={translate('UNIT_HERO_TOOLTIP')} arrow>
+              <Stack direction={'row'} gap={0.5} alignItems={'center'}>
+                <MilitaryTechIcon fontSize="small" />
+              </Stack>
+            </Tooltip>
+          </ListItem>
+        )}
+
         {/* Population cost */}
         <ListItem disablePadding sx={{ width: 'auto' }}>
           <Tooltip title={translate('TROOP_UNIT_POPULATION_COST_TOOLTIP')} arrow>

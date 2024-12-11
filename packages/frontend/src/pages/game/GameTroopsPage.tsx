@@ -6,6 +6,7 @@ import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import GroupIcon from '@mui/icons-material/Group'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
@@ -17,7 +18,6 @@ import Image from '../../components/image/Image'
 import Loader from '../../components/loader/Loader'
 import getUnitImage from '../../utils/getUnitImage'
 import formatNumber from '../../utils/formatNumber'
-import { useBuildUnits } from '../../store/buildUnitsContext'
 import UnitStats from '../../components/unit-stats/UnitStats'
 import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
 import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
@@ -29,12 +29,6 @@ function GameTroopsPage() {
   const [unitToBuild, setUnitToBuild] = useState<UnitType>()
 
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
-
-  const { buildTroopsQueue, activeBuildTroopsCountdown, activeBuildTroops } = useBuildUnits()
-
-  console.log('buildTroopsQueue: ', buildTroopsQueue)
-  console.log('activeBuildTroopsCountdown: ', activeBuildTroopsCountdown)
-  console.log('activeBuildTroops: ', activeBuildTroops)
 
   const units = player && selectedPlanet ? [...selectedPlanet.units, ...player.race.units] : []
 
@@ -76,63 +70,65 @@ function GameTroopsPage() {
                         sx={{ transform: 'translate(0, -50%)' }}
                       >
                         <Paper variant="outlined">
-                          <Typography
-                            variant="body1"
-                            fontSize={12}
-                            fontWeight={500}
+                          <Stack
+                            direction={'row'}
+                            gap={0.5}
                             padding={0.4}
-                            paddingLeft={0.8}
+                            paddingLeft={0.6}
                             paddingRight={0.8}
-                            overflow={'hidden'}
-                            textOverflow="ellipsis"
+                            alignItems={'center'}
                           >
-                            {translate(unit.name)}
-                          </Typography>
+                            {unit.isHero && <MilitaryTechIcon fontSize="small" />}
+                            <Typography variant="body1" fontSize={13}>
+                              {translate(unit.name)}
+                            </Typography>
+                          </Stack>
                         </Paper>
                       </Box>
 
                       {/* Amount of units in this planet */}
                       <Box position={'absolute'} right={0} bottom={0} padding={1}>
                         <Paper variant="outlined">
-                          <Stack
-                            direction={'row'}
-                            alignItems={'center'}
-                            padding={0.4}
-                            paddingLeft={0}
-                            paddingRight={0.8}
+                          <Tooltip
+                            title={translate(
+                              'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
+                              formatNumber(troopsInThisPlanet, true)
+                            )}
+                            arrow
                           >
-                            {unit.isHero && <MilitaryTechIcon fontSize="small" />}
-                            <Tooltip
-                              title={translate(
-                                'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
-                                formatNumber(troopsInThisPlanet, true)
-                              )}
-                              arrow
+                            <Stack
+                              direction={'row'}
+                              gap={0.5}
+                              padding={0.4}
+                              paddingLeft={0.6}
+                              paddingRight={0.8}
+                              alignItems={'center'}
                             >
-                              <Typography
-                                paddingLeft={unit.isHero ? 0 : 0.8}
-                                variant="body1"
-                                fontSize={13}
-                                fontWeight={500}
-                              >
+                              <GroupIcon fontSize="small" />
+                              <Typography fontSize={13}>
                                 {formatNumber(troopsInThisPlanet)}
                               </Typography>
-                            </Tooltip>
-                          </Stack>
+                            </Stack>
+                          </Tooltip>
                         </Paper>
                       </Box>
                     </Stack>
                   </Box>
 
-                  <Typography maxWidth={'230px'} fontSize={12} padding={0.5}>
-                    {translate(unit.description)}
-                  </Typography>
+                  <Box padding={1} paddingRight={0}>
+                    <Paper variant="outlined">
+                      <Typography maxWidth={'212px'} padding={1} fontSize={12}>
+                        {translate(unit.description)}
+                      </Typography>
+                    </Paper>
+                  </Box>
                 </Box>
 
                 <Stack padding={1} flexGrow={1}>
                   <Stack direction={'row'} gap={1}>
                     {/* Unit bonus */}
                     <UnitBonus bonus={unit.bonus} />
+
                     {/* Requirements Part */}
                     <UnitRequirements requirements={requirements} />
                   </Stack>
