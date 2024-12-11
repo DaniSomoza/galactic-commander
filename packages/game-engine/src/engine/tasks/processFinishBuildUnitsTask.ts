@@ -10,6 +10,8 @@ import hasBonus from '../../helpers/hasBonus'
 import getTotalAmountOfUnits from '../units/getTotalAmountOfUnits'
 import { UnitTypes } from '../../types/IUnit'
 import { IPlanet } from '../../types/IPlanet'
+import createStartBuildUnitsTask from './utils/createStartBuildUnitsTask'
+import taskRepository from '../../repositories/taskRepository'
 
 async function processFinishBuildUnitsTask(
   task: ITaskTypeDocument<FinishBuildUnitsTaskType>,
@@ -118,7 +120,36 @@ async function processFinishBuildUnitsTask(
 
   planet.unitBuild[buildUnitsType[unit.type]].activeBuild = undefined
 
-  // TODO: check planets.builds.queue
+  const nextBuildUnits = planet.unitBuild[buildUnitsType[unit.type]].queue.shift()
+
+  if (nextBuildUnits) {
+    const raceUnit = player.race.units.find((raceUnit) => raceUnit.name === nextBuildUnits.unitName)
+    const specialPlanetUnit = planet.units.find(
+      (planetUnit) => planetUnit.name === nextBuildUnits.unitName
+    )
+
+    const nextUnitInTheQueue = raceUnit || specialPlanetUnit
+
+    if (nextUnitInTheQueue) {
+      // TODO: check if it has enough resources => next Build unit ???
+
+      const buildUnitsTask = createStartBuildUnitsTask(
+        task.universeId,
+        player._id.toString(),
+        planet._id.toString(),
+        nextUnitInTheQueue._id.toString(),
+        nextBuildUnits.amount
+      )
+
+      Promise.all([
+        player.save(),
+        planetFleet.save(),
+        points.save(),
+        planet.save(),
+        taskRepository.createStartBuildUnitsTask(buildUnitsTask)
+      ])
+    }
+  }
 
   return Promise.all([player.save(), planetFleet.save(), points.save(), planet.save()])
 }

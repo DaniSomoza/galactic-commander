@@ -17,14 +17,13 @@ const gameBaseEndpoint = import.meta.env.VITE_GAME_SERVICE_ORIGIN
 
 export async function startBuildUnits(
   unitName: string,
-  unitType: string,
   amount: number,
   planetCoordinates: PlanetCoordinatesType,
   universeName: string
 ): Promise<AxiosResponse<startBuildUnitsResponseType>> {
   const startBuildUnitsEndpoint = `${gameBaseEndpoint}${BUILD_UNITS_PATH}`
 
-  const payload = { universeName, unitName, unitType, amount, planetCoordinates }
+  const payload = { universeName, unitName, amount, planetCoordinates }
 
   return await Api.post<startBuildUnitsResponseType, typeof payload>(
     startBuildUnitsEndpoint,

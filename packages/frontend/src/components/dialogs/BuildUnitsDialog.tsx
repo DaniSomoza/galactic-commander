@@ -63,10 +63,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
   const { resources } = usePlayerResources()
 
-  // const { buildTroopsQueue, activeBuildTroopsCountdown, activeBuildTroops, starBuildUnits } =
-  //   useBuildUnits()
-
-  const { starBuildUnits, activeBuildTroops } = useBuildUnits()
+  const { starBuildUnits, updateBuildUnitsQueue, activeBuildTroops } = useBuildUnits()
 
   const resourceCost = amount * unitToBuild.resourceCost
   const currentPopulation = calculateCurrentPlayerPopulation(player!)
@@ -86,24 +83,17 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
   const { requirements } = checkUnitRequirements(unitToBuild, player!)
 
-  // async function performUpdateBuildUnitsQueue() {
-  //   setIsLoading(true)
-  //   console.log('unitName: ', unitName)
-  //   console.log('amount: ', amount)
-  //   console.log('planetCoordinates: ', selectedPlanet?.coordinates)
-  //   // TODO: implement performUpdateBuildUnitsQueue
-  //   await starBuildUnits(unitName, amount, 'TROOP')
-  //   setIsLoading(false)
-  //   setAmount(0)
-  // }
+  async function performUpdateBuildUnitsQueue() {
+    setIsLoading(true)
+    await updateBuildUnitsQueue(unitToBuild.name, amount, unitToBuild.type)
+    setIsLoading(false)
+    setAmount(0)
+    handleClose()
+  }
 
   async function performStartBuildUnits() {
     setIsLoading(true)
-    console.log('unitName: ', unitToBuild.name)
-    console.log('amount: ', amount)
-    console.log('planetCoordinates: ', selectedPlanet?.coordinates)
-    // TODO: implement performStartBuildUnits
-    await starBuildUnits(unitToBuild.name, amount, 'TROOP')
+    await starBuildUnits(unitToBuild.name, amount)
     setIsLoading(false)
     setAmount(0)
     handleClose()
@@ -427,10 +417,28 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
       <DialogActions>
         <Tooltip title={'Add units to planet queue'} arrow>
-          <Button disabled={isLoading || !!error} autoFocus onClick={performStartBuildUnits}>
-            {activeBuildTroops ? 'Queue units' : 'Build Units'}
+          <Button disabled={isLoading || !!error} autoFocus>
+            Schedule
           </Button>
         </Tooltip>
+
+        {activeBuildTroops ? (
+          <Tooltip title={'Add units to planet queue'} arrow>
+            <Button
+              disabled={isLoading || !!error}
+              autoFocus
+              onClick={performUpdateBuildUnitsQueue}
+            >
+              Queue units
+            </Button>
+          </Tooltip>
+        ) : (
+          <Tooltip title={'Add units to planet queue'} arrow>
+            <Button disabled={isLoading || !!error} autoFocus onClick={performStartBuildUnits}>
+              Build Units
+            </Button>
+          </Tooltip>
+        )}
       </DialogActions>
     </Dialog>
   )

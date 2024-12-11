@@ -16,7 +16,6 @@ import { PlanetCoordinatesType } from '../types/Planet'
 type BuildUnitsData = {
   username: string
   unitName: string
-  unitType: UnitTypes
   amount: number
   universeName: string
   executeTaskAt?: number
@@ -26,7 +25,6 @@ type BuildUnitsData = {
 async function startBuildUnits({
   username,
   unitName,
-  // unitType,
   amount,
   universeName,
   planetCoordinates,
@@ -149,7 +147,7 @@ async function updateBuildUnitsQueue({
 
     const unit = raceUnit || planetUnit
 
-    return !!unit
+    return !!unit && unitType === unit.type
   })
 
   if (!isValidQueue) {
@@ -174,7 +172,6 @@ async function updateBuildUnitsQueue({
         unitName: nextBuildUnits.unitName,
         amount: nextBuildUnits.amount,
         planetCoordinates,
-        unitType,
         universeName
       })
     }

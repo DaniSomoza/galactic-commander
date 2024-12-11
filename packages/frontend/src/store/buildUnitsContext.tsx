@@ -49,7 +49,7 @@ type buildUnitsContextValue = {
 
   isBuildUnitsLoading: boolean
 
-  starBuildUnits: (unitName: string, amount: number, unitType: UnitTypes) => Promise<void>
+  starBuildUnits: (unitName: string, amount: number) => Promise<void>
   updateBuildUnitsQueue: (unitName: string, amount: number, unitType: UnitTypes) => Promise<void>
   removeBuildUnitsFromQueue: (index: number, unitType: UnitTypes) => Promise<void>
 }
@@ -160,12 +160,11 @@ function BuildUnitsProvider({ children }: BuildUnitsProviderProps) {
       : buildDefensesQueue.length > 0)
 
   const starBuildUnits = useCallback(
-    async (unitName: string, amount: number, unitType: UnitTypes) => {
+    async (unitName: string, amount: number) => {
       const {
         data: { task }
       } = await startBuildUnitsEndpoint(
         unitName,
-        unitType,
         amount,
         selectedPlanet!.coordinates,
         selectedUniverse!.name

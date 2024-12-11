@@ -17,7 +17,6 @@ import { StartBuildUnitsData, updateBuildUnitsQueueData } from '../types/Unit'
 
 const buildUnitsValidationSchema = Joi.object<StartBuildUnitsData>({
   unitName: Joi.string().required(),
-  unitType: Joi.string().valid('TROOP', 'SPACESHIP', 'DEFENSE').required(),
   amount: Joi.number().required(),
 
   planetCoordinates: Joi.object({
@@ -36,7 +35,7 @@ async function startBuildUnits(request: FastifyRequest, response: FastifyReply) 
   try {
     await validateInputData(request.body, buildUnitsValidationSchema)
 
-    const { unitName, unitType, amount, planetCoordinates, universeName, executeTaskAt } =
+    const { unitName, amount, planetCoordinates, universeName, executeTaskAt } =
       request.body as StartBuildUnitsData
 
     const jwtToken = getJWTFromAuthHeader(request.headers.authorization)
@@ -46,7 +45,6 @@ async function startBuildUnits(request: FastifyRequest, response: FastifyReply) 
     const startBuildUnitsTask = await buildUnitsService.startBuildUnits({
       username,
       unitName,
-      unitType,
       amount,
       planetCoordinates,
       universeName,
@@ -78,7 +76,7 @@ const updateBuildUnitsQueueValidationSchema = Joi.object<updateBuildUnitsQueueDa
     planet: Joi.number().integer().min(1).max(PLANETS_PER_SYSTEM).required()
   }),
 
-  unitType: Joi.string().required(),
+  unitType: Joi.string().valid('TROOP', 'SPACESHIP', 'DEFENSE').required(),
   universeName: Joi.string().required()
 })
 

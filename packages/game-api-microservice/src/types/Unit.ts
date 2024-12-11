@@ -95,7 +95,6 @@ export type UnitType = {
 
 export type StartBuildUnitsData = {
   unitName: string
-  unitType: UnitTypes
   amount: number
   planetCoordinates: PlanetCoordinatesType
 
