@@ -1,28 +1,31 @@
 import { MongoServerError } from 'mongodb'
 
-import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import {
+  TaskType,
   ERROR_TASK_STATUS,
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskData,
-  ITaskDocument,
-  ITaskTypeDocument,
   NEW_PLAYER_TASK_TYPE,
-  NewPlayerTaskData,
   PROCESSED_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
   StartResearchTaskData,
-  TaskType
-} from '../models/TaskModel'
+  TaskData,
+  FINISH_BUILD_UNITS_TASK_TYPE,
+  START_BUILD_UNITS_TASK_TYPE,
+  FinishBuildUnitsTaskData,
+  StartBuildUnitsTaskData
+} from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
-import GameEngineError from './errors/GameEngineError'
-import { IUniverseDocument } from '../models/UniverseModel'
+import groupTasksBySeconds from '../helpers/groupTasksBySeconds'
 import { IPlanetDocument } from '../models/PlanetModel'
 import { IPlayerDocument } from '../models/PlayerModel'
-import calculateResourceProduction from './resources/calculateResourceProduction'
+import { IUniverseDocument } from '../models/UniverseModel'
+import { ITaskDocument, ITaskTypeDocument } from '../models/TaskModel'
 import { TASK_HANDLER, TaskHandler } from './tasks/taskHandlers'
+import calculateResourceProduction from './resources/calculateResourceProduction'
 import computedBonus from './bonus/computedBonus'
+import GameEngineError from './errors/GameEngineError'
 
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
@@ -54,6 +57,22 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
       START_RESEARCH_TASK_TYPE
     )
     await processTasksSequentially(startResearchTasks, startResearchTaskHandler, second)
+
+    // 4.- Finish Build Units Tasks
+    const finishBuildUnitsTaskHandler = TASK_HANDLER[FINISH_BUILD_UNITS_TASK_TYPE].handler
+
+    const finishBuildUnitsTasks = tasks.filter((task) => task.type === FINISH_BUILD_UNITS_TASK_TYPE)
+    await processTasksInParallel(finishBuildUnitsTasks, finishBuildUnitsTaskHandler, second)
+
+    // 5.- Start Build Units Tasks
+    const startBuildUnitsTaskHandler = TASK_HANDLER[START_BUILD_UNITS_TASK_TYPE].handler
+
+    const startBuildUnitsTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      START_BUILD_UNITS_TASK_TYPE
+    )
+    await processTasksSequentially(startBuildUnitsTasks, startBuildUnitsTaskHandler, second)
 
     // update universe
     universe.lastProcessedTime = second
@@ -93,8 +112,16 @@ async function setTaskAsProcessed<Type extends TaskType>(
     task.status = PROCESSED_TASK_STATUS
     task.history.push({ taskStatus: PROCESSED_TASK_STATUS, updatedAt: new Date().getTime() })
   } catch (error) {
-    if (error instanceof MongoServerError) {
-      task.errorDetails = error.message
+    // TODO: create a task.error as an object
+    // task.error.message
+    // task.error.details
+    // task.error.extraData
+
+    task.errorDetails = (error as Error)?.message
+
+    if (error?.constructor?.name === 'MongoServerError') {
+      const mongoError = error as MongoServerError
+      task.errorDetails = mongoError.message
     }
     if (error instanceof GameEngineError) {
       task.errorDetails = error.message
@@ -124,7 +151,7 @@ async function processResourceProduction(
   for (const task of tasks) {
     // calculate all player planet production
     if (isPlayerTaskData(task.data)) {
-      const player = await playerRepository.findPlayerById(task.data.player)
+      const player = await playerRepository.findPlayerById(task.data.playerId)
 
       if (player) {
         const playerPlanets = player.planets.colonies
@@ -164,7 +191,11 @@ async function processResourceProduction(
 }
 
 function isPlayerTaskData(
-  taskData: NewPlayerTaskData | StartResearchTaskData | FinishResearchTaskData
-): taskData is StartResearchTaskData | FinishResearchTaskData {
-  return 'player' in taskData
+  taskData: TaskData<TaskType>
+): taskData is
+  | StartResearchTaskData
+  | FinishResearchTaskData
+  | StartBuildUnitsTaskData
+  | FinishBuildUnitsTaskData {
+  return 'playerId' in taskData
 }

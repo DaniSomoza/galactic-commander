@@ -1,46 +1,45 @@
 import { IPlanetDocument } from 'game-engine/models/PlanetModel'
+import { IPlanet } from 'game-engine/types/IPlanet'
 
 import { PlanetType } from '../types/Planet'
 
-function cleanPlanetFields(planet: IPlanetDocument): PlanetType {
+function cleanPlanetFields(planet: IPlanetDocument | IPlanet): PlanetType {
   const {
     name,
+    universeId,
     imgUrl,
-    owner,
+    ownerId,
     colonizedAt,
     resources,
     resourceQuality,
     lastResourceProductionTime,
-    universe,
     coordinates,
     isSpecial,
     isPrincipal,
     isUnderConquer,
     isExplored,
     specials,
-    isBuildingFleets,
-    isTrainingTroops,
-    isBuildingDefenses
+    unitBuild,
+    units
   } = planet
 
   return {
     name,
+    universeId,
     imgUrl,
-    owner: owner?.toString() || null,
+    ownerId,
     colonizedAt,
     resources,
     resourceQuality,
     lastResourceProductionTime,
-    universe: universe.toString(),
     coordinates,
     isSpecial,
     isPrincipal,
     isUnderConquer,
     isExplored,
-    specials: specials.map((special) => special.toString()),
-    isBuildingFleets,
-    isTrainingTroops,
-    isBuildingDefenses
+    specials,
+    unitBuild,
+    units
   }
 }
 

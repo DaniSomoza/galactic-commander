@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 import { PlayerType } from 'game-api-microservice/src/types/Player'
+import { PlanetType } from 'game-api-microservice/src/types/Planet'
 
 import { useAuthorization } from './AuthorizationContext'
 import { createPlayer, getPlayer } from '../endpoints/game/playerEndpoints'
@@ -8,6 +9,7 @@ import { useGameInfo } from './GameInfoContext'
 
 const initialContext = {
   player: undefined,
+  selectedPlanet: undefined,
   loadPlayer: () => Promise.resolve({ player: {} as PlayerType }),
   createNewPlayer: () => {},
   isPlayerLoading: true,
@@ -16,6 +18,7 @@ const initialContext = {
 
 type playerContextValue = {
   player?: PlayerType
+  selectedPlanet?: PlanetType
   loadPlayer: () => Promise<{ player: PlayerType } | undefined>
   createNewPlayer: (universeName: string, raceName: string) => void
   isPlayerLoading: boolean
@@ -75,10 +78,11 @@ function PlayerProvider({ children }: PlayerProviderProps) {
     setCreatePlayerTaskId(taskId)
   }, [])
 
-  // TODO: ADD SELECTED PLANET ??
+  const selectedPlanet = player?.planets.principal
 
   const value = {
     player,
+    selectedPlanet,
     loadPlayer,
     createNewPlayer,
     isPlayerLoading,

@@ -19,6 +19,8 @@ import PopulationLabel from '../../components/population-label/PopulationLabel'
 import EnergyLabel from '../../components/energy-label/EnergyLabel'
 import GamePlanetSection from '../../components/game-planet-section/GamePlanetSection'
 import GameActiveResearchSection from '../../components/game-active-research-section/GameActiveResearchSection'
+import { BuildUnitsProvider } from '../../store/buildUnitsContext'
+import ActiveBuildTroopsSection from '../../components/active-build-troops-section/ActiveBuildTroopsSection'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
@@ -91,7 +93,26 @@ function GamePage() {
               </Box>
 
               <Box component="section">
-                <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
+                {/* TODO: game stats? */}
+                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+              </Box>
+            </Stack>
+
+            {/* Player current planet actions Bar */}
+            <Stack direction="row" spacing={2}>
+              <Box component="section">
+                {/* Troops build */}
+                <ActiveBuildTroopsSection />
+              </Box>
+
+              <Box component="section">
+                {/* Spaceships build */}
+                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+              </Box>
+
+              <Box component="section">
+                {/* Defenses build */}
+                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
               </Box>
             </Stack>
           </Stack>
@@ -111,9 +132,11 @@ function GamePageWithGameProviders() {
     <GameInfoProvider>
       <PlayerProvider>
         <ResearchProvider>
-          <PlayerResourcesProvider>
-            <GamePage />
-          </PlayerResourcesProvider>
+          <BuildUnitsProvider>
+            <PlayerResourcesProvider>
+              <GamePage />
+            </PlayerResourcesProvider>
+          </BuildUnitsProvider>
         </ResearchProvider>
       </PlayerProvider>
     </GameInfoProvider>

@@ -1,5 +1,6 @@
-import { ITaskDocument, ITaskTypeDocument, TaskType } from '../models/TaskModel'
-import { IUniverse } from '../models/UniverseModel'
+import { ITaskDocument, ITaskTypeDocument } from '../models/TaskModel'
+import { TaskType } from '../types/ITask'
+import { IUniverse } from '../types/IUniverse'
 
 type GroupedTaskItem<Type extends TaskType> = { second: number; tasks: ITaskTypeDocument<Type>[] }
 type GroupOfTasksType = GroupedTaskItem<TaskType>[]

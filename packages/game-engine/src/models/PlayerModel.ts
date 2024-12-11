@@ -1,85 +1,18 @@
 import mongoose, { Schema, Model, Document } from 'mongoose'
 
-import { BonusType, IResearchDocument } from './ResearchModel'
+import { BonusSchema } from './BonusModel'
+import { IPlayer } from '../types/IPlayer'
 import { IRaceDocument } from './RaceModel'
-import { IUniverseDocument } from './UniverseModel'
+import { IResearchDocument } from './ResearchModel'
 import { IPlanetDocument } from './PlanetModel'
-import { IBonus } from '../types/bonus'
-
-interface IPlayerUser {
-  username: string
-  email: string
-}
-
-interface IPlayerPlanet {
-  principal: IPlanetDocument
-  colonies: IPlanetDocument[]
-  explored: mongoose.Types.ObjectId[]
-}
-
-export interface IPlayerPerk {
-  bonus: IBonus
-  source: mongoose.Types.ObjectId
-  sourceName: string
-  type: 'Planet' | 'Special' | 'Unit' | 'Research' | 'Race'
-}
-
-// TODO: refactor points to remove them from the player Model (create points collection)
-export interface IPlayerPoints {
-  points: number
-  source: mongoose.Types.ObjectId
-  sourceName: string
-  type: 'Unit' | 'Research' | 'Battle'
-  second: number
-}
-
-export interface IPlayerResearch {
-  research: IResearchDocument
-  level: number
-}
-
-export interface IPlayerActiveResearch {
-  research: IResearchDocument
-  level: number
-  executeTaskAt: number
-  taskId: mongoose.Types.ObjectId
-}
-
-export interface IPlayerResearches {
-  researched: IPlayerResearch[]
-  activeResearch?: IPlayerActiveResearch
-  queue: string[]
-}
-
-interface IPlayerUnits {
-  troops: {
-    population: number
-  }
-  fleets: {
-    energy: number
-  }
-  defenses: {
-    structures: number
-  }
-}
-
-export interface IPlayer {
-  user: IPlayerUser
-  race: IRaceDocument
-  universe: IUniverseDocument
-  planets: IPlayerPlanet
-  perks: IPlayerPerk[]
-  points: IPlayerPoints[]
-  researches: IPlayerResearches
-  units: IPlayerUnits
-}
+import { FleetSchema, IFleetDocument } from './FleetModel'
 
 const ActiveResearchSchema = new Schema(
   {
-    research: { type: Schema.Types.ObjectId, ref: 'Research' },
-    level: { type: Number },
-    executeTaskAt: { type: Number },
-    taskId: { type: Schema.Types.ObjectId, ref: 'Task' }
+    research: { type: Schema.Types.ObjectId, ref: 'Research', required: true },
+    level: { type: Number, required: true },
+    executeTaskAt: { type: Number, required: true },
+    taskId: { type: String, required: true }
   },
   { _id: false }
 )
@@ -92,30 +25,18 @@ const PlayerSchema: Schema = new Schema({
 
   race: { type: Schema.Types.ObjectId, ref: 'Race', required: true },
 
-  universe: { type: Schema.Types.ObjectId, ref: 'Universe', required: true },
+  universeId: { type: String, required: true },
 
   planets: {
     principal: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
-    colonies: [{ type: Schema.Types.ObjectId, ref: 'Planet' }],
-    explored: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
+    colonies: [{ type: Schema.Types.ObjectId, ref: 'Planet' }]
   },
 
   perks: [
     {
       _id: false,
-      bonus: BonusType,
-      source: { type: Schema.Types.ObjectId, required: true },
-      sourceName: { type: String, required: true },
-      type: { type: String, required: true }
-    }
-  ],
-
-  points: [
-    {
-      _id: false,
-      points: { type: Number, required: true },
-      second: { type: Number, required: true },
-      source: { type: Schema.Types.ObjectId, required: true },
+      bonus: BonusSchema,
+      sourceId: { type: String, required: true },
       sourceName: { type: String, required: true },
       type: { type: String, required: true }
     }
@@ -137,20 +58,38 @@ const PlayerSchema: Schema = new Schema({
     queue: [{ type: String }]
   },
 
-  units: {
-    troops: {
-      population: { type: Number, required: true }
-    },
-    fleets: {
-      energy: { type: Number, required: true }
-    },
-    defenses: {
-      structures: { type: Number, required: true }
-    }
-  }
+  fleets: [FleetSchema]
 })
 
-export interface IPlayerDocument extends IPlayer, Document {}
+interface IPlayerResearchDocument {
+  research: IResearchDocument
+  level: number
+}
+
+interface IPlayerActiveResearchDocument {
+  research: IResearchDocument
+  level: number
+  executeTaskAt: number
+  taskId: string
+}
+
+export interface IPlayerDocument extends IPlayer, Document {
+  _id: mongoose.Types.ObjectId
+
+  race: IRaceDocument
+
+  researches: {
+    researched: IPlayerResearchDocument[]
+    activeResearch?: IPlayerActiveResearchDocument
+    queue: string[]
+  }
+  planets: {
+    principal: IPlanetDocument
+    colonies: IPlanetDocument[]
+  }
+
+  fleets: IFleetDocument[]
+}
 
 const PlayerModel: Model<IPlayerDocument> = mongoose.model<IPlayerDocument>('Player', PlayerSchema)
 

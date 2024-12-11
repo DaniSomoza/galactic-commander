@@ -1,10 +1,9 @@
 import {
-  IRace,
-  DEFAULT_RESOURCE_NAME,
   DEFAULT_ALLOWED_PLANETS,
-  DEFAULT_INITIAL_RESOURCES
-} from '../../models/RaceModel'
-
+  DEFAULT_INITIAL_RESOURCES,
+  DEFAULT_RESOURCE_NAME,
+  IRace
+} from '../../types/IRace'
 // TODO: invisible units!
 const GHOSTS_INTERGALACTIC_TRAVEL_THRESHOLD = 6
 const GHOSTS_FLEET_ENERGY = 150
@@ -20,7 +19,12 @@ const ghosts: IRace = {
   baseResources: DEFAULT_INITIAL_RESOURCES,
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: GHOSTS_INTERGALACTIC_TRAVEL_THRESHOLD,
+
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     STEALTH_FLEETS_BONUS: true

@@ -1,13 +1,13 @@
 import pirates from '../../assets/races/pirates'
-import { IPlanet } from '../../models/PlanetModel'
+import { IPlanet } from '../../types/IPlanet'
 
-type IBasePlanet = Omit<IPlanet, 'universe'>
-
-export const PRINCIPAL_PLANET_TEST_1: IBasePlanet = {
+export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
   name: 'principal_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
 
-  owner: null,
+  universeId: 'Migration pending...',
+
+  ownerId: null,
   colonizedAt: 0,
 
   resources: pirates.baseResources,
@@ -28,16 +28,28 @@ export const PRINCIPAL_PLANET_TEST_1: IBasePlanet = {
 
   specials: [],
 
-  isBuildingFleets: false,
-  isTrainingTroops: false,
-  isBuildingDefenses: false
+  unitBuild: {
+    troops: {
+      queue: []
+    },
+    spaceships: {
+      queue: []
+    },
+    defenses: {
+      queue: []
+    }
+  },
+
+  units: []
 }
 
-export const AVAILABLE_PLANET_TEST_1: IBasePlanet = {
+export const AVAILABLE_PLANET_TEST_1: IPlanet = {
   name: 'available_planet_test_1',
   imgUrl: '/planets/planet_80_1.jpg',
 
-  owner: null,
+  universeId: 'Migration pending...',
+
+  ownerId: null,
   colonizedAt: 0,
 
   resources: 0,
@@ -58,9 +70,19 @@ export const AVAILABLE_PLANET_TEST_1: IBasePlanet = {
 
   specials: [],
 
-  isBuildingFleets: false,
-  isTrainingTroops: false,
-  isBuildingDefenses: false
+  unitBuild: {
+    troops: {
+      queue: []
+    },
+    spaceships: {
+      queue: []
+    },
+    defenses: {
+      queue: []
+    }
+  },
+
+  units: []
 }
 
 const ALL_PLANETS_MOCK = [PRINCIPAL_PLANET_TEST_1, AVAILABLE_PLANET_TEST_1]
