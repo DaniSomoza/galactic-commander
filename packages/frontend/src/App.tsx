@@ -34,7 +34,7 @@ import GameResearchPage from './pages/game/GameResearchPage'
 import GameResourcesPage from './pages/game/GameResourcesPage'
 import GameSpecialsPage from './pages/game/GameSpecialsPage'
 import GameTroopsPage from './pages/game/GameTroopsPage'
-import GameShipsPage from './pages/game/GameShipsPage'
+import GameSpaceshipsPage from './pages/game/GameSpaceshipsPage'
 import GameDefensesPage from './pages/game/GameDefensesPage'
 import GameAlliancePage from './pages/game/GameAlliancePage'
 import GameGalaxiesPage from './pages/game/GameGalaxiesPage'
@@ -91,7 +91,7 @@ const AppRoutes = createBrowserRouter([
       },
       {
         path: GAME_SHIPS_PATH,
-        element: <GameShipsPage />
+        element: <GameSpaceshipsPage />
       },
       {
         path: GAME_DEFENSES_PATH,

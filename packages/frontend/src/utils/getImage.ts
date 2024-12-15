@@ -10,7 +10,18 @@ export default getImage
 const placeholder = '/placeholder.jpeg'
 
 const unitImages: Record<string, string> = {
-  TROOP_PIRATE_CADET_NAME: '/units/pirates/troops/pirate_cadet_unit.jpeg'
+  // troops
+  TROOP_PIRATE_CADET_NAME: '/units/pirates/troops/pirate_cadet_unit.jpeg',
+  TROOP_PIRATE_OFFICER_NAME: '/units/pirates/troops/pirate_officer_unit.jpeg',
+  TROOP_PIRATE_CORSAIR_NAME: '/units/pirates/troops/pirate_corsair_unit.jpeg',
+  TROOP_PIRATE_JACK_SPACEROW_HERO_NAME: '/units/pirates/troops/pirate_jack_spacerow_unit.jpeg',
+  // spaceships
+  SPACESHIP_PIRATE_RECON_DRONE_NAME: '/units/pirates/spaceships/pirate_recon_drone_unit.jpeg',
+  SPACESHIP_PIRATE_STAR_FIGHTER_NAME: '/units/pirates/spaceships/pirate_star_fighter_unit.jpeg',
+  SPACESHIP_PIRATE_INTERCEPTOR_NAME: '/units/pirates/spaceships/pirate_interceptor_unit.jpeg',
+  SPACESHIP_PIRATE_CRUISER_NAME: '/units/pirates/spaceships/pirate_cruiser_unit.jpeg',
+  SPACESHIP_PIRATE_FRIGATE_NAME: '/units/pirates/spaceships/pirate_frigate_unit.jpeg'
+  // defenses
 }
 
 const researchImages: Record<string, string> = {

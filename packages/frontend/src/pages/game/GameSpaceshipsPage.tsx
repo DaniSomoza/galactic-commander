@@ -19,7 +19,7 @@ import UnitBonus from '../../components/unit-bonus/UnitBonus'
 import BuildUnitsQueue from '../../components/build-units-queue/BuildUnitsQueue'
 import UnitCard from '../../components/unit-card/UnitCard'
 
-function GameTroopsPage() {
+function GameSpaceshipsPage() {
   const { translate } = useTranslations()
 
   const [unitToBuild, setUnitToBuild] = useState<UnitType>()
@@ -32,19 +32,19 @@ function GameTroopsPage() {
     return <Loader isLoading />
   }
 
-  const activeBuildUnits = selectedPlanet.unitBuild.troops.activeBuild
+  const activeBuildUnits = selectedPlanet.unitBuild.spaceships.activeBuild
 
   return (
     <>
-      <BuildUnitsQueue unitType={'TROOP'} />
+      <BuildUnitsQueue unitType={'SPACESHIP'} />
 
       <Stack direction={'column'} gap={2} marginTop={1}>
         {units
-          .filter((unit) => unit.type === 'TROOP')
+          .filter((unit) => unit.type === 'SPACESHIP')
           .map((unit) => {
             const unitRequirements = checkUnitRequirements(unit, player)
 
-            const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
+            const unitsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
               player,
               selectedPlanet,
               unit
@@ -55,7 +55,7 @@ function GameTroopsPage() {
                 <Stack direction={'row'}>
                   {/* Image Part */}
                   <Box>
-                    <UnitCard unit={unit} amount={troopsInThisPlanet} height={230} width={230} />
+                    <UnitCard unit={unit} amount={unitsInThisPlanet} height={230} width={230} />
 
                     <Box padding={1} paddingRight={0}>
                       <Paper variant="outlined">
@@ -124,4 +124,4 @@ function GameTroopsPage() {
   )
 }
 
-export default GameTroopsPage
+export default GameSpaceshipsPage

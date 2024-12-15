@@ -19,7 +19,7 @@ import AlarmIcon from '@mui/icons-material/Alarm'
 import DiamondIcon from '@mui/icons-material/Diamond'
 import GroupIcon from '@mui/icons-material/Group'
 
-import { UnitType } from 'game-api-microservice/src/types/Unit'
+import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
@@ -27,6 +27,7 @@ import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculate
 import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
 import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
+import { IBonus } from 'game-engine/src/types/IBonus'
 
 import { useBuildUnits } from '../../store/buildUnitsContext'
 import { usePlayer } from '../../store/PlayerContext'
@@ -63,14 +64,20 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
   const { resources } = usePlayerResources()
 
-  const { starBuildUnits, updateBuildUnitsQueue, activeBuildTroops } = useBuildUnits()
+  const {
+    starBuildUnits,
+    updateBuildUnitsQueue,
+    activeBuildTroops,
+    activeBuildSpaceships,
+    activeBuildDefenses
+  } = useBuildUnits()
 
   const resourceCost = amount * unitToBuild.resourceCost
   const currentPopulation = calculateCurrentPlayerPopulation(player!)
   const predictedPopulation = currentPopulation + amount
   const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
   const currentEnergy = calculateCurrentPlayerEnergy(player!)
-  const predictedEnergy = currentEnergy * amount
+  const predictedEnergy = currentEnergy + unitToBuild.energyCost * amount
   const maxPlayerEnergy = calculateMaxPlayerEnergy(player!)
 
   const selectedPlanetLabel = formatCoordinatesLabel(selectedPlanet!.coordinates)
@@ -78,7 +85,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
   const isValidAmount = unitToBuild.isHero ? amount === 1 : amount >= 1
   const hasEnoughResources = planetResources >= resourceCost
-  const isValidPopulation = maxPlayerPopulation >= predictedPopulation
+  const isValidPopulation =
+    unitToBuild.type !== 'TROOP' || maxPlayerPopulation >= predictedPopulation
   const isValidEnergy = maxPlayerEnergy >= predictedEnergy
 
   const unitRequirements = checkUnitRequirements(unitToBuild, player!)
@@ -103,7 +111,13 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
     setUnitToBuild(undefined)
   }
 
-  const buildUnitBonus = computedBonus(player!.perks, 'TROOPS_TRAINING_BONUS')
+  const buildUnitsPerk: Record<UnitTypes, keyof IBonus> = {
+    TROOP: 'TROOPS_TRAINING_BONUS',
+    SPACESHIP: 'TROOPS_TRAINING_BONUS',
+    DEFENSE: 'TROOPS_TRAINING_BONUS'
+  }
+
+  const buildUnitBonus = computedBonus(player!.perks, buildUnitsPerk[unitToBuild.type])
   const buildUnitDuration = millisToSeconds(unitToBuild.buildBaseTime * (100 / buildUnitBonus))
 
   const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
@@ -120,6 +134,10 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   })
 
   const showErrorLabel = !!amount && !!error
+  const showQueueButton =
+    (unitToBuild.type === 'TROOP' && activeBuildTroops) ||
+    (unitToBuild.type === 'SPACESHIP' && activeBuildSpaceships) ||
+    (unitToBuild.type === 'DEFENSE' && activeBuildDefenses)
 
   return (
     <Dialog onClose={handleClose} open={isOpen}>
@@ -415,7 +433,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
           </Button>
         </Tooltip>
 
-        {activeBuildTroops ? (
+        {showQueueButton ? (
           <Tooltip title={'Add units to planet queue'} arrow>
             <Button disabled={isLoading} autoFocus onClick={performUpdateBuildUnitsQueue}>
               Queue units
@@ -489,9 +507,8 @@ function getMaxAmountOfUnits({
   const maxAmountOfUnitsBasedOnResources = planetResources / resourceCost
 
   const hasEnergy = energyCost !== 0
-  const maxAmountOfUnitsBasedOnEnergy = hasEnergy
-    ? MAX_INPUT_AMOUNT
-    : maxPlayerEnergy / currentEnergy
+  const availableEnergy = maxPlayerEnergy - currentEnergy
+  const maxAmountOfUnitsBasedOnEnergy = hasEnergy ? availableEnergy / energyCost : MAX_INPUT_AMOUNT
 
   const isTroop = type === 'TROOP'
 

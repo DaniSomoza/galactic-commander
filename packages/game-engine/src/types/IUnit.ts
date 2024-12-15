@@ -27,6 +27,7 @@ type UnitSpaceshipProbeSubtype = 'PROBE'
 type UnitSpaceshipStarFighterSubtype = 'STAR_FIGHTER'
 // TODO: Implement the INTERCEPTOR_STAR_FIGHTER subtype to be effective against other StarFighters and less effective against other unit types.
 type UnitSpaceshipCruiserSubtype = 'CRUISER'
+type UnitSpaceshipFrigateSubtype = 'FRIGATE'
 type UnitSpaceshipBattleStationSubtype = 'BATTLE_STATION'
 
 // TODO: defenses subtypes
@@ -37,7 +38,6 @@ type UnitDefenseSubtype = 'DEFENSE'
 // export type SpaceCarrier = 'spaceCarrier'
 // export type SpaceCruiser = 'spaceCruiser'
 // export type SpaceDestroyer = 'spaceDestroyer'
-// export type SpaceFrigate = 'spaceFrigate'
 // export type SpaceBattleStation = 'spaceBattleStation'
 // export type SpacePlanetaryBomber = 'spacePlanetaryBomber'
 // export type SpaceCargo = 'spaceCargo'
@@ -60,6 +60,7 @@ type UnitSubtypes =
   | UnitSpaceshipProbeSubtype
   | UnitSpaceshipStarFighterSubtype
   | UnitSpaceshipCruiserSubtype
+  | UnitSpaceshipFrigateSubtype
   | UnitSpaceshipBattleStationSubtype
   | UnitDefenseSubtype
 
