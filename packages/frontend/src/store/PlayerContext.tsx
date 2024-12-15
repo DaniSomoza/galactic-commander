@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { PlayerType } from 'game-api-microservice/src/types/Player'
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
+import { UnitType } from 'game-api-microservice/src/types/Unit'
 
 import { useAuthorization } from './AuthorizationContext'
 import { createPlayer, getPlayer } from '../endpoints/game/playerEndpoints'
@@ -13,7 +14,10 @@ const initialContext = {
   loadPlayer: () => Promise.resolve({ player: {} as PlayerType }),
   createNewPlayer: () => {},
   isPlayerLoading: true,
-  createPlayerTaskId: ''
+  createPlayerTaskId: '',
+  units: [],
+  raceUnits: [],
+  planetUnits: []
 }
 
 type playerContextValue = {
@@ -23,6 +27,9 @@ type playerContextValue = {
   createNewPlayer: (universeName: string, raceName: string) => void
   isPlayerLoading: boolean
   createPlayerTaskId?: string
+  units: UnitType[]
+  raceUnits: UnitType[]
+  planetUnits: UnitType[]
 }
 
 const playerContext = createContext<playerContextValue>(initialContext)
@@ -80,13 +87,22 @@ function PlayerProvider({ children }: PlayerProviderProps) {
 
   const selectedPlanet = player?.planets.principal
 
+  const planetUnits = selectedPlanet?.units || []
+  const raceUnits = player?.race.units || []
+
+  const units = [...planetUnits, ...raceUnits]
+
   const value = {
     player,
     selectedPlanet,
     loadPlayer,
     createNewPlayer,
     isPlayerLoading,
-    createPlayerTaskId
+    createPlayerTaskId,
+
+    units,
+    raceUnits,
+    planetUnits
   }
 
   return <playerContext.Provider value={value}>{children}</playerContext.Provider>

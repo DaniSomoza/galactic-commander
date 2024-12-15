@@ -28,7 +28,7 @@ import formatNumber from '../../utils/formatNumber'
 import BonusCards from '../../components/bonus-cards/BonusCards'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
-import getResearchImage from '../../utils/getResearchImage'
+import getImage from '../../utils/getImage'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
@@ -129,7 +129,7 @@ function GameResearchPage() {
                       <Paper variant="outlined">
                         <Stack justifyContent="center" alignItems="center" gap={1}>
                           <Image
-                            src={getResearchImage(raceResearch?.name || '')}
+                            src={getImage(raceResearch?.name || '')}
                             alt={translate(researchName)}
                             height={'128px'}
                             width={'128px'}
@@ -300,7 +300,7 @@ function GameResearchPage() {
                 <Box sx={{ position: 'relative' }}>
                   <Stack justifyContent="center" alignItems="center">
                     <Image
-                      src={getResearchImage(raceResearch?.name || '')}
+                      src={getImage(raceResearch?.name || '')}
                       alt={translate(raceResearch.name)}
                       height={'230px'}
                       width={'230px'}

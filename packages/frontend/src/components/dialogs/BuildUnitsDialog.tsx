@@ -31,7 +31,6 @@ import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequire
 import { useBuildUnits } from '../../store/buildUnitsContext'
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
-import getUnitImage from '../../utils/getUnitImage'
 import formatTimer from '../../utils/formatTimer'
 import formatNumber from '../../utils/formatNumber'
 import millisToSeconds from '../../utils/millisToSeconds'
@@ -42,6 +41,7 @@ import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 import { useTheme } from '../../store/ThemeContext'
 import UnitRequirements from '../unit-requirements/UnitRequirements'
 import UnitBonus from '../unit-bonus/UnitBonus'
+import getImage from '../../utils/getImage'
 
 type BuildUnitDialogProps = {
   unitToBuild: UnitType
@@ -147,7 +147,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
               <Paper variant="outlined">
                 <Stack justifyContent="center" alignItems="center">
                   <Image
-                    src={getUnitImage(unitToBuild.name)}
+                    src={getImage(unitToBuild.name)}
                     alt={translate(unitToBuild.name)}
                     height={'230px'}
                     width={'230px'}

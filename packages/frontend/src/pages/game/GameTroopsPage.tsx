@@ -17,7 +17,6 @@ import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
 import Image from '../../components/image/Image'
 import Loader from '../../components/loader/Loader'
-import getUnitImage from '../../utils/getUnitImage'
 import formatNumber from '../../utils/formatNumber'
 import UnitStats from '../../components/unit-stats/UnitStats'
 import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
@@ -25,6 +24,7 @@ import UnitRequirements from '../../components/unit-requirements/UnitRequirement
 import UnitBonus from '../../components/unit-bonus/UnitBonus'
 import formatTimer from '../../utils/formatTimer'
 import formatTimestamp from '../../utils/formatTimestamp'
+import getImage from '../../utils/getImage'
 
 function GameTroopsPage() {
   const { translate } = useTranslations()
@@ -66,7 +66,7 @@ function GameTroopsPage() {
                     <Tooltip title={translate(unitName)} arrow>
                       <Stack key={index} justifyContent={'center'} direction={'row'} gap={1}>
                         <Image
-                          src={getUnitImage(unitName)}
+                          src={getImage(unitName)}
                           alt={translate(unitName)}
                           height={'128px'}
                           width={'128px'}
@@ -150,7 +150,7 @@ function GameTroopsPage() {
                   <Box sx={{ position: 'relative' }}>
                     <Stack justifyContent="center" alignItems="center">
                       <Image
-                        src={getUnitImage(unit.name)}
+                        src={getImage(unit.name)}
                         alt={translate(unit.name)}
                         height={'230px'}
                         width={'230px'}

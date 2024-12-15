@@ -9,7 +9,6 @@ import Button from '@mui/material/Button'
 import ArrowRightAltRoundedIcon from '@mui/icons-material/ArrowRightAltRounded'
 import { green, orange } from '@mui/material/colors'
 
-import getResearchImage from '../../utils/getResearchImage'
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
 import BonusCards from '../bonus-cards/BonusCards'
@@ -17,8 +16,9 @@ import { GAME_RESEARCHES_PATH } from '../../routes/routes'
 import { useResearch } from '../../store/ResearchContext'
 import { useTranslations } from '../../store/TranslationContext'
 import Image from '../image/Image'
+import getImage from '../../utils/getImage'
 
-function GameActiveResearchSection() {
+function ActiveResearch() {
   const navigate = useNavigate()
   const { translate } = useTranslations()
 
@@ -52,7 +52,7 @@ function GameActiveResearchSection() {
               <Skeleton variant="rounded" height={'200px'} width={'200px'} />
             ) : (
               <Image
-                src={getResearchImage(activeResearch?.research.name || '')}
+                src={getImage(activeResearch?.research.name || '')}
                 alt="player active research image"
                 height={'200px'}
                 width={'200px'}
@@ -182,4 +182,4 @@ function GameActiveResearchSection() {
   )
 }
 
-export default GameActiveResearchSection
+export default ActiveResearch

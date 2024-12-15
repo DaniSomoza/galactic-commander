@@ -18,9 +18,9 @@ import PlanetsLabel from '../../components/planets-label/PlanetsLabel'
 import PopulationLabel from '../../components/population-label/PopulationLabel'
 import EnergyLabel from '../../components/energy-label/EnergyLabel'
 import GamePlanetSection from '../../components/game-planet-section/GamePlanetSection'
-import GameActiveResearchSection from '../../components/game-active-research-section/GameActiveResearchSection'
-import { BuildUnitsProvider } from '../../store/buildUnitsContext'
-import ActiveBuildTroopsSection from '../../components/active-build-troops-section/ActiveBuildTroopsSection'
+import { BuildUnitsProvider, useBuildUnits } from '../../store/buildUnitsContext'
+import ActiveResearch from '../../components/active-research/ActiveResearch'
+import ActiveUnitsBuild from '../../components/active-units-build/ActiveUnitsBuild'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
@@ -28,6 +28,16 @@ function GamePage() {
 
   const { loadPlayer } = usePlayer()
   const { selectedUniverse } = useGameInfo()
+
+  const {
+    activeBuildTroopsCountdown,
+    activeBuildSpaceshipsCountdown,
+    activeBuildDefensesCountdown,
+
+    activeBuildTroops,
+    activeBuildSpaceships,
+    activeBuildDefenses
+  } = useBuildUnits()
 
   useEffect(() => {
     if (!sessionToken) {
@@ -89,7 +99,7 @@ function GamePage() {
               </Box>
 
               <Box component="section">
-                <GameActiveResearchSection />
+                <ActiveResearch />
               </Box>
 
               <Box component="section">
@@ -100,19 +110,28 @@ function GamePage() {
 
             {/* Player current planet actions Bar */}
             <Stack direction="row" spacing={2}>
+              {/* Troops build */}
               <Box component="section">
-                {/* Troops build */}
-                <ActiveBuildTroopsSection />
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildTroopsCountdown}
+                  activeBuild={activeBuildTroops}
+                />
               </Box>
 
+              {/* Spaceships build */}
               <Box component="section">
-                {/* Spaceships build */}
-                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildSpaceshipsCountdown}
+                  activeBuild={activeBuildSpaceships}
+                />
               </Box>
 
+              {/* Defenses build */}
               <Box component="section">
-                {/* Defenses build */}
-                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildDefensesCountdown}
+                  activeBuild={activeBuildDefenses}
+                />
               </Box>
             </Stack>
           </Stack>

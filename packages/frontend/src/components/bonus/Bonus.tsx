@@ -13,11 +13,9 @@ import {
 import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { useTranslations } from '../../store/TranslationContext'
-import getBonusImage from '../../utils/getBonusImage'
 import { usePlayer } from '../../store/PlayerContext'
 import Image from '../image/Image'
-import getResearchImage from '../../utils/getResearchImage'
-import getRaceImage from '../../utils/getRaceImage'
+import getImage from '../../utils/getImage'
 
 type BonusProps = {
   size?: 'small' | 'large'
@@ -30,7 +28,7 @@ type BonusProps = {
 function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: BonusProps) {
   const { translate } = useTranslations()
 
-  const bonusImg = getBonusImage(bono)
+  const bonusImg = getImage(bono)
 
   const bonusLabel = getBonusLabel(bono, bonusValue as number)
   const showBonusLabel = isBonusLabelVisible(bono, bonusValue as number)
@@ -239,13 +237,13 @@ function getBonusSourceImg(
   player?: PlayerType
 ): string {
   if (sourceType === 'Race') {
-    return getRaceImage(player?.race.name || '')
+    return getImage(player?.race.name || '')
   }
 
   if (sourceType === 'Research') {
     const research = player?.race.researches.find((research) => research.name === sourceName)
 
-    return getResearchImage(research?.name || '')
+    return getImage(research?.name || '')
   }
 
   // TODO: implement all source sourceTypes
