@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
@@ -21,7 +22,6 @@ import UnitCard from '../unit-card/UnitCard'
 import formatTimestamp from '../../utils/formatTimestamp'
 import formatTimer from '../../utils/formatTimer'
 import millisToSeconds from '../../utils/millisToSeconds'
-import { useState } from 'react'
 import { useBuildUnits } from '../../store/buildUnitsContext'
 
 type BuildUnitsQueueProps = {
@@ -48,7 +48,7 @@ function BuildUnitsQueue({ unitType }: BuildUnitsQueueProps) {
   return (
     <Paper variant="outlined">
       {showQueue ? (
-        <Stack direction={'row'} gap={1} padding={1}>
+        <Stack direction={'row'} gap={1} padding={1} sx={{ overflowX: 'scroll' }}>
           {queue.map(({ unitName, amount }, index) => {
             const unit = units.find((unit) => unit.name === unitName)
 
@@ -111,7 +111,7 @@ function QueueItem({ unit, amount, player, index }: QueueItemProps) {
         <UnitCard showNameLabel={false} unit={unit} amount={amount} height={128} width={128}>
           <>
             {/* Countdown */}
-            <Box position={'absolute'} top={16} sx={{ transform: 'translate(0, -50%)' }}>
+            <Box position={'absolute'} top={20} sx={{ transform: 'translate(0, -50%)' }}>
               <Paper variant="outlined">
                 <Tooltip
                   title={translate(

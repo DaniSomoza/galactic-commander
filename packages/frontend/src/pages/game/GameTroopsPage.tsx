@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import StarsIcon from '@mui/icons-material/Stars'
 import GroupIcon from '@mui/icons-material/Group'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
@@ -45,7 +45,7 @@ function GameTroopsPage() {
 
       <Stack direction={'column'} gap={2} marginTop={1}>
         {units.map((unit) => {
-          const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
+          const unitRequirements = checkUnitRequirements(unit, player)
 
           const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(player, selectedPlanet, unit)
 
@@ -81,7 +81,7 @@ function GameTroopsPage() {
                             paddingRight={0.8}
                             alignItems={'center'}
                           >
-                            {unit.isHero && <MilitaryTechIcon fontSize="small" />}
+                            {unit.isHero && <StarsIcon fontSize="small" color="info" />}
                             <Typography variant="body1" fontSize={13}>
                               {translate(unit.name)}
                             </Typography>
@@ -127,20 +127,13 @@ function GameTroopsPage() {
                   </Box>
                 </Box>
 
-                <Stack padding={1} flexGrow={1}>
-                  <Stack direction={'row'} gap={1}>
-                    {/* Unit bonus */}
+                <Stack padding={1} flexGrow={1} gap={1}>
+                  <Stack alignItems={'flex-start'} gap={1}>
+                    <UnitRequirements unitRequirements={unitRequirements} unitName={unit.name} />
+
                     <UnitBonus bonus={unit.bonus} />
 
-                    {/* Requirements Part */}
-                    <UnitRequirements requirements={requirements} />
-                  </Stack>
-
-                  <Stack direction={'row'} paddingTop={1}>
-                    {/* Stats Part */}
-                    <Box flexBasis={'70%'}>
-                      <UnitStats unit={unit} player={player} />
-                    </Box>
+                    <UnitStats unit={unit} player={player} />
                   </Stack>
 
                   <Stack
@@ -163,7 +156,7 @@ function GameTroopsPage() {
                       <Button
                         variant="contained"
                         size="small"
-                        disabled={!isUnitAvailable}
+                        disabled={!unitRequirements.isUnitAvailable}
                         onClick={() => setUnitToBuild(unit)}
                       >
                         {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}

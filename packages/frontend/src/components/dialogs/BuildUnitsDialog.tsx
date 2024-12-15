@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper'
 import Tooltip from '@mui/material/Tooltip'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import StarsIcon from '@mui/icons-material/Stars'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
 import DiamondIcon from '@mui/icons-material/Diamond'
@@ -81,7 +81,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   const isValidPopulation = maxPlayerPopulation >= predictedPopulation
   const isValidEnergy = maxPlayerEnergy >= predictedEnergy
 
-  const { requirements } = checkUnitRequirements(unitToBuild, player!)
+  const unitRequirements = checkUnitRequirements(unitToBuild, player!)
 
   async function performUpdateBuildUnitsQueue() {
     setIsLoading(true)
@@ -171,7 +171,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           paddingRight={0.8}
                           alignItems={'center'}
                         >
-                          {unitToBuild.isHero && <MilitaryTechIcon fontSize="small" />}
+                          {unitToBuild.isHero && <StarsIcon fontSize="small" color="info" />}
                           <Typography variant="body1" fontSize={13}>
                             {translate(unitToBuild.name)}
                           </Typography>
@@ -215,20 +215,14 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
         </Paper>
 
         <Paper sx={{ marginTop: 1 }}>
-          <Stack
-            direction={'row'}
-            gap={1}
-            padding={1}
-            justifyContent={'center'}
-            alignItems={'flex-end'}
-          >
+          <Stack direction={'row'} gap={1} padding={1} justifyContent={'center'}>
             <Box flexBasis={'50%'}>
               <Stack gap={1}>
+                {/* Requirements Part */}
+                <UnitRequirements unitRequirements={unitRequirements} unitName={unitToBuild.name} />
+
                 {/* Unit bonus */}
                 <UnitBonus bonus={unitToBuild.bonus} />
-
-                {/* Requirements Part */}
-                <UnitRequirements requirements={requirements} />
               </Stack>
             </Box>
 

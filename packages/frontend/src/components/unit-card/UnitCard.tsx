@@ -73,7 +73,7 @@ function UnitCard({
                   paddingRight={0.8}
                   alignItems={'center'}
                 >
-                  {unit.isHero && <StarsIcon fontSize="small" />}
+                  {unit.isHero && <StarsIcon fontSize="small" color="info" />}
                   <Typography variant="body1" fontSize={13}>
                     {translate(unit.name)}
                   </Typography>
@@ -97,6 +97,7 @@ function UnitCard({
                   paddingRight={0.8}
                   alignItems={'center'}
                 >
+                  {unit.isHero && <StarsIcon fontSize="small" color="info" />}
                   <UnitIconComponent fontSize="small" />
                   <Typography fontSize={12}>{formatNumber(amount, true)}</Typography>
                 </Stack>

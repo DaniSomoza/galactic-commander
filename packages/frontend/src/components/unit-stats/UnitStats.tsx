@@ -21,7 +21,7 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice'
 import GroupIcon from '@mui/icons-material/Group'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import StarsIcon from '@mui/icons-material/Stars'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import { PlayerType } from 'game-api-microservice/src/types/Player'
@@ -91,14 +91,8 @@ function UnitStats({ unit, player }: UnitStatsProps) {
           <ListItem disablePadding>
             <Tooltip title={translate('SHIELD_UNIT_TOOLTIP', shield, unit.stats.shield)} arrow>
               <Stack direction={'row'} gap={1} paddingLeft={1} alignItems={'center'}>
-                <ShieldIcon
-                  fontSize="small"
-                  color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
-                />
-                <Typography
-                  fontSize={12}
-                  color={unit.type === 'SPACESHIP' && unit.stats.shield ? 'action' : '#ffffff4d'}
-                >
+                <ShieldIcon fontSize="small" color={unit.stats.shield ? 'action' : 'disabled'} />
+                <Typography fontSize={12} color={unit.stats.shield ? 'action' : '#ffffff4d'}>
                   {formatNumber(shield, true)}
                 </Typography>
               </Stack>
@@ -224,28 +218,25 @@ function UnitStats({ unit, player }: UnitStatsProps) {
         >
           <ListItem disablePadding>
             <Tooltip title={translate('INVISIBLE_UNIT_TOOLTIP')} arrow>
-              <VisibilityOffIcon
-                fontSize="small"
-                color={unit.isInvisible ? 'success' : 'disabled'}
-              />
+              <VisibilityOffIcon fontSize="small" color={unit.isInvisible ? 'info' : 'disabled'} />
             </Tooltip>
           </ListItem>
 
           <ListItem disablePadding>
             <Tooltip title={translate('ORGANIC_UNIT_TOOLTIP')} arrow>
-              <BugReportIcon fontSize="small" color={unit.isOrganic ? 'success' : 'disabled'} />
+              <BugReportIcon fontSize="small" color={unit.isOrganic ? 'info' : 'disabled'} />
             </Tooltip>
           </ListItem>
 
           {/* <ListItem disablePadding>
             <Tooltip title={translate('NO_CAPTURABLE_UNIT_TOOLTIP')} arrow>
-              <ChurchIcon fontSize="small" color={!unit.isCapturable ? 'success' : 'disabled'} />
+              <ChurchIcon fontSize="small" color={!unit.isCapturable ? 'info' : 'disabled'} />
             </Tooltip>
           </ListItem> */}
 
           <ListItem disablePadding>
             <Tooltip title={translate('AIRBORNE_UNIT_TOOLTIP')} arrow>
-              <ParaglidingIcon fontSize="small" color={unit.isAirborne ? 'success' : 'disabled'} />
+              <ParaglidingIcon fontSize="small" color={unit.isAirborne ? 'info' : 'disabled'} />
             </Tooltip>
           </ListItem>
 
@@ -253,7 +244,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
             <Tooltip title={translate('SHIELD_PIERCING_UNIT_TOOLTIP')} arrow>
               <LocalPoliceIcon
                 fontSize="small"
-                color={unit.hasShieldPiercing ? 'success' : 'disabled'}
+                color={unit.hasShieldPiercing ? 'info' : 'disabled'}
               />
             </Tooltip>
           </ListItem>
@@ -270,8 +261,8 @@ function UnitStats({ unit, player }: UnitStatsProps) {
         {unit.isHero && (
           <ListItem disablePadding sx={{ width: 'auto' }}>
             <Tooltip title={translate('UNIT_HERO_TOOLTIP')} arrow>
-              <Stack direction={'row'} gap={0.5} alignItems={'center'}>
-                <MilitaryTechIcon fontSize="small" />
+              <Stack direction={'row'} gap={0.5} alignItems={'center'} paddingRight={1}>
+                <StarsIcon fontSize="small" color="info" />
               </Stack>
             </Tooltip>
           </ListItem>

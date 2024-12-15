@@ -90,7 +90,7 @@ async function processStartBuildUnitsTask(
         nextBuildUnits.amount
       )
 
-      await Promise.all([player.save(), taskRepository.createStartBuildUnitsTask(buildUnitsTask)])
+      await Promise.all([planet.save(), taskRepository.createStartBuildUnitsTask(buildUnitsTask)])
     }
   }
 
