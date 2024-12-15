@@ -460,8 +460,8 @@ const pirateFrigate: IUnit = {
 
 // Pirate Defense (Defense)
 const pirateLaserCannon: IUnit = {
-  name: 'SPACESHIP_PIRATE_LASER_CANNON_NAME',
-  description: 'SPACESHIP_PIRATE_LASER_CANNON_DESCRIPTION',
+  name: 'DEFENSE_PIRATE_LASER_CANNON_NAME',
+  description: 'DEFENSE_PIRATE_LASER_CANNON_DESCRIPTION',
 
   raceName: 'PIRATES_RACE_NAME',
 

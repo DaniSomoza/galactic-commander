@@ -20,8 +20,9 @@ const unitImages: Record<string, string> = {
   SPACESHIP_PIRATE_STAR_FIGHTER_NAME: '/units/pirates/spaceships/pirate_star_fighter_unit.jpeg',
   SPACESHIP_PIRATE_INTERCEPTOR_NAME: '/units/pirates/spaceships/pirate_interceptor_unit.jpeg',
   SPACESHIP_PIRATE_CRUISER_NAME: '/units/pirates/spaceships/pirate_cruiser_unit.jpeg',
-  SPACESHIP_PIRATE_FRIGATE_NAME: '/units/pirates/spaceships/pirate_frigate_unit.jpeg'
+  SPACESHIP_PIRATE_FRIGATE_NAME: '/units/pirates/spaceships/pirate_frigate_unit.jpeg',
   // defenses
+  DEFENSE_PIRATE_LASER_CANNON_NAME: '/units/pirates/defenses/pirate_laser_cannon_unit.jpeg'
 }
 
 const researchImages: Record<string, string> = {
