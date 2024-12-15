@@ -16,6 +16,7 @@ import Image from '../image/Image'
 import formatNumber from '../../utils/formatNumber'
 
 type UnitCardProps = {
+  showNameLabel?: boolean
   unit: UnitType
   amount: number
   height?: number
@@ -33,6 +34,7 @@ const unitIcon = {
 }
 
 function UnitCard({
+  showNameLabel = true,
   unit,
   amount,
   height = DEFAULT_HEIGHT,
@@ -44,61 +46,68 @@ function UnitCard({
   const UnitIconComponent = unitIcon[unit.type]
   return (
     <Box sx={{ position: 'relative' }}>
-      <Stack justifyContent="center" alignItems="center">
-        <Image
-          src={getImage(unit.name)}
-          alt={translate(unit.name)}
-          height={`${height}px`}
-          width={`${width}px`}
-          border
-        />
+      <Paper variant="outlined">
+        <Stack justifyContent="center" alignItems="center">
+          <Image
+            src={getImage(unit.name)}
+            alt={translate(unit.name)}
+            height={`${height}px`}
+            width={`${width}px`}
+            border
+          />
 
-        {/* Unit name */}
-        <Box
-          position={'absolute'}
-          top={20}
-          maxWidth={width}
-          sx={{ transform: 'translate(0, -50%)' }}
-        >
-          <Paper variant="outlined">
-            <Stack
-              direction={'row'}
-              gap={0.5}
-              padding={0.4}
-              paddingLeft={0.6}
-              paddingRight={0.8}
-              alignItems={'center'}
+          {/* Unit name */}
+          {showNameLabel && (
+            <Box
+              position={'absolute'}
+              top={20}
+              maxWidth={width}
+              sx={{ transform: 'translate(0, -50%)' }}
             >
-              {unit.isHero && <StarsIcon fontSize="small" />}
-              <Typography variant="body1" fontSize={13}>
-                {translate(unit.name)}
-              </Typography>
-            </Stack>
-          </Paper>
-        </Box>
+              <Paper variant="outlined">
+                <Stack
+                  direction={'row'}
+                  gap={0.5}
+                  padding={0.4}
+                  paddingLeft={0.6}
+                  paddingRight={0.8}
+                  alignItems={'center'}
+                >
+                  {unit.isHero && <StarsIcon fontSize="small" />}
+                  <Typography variant="body1" fontSize={13}>
+                    {translate(unit.name)}
+                  </Typography>
+                </Stack>
+              </Paper>
+            </Box>
+          )}
 
-        {/* Amount of units */}
-        <Box position={'absolute'} right={0} bottom={0} padding={1}>
-          <Paper variant="outlined">
-            <Tooltip title={translate('AMOUNT_OF_UNITS_TOOLTIP', formatNumber(amount, true))} arrow>
-              <Stack
-                direction={'row'}
-                gap={0.5}
-                padding={0.4}
-                paddingLeft={0.6}
-                paddingRight={0.8}
-                alignItems={'center'}
+          {/* Amount of units */}
+          <Box position={'absolute'} right={0} bottom={0} padding={0.5}>
+            <Paper variant="outlined">
+              <Tooltip
+                title={translate('AMOUNT_OF_UNITS_TOOLTIP', formatNumber(amount, true))}
+                arrow
               >
-                <UnitIconComponent fontSize="small" />
-                <Typography fontSize={12}>{formatNumber(amount, true)}</Typography>
-              </Stack>
-            </Tooltip>
-          </Paper>
-        </Box>
+                <Stack
+                  direction={'row'}
+                  gap={0.5}
+                  padding={0.4}
+                  paddingLeft={0.6}
+                  paddingRight={0.8}
+                  alignItems={'center'}
+                >
+                  <UnitIconComponent fontSize="small" />
+                  <Typography fontSize={12}>{formatNumber(amount, true)}</Typography>
+                </Stack>
+              </Tooltip>
+            </Paper>
+          </Box>
 
-        {/* additional labels */}
-        {children}
-      </Stack>
+          {/* additional labels */}
+          {children}
+        </Stack>
+      </Paper>
     </Box>
   )
 }

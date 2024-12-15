@@ -104,7 +104,6 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   }
 
   const buildUnitBonus = computedBonus(player!.perks, 'TROOPS_TRAINING_BONUS')
-
   const buildUnitDuration = millisToSeconds(unitToBuild.buildBaseTime * (100 / buildUnitBonus))
 
   const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
