@@ -12,6 +12,8 @@ import { UnitTypes } from '../../types/IUnit'
 import { IPlanet } from '../../types/IPlanet'
 import createStartBuildUnitsTask from './utils/createStartBuildUnitsTask'
 import taskRepository from '../../repositories/taskRepository'
+import getPlayerUnit from '../units/getPlayerUnit'
+import getFirstUnitInTheBuildQueue from '../units/getFirstUnitInTheBuildQueue'
 
 async function processFinishBuildUnitsTask(
   task: ITaskTypeDocument<FinishBuildUnitsTaskType>,
@@ -32,18 +34,9 @@ async function processFinishBuildUnitsTask(
     throw new GameEngineError('invalid planet owner')
   }
 
-  const raceUnit = player.race.units.find(
-    (raceUnit) => raceUnit._id.toString() === task.data.build.unitId
-  )
-  const specialPlanetUnit = planet.units.find(
-    (planetUnit) => planetUnit._id.toString() === task.data.build.unitId
-  )
-
-  const unit = raceUnit || specialPlanetUnit
+  const unit = getPlayerUnit(player, task.data.build.unitId, planet)
 
   if (!unit) {
-    // TODO: check build units queue
-
     throw new GameEngineError('invalid unit')
   }
 
@@ -121,34 +114,24 @@ async function processFinishBuildUnitsTask(
   planet.unitBuild[buildUnitsType[unit.type]].activeBuild = undefined
 
   const nextBuildUnits = planet.unitBuild[buildUnitsType[unit.type]].queue.shift()
+  const nextUnitInTheQueue = getFirstUnitInTheBuildQueue(player, planet, nextBuildUnits)
 
-  if (nextBuildUnits) {
-    const raceUnit = player.race.units.find((raceUnit) => raceUnit.name === nextBuildUnits.unitName)
-    const specialPlanetUnit = planet.units.find(
-      (planetUnit) => planetUnit.name === nextBuildUnits.unitName
+  if (nextUnitInTheQueue && nextBuildUnits) {
+    const buildUnitsTask = createStartBuildUnitsTask(
+      task.universeId,
+      player._id.toString(),
+      planet._id.toString(),
+      nextUnitInTheQueue._id.toString(),
+      nextBuildUnits.amount
     )
 
-    const nextUnitInTheQueue = raceUnit || specialPlanetUnit
-
-    if (nextUnitInTheQueue) {
-      // TODO: check if it has enough resources => next Build unit ???
-
-      const buildUnitsTask = createStartBuildUnitsTask(
-        task.universeId,
-        player._id.toString(),
-        planet._id.toString(),
-        nextUnitInTheQueue._id.toString(),
-        nextBuildUnits.amount
-      )
-
-      Promise.all([
-        player.save(),
-        planetFleet.save(),
-        points.save(),
-        planet.save(),
-        taskRepository.createStartBuildUnitsTask(buildUnitsTask)
-      ])
-    }
+    return Promise.all([
+      player.save(),
+      planetFleet.save(),
+      points.save(),
+      planet.save(),
+      taskRepository.createStartBuildUnitsTask(buildUnitsTask)
+    ])
   }
 
   return Promise.all([player.save(), planetFleet.save(), points.save(), planet.save()])

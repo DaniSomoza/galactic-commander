@@ -8,8 +8,6 @@ import PlayerPerksSection from '../../components/player-perks-section/PlayerPerk
 function GameDashboardPage() {
   const { player, isPlayerLoading } = usePlayer()
 
-  console.log('player: ', player)
-
   // TODO: ADD PLAYER RESEARCH QUEUE ?
 
   // TODO: create computed bonuses

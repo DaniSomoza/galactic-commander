@@ -16,6 +16,10 @@ import computedBonus from '../bonus/computedBonus'
 import { UnitTypes } from '../../types/IUnit'
 import { IBonus } from '../../types/IBonus'
 import { IPlanet } from '../../types/IPlanet'
+import getPlayerUnit from '../units/getPlayerUnit'
+import getFirstUnitInTheBuildQueue from '../units/getFirstUnitInTheBuildQueue'
+import taskRepository from '../../repositories/taskRepository'
+import createStartBuildUnitsTask from './utils/createStartBuildUnitsTask'
 
 async function processStartBuildUnitsTask(
   task: ITaskTypeDocument<StartBuildUnitsTaskType>,
@@ -36,18 +40,9 @@ async function processStartBuildUnitsTask(
     throw new GameEngineError('invalid planet owner')
   }
 
-  const raceUnit = player.race.units.find(
-    (raceUnit) => raceUnit._id.toString() === task.data.build.unitId
-  )
-  const specialPlanetUnit = planet.units.find(
-    (planetUnit) => planetUnit._id.toString() === task.data.build.unitId
-  )
-
-  const unit = raceUnit || specialPlanetUnit
+  const unit = getPlayerUnit(player, task.data.build.unitId, planet)
 
   if (!unit) {
-    // TODO: check build units queue
-
     throw new GameEngineError('invalid unit')
   }
 
@@ -63,23 +58,15 @@ async function processStartBuildUnitsTask(
     throw new GameEngineError('player already building defenses in this planet')
   }
 
+  const buildUnitsType: Record<UnitTypes, keyof IPlanet['unitBuild']> = {
+    TROOP: 'troops',
+    SPACESHIP: 'spaceships',
+    DEFENSE: 'defenses'
+  }
+
   const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
-
-  if (!isUnitAvailable) {
-    throw new GameEngineError('unit not available for this player', requirements)
-  }
-
-  // TODO: create buildUnits queue
-
-  if (!isValidUnitAmount(unit, task.data.build.amount, player)) {
-    // TODO: check build units queue
-
-    throw new GameEngineError('invalid unit amount')
-  }
-
-  if (isHeroAlreadyBuild(unit, player.fleets)) {
-    throw new GameEngineError('invalid unit, hero already build')
-  }
+  const isValidAmount = isValidUnitAmount(unit, task.data.build.amount, player)
+  const isHeroUnitAlreadyBuild = isHeroAlreadyBuild(unit, player.fleets)
 
   const resourceCost = unit.resourceCost * task.data.build.amount
   const unitEnergyCost = unit.energyCost || 0
@@ -87,9 +74,39 @@ async function processStartBuildUnitsTask(
 
   const hasEnoughResources = planet.resources >= resourceCost
 
-  if (!hasEnoughResources) {
-    // TODO: check build units queue
+  const checkBuildUnitsQueue =
+    !isUnitAvailable || !isValidAmount || isHeroUnitAlreadyBuild || !hasEnoughResources
 
+  if (checkBuildUnitsQueue) {
+    const nextBuildUnits = planet.unitBuild[buildUnitsType[unit.type]].queue.shift()
+    const nextUnitInTheQueue = getFirstUnitInTheBuildQueue(player, planet, nextBuildUnits)
+
+    if (nextUnitInTheQueue && nextBuildUnits) {
+      const buildUnitsTask = createStartBuildUnitsTask(
+        task.universeId,
+        player._id.toString(),
+        planet._id.toString(),
+        nextUnitInTheQueue._id.toString(),
+        nextBuildUnits.amount
+      )
+
+      await Promise.all([player.save(), taskRepository.createStartBuildUnitsTask(buildUnitsTask)])
+    }
+  }
+
+  if (!isUnitAvailable) {
+    throw new GameEngineError('unit not available for this player', requirements)
+  }
+
+  if (!isValidAmount) {
+    throw new GameEngineError('invalid unit amount')
+  }
+
+  if (isHeroUnitAlreadyBuild) {
+    throw new GameEngineError('invalid unit, hero already build')
+  }
+
+  if (!hasEnoughResources) {
     throw new GameEngineError('no resources available', {
       resourceCost,
       planetResources: planet.resources
@@ -138,12 +155,6 @@ async function processStartBuildUnitsTask(
   }
   const taskModel = getTaskModel<FinishBuildUnitsTaskType>()
   const newTask = new taskModel(finishBuildUnitsTask)
-
-  const buildUnitsType: Record<UnitTypes, keyof IPlanet['unitBuild']> = {
-    TROOP: 'troops',
-    SPACESHIP: 'spaceships',
-    DEFENSE: 'defenses'
-  }
 
   planet.unitBuild[buildUnitsType[unit.type]].activeBuild = {
     unitId: unit._id.toString(),

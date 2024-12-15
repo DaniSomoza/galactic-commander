@@ -424,11 +424,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
         {activeBuildTroops ? (
           <Tooltip title={'Add units to planet queue'} arrow>
-            <Button
-              disabled={isLoading || !!error}
-              autoFocus
-              onClick={performUpdateBuildUnitsQueue}
-            >
+            <Button disabled={isLoading} autoFocus onClick={performUpdateBuildUnitsQueue}>
               Queue units
             </Button>
           </Tooltip>

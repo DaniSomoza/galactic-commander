@@ -16,6 +16,9 @@ function PopulationLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
 
+  // TODO: move this to usePlayer
+  // const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
+
   return (
     <Paper variant="outlined">
       <Tooltip
@@ -42,8 +45,9 @@ function PopulationLabel() {
             textAlign="center"
           >
             {player ? (
-              `${calculateCurrentPlayerPopulation(player)} / ${formatNumber(
-                calculateMaxPlayerPopulation(player)
+              `${formatNumber(calculateCurrentPlayerPopulation(player), true)} / ${formatNumber(
+                calculateMaxPlayerPopulation(player),
+                true
               )}`
             ) : (
               <Skeleton variant="text" width={32} />

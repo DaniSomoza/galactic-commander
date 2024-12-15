@@ -24,9 +24,6 @@ function ActiveBuildTroopsSection() {
 
   const { activeBuildTroopsCountdown, activeBuildTroops } = useBuildUnits()
 
-  console.log('activeBuildTroopsCountdown: ', activeBuildTroopsCountdown)
-  console.log('activeBuildTroops: ', activeBuildTroops)
-
   if (!selectedPlanet || !player || isPlayerLoading) {
     return <Skeleton variant="rounded" height={'200px'} width={'200px'} />
   }
@@ -42,8 +39,6 @@ function ActiveBuildTroopsSection() {
   if (!unit) {
     return <Skeleton variant="rounded" height={'200px'} width={'200px'} />
   }
-
-  console.log('>>> unit: ', unit)
 
   return (
     <Paper variant="outlined">

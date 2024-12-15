@@ -42,8 +42,9 @@ function EnergyLabel() {
             textAlign="center"
           >
             {player ? (
-              `${calculateCurrentPlayerEnergy(player)} / ${formatNumber(
-                calculateMaxPlayerEnergy(player)
+              `${formatNumber(calculateCurrentPlayerEnergy(player), true)} / ${formatNumber(
+                calculateMaxPlayerEnergy(player),
+                true
               )}`
             ) : (
               <Skeleton variant="text" width={32} />

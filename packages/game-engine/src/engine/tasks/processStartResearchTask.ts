@@ -62,10 +62,7 @@ async function processStartResearchTask(
         nextResearch._id.toString()
       )
 
-      await Promise.all([
-        player.save(),
-        await taskRepository.createStartResearchTask(startResearchTask)
-      ])
+      await Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
     }
 
     throw new GameEngineError('no resources available')

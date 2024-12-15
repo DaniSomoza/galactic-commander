@@ -7,6 +7,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
 import GroupIcon from '@mui/icons-material/Group'
+import AlarmIcon from '@mui/icons-material/Alarm'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
@@ -22,6 +23,8 @@ import UnitStats from '../../components/unit-stats/UnitStats'
 import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
 import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
 import UnitBonus from '../../components/unit-bonus/UnitBonus'
+import formatTimer from '../../utils/formatTimer'
+import formatTimestamp from '../../utils/formatTimestamp'
 
 function GameTroopsPage() {
   const { translate } = useTranslations()
@@ -37,10 +40,103 @@ function GameTroopsPage() {
   }
 
   const activeBuildUnits = selectedPlanet.unitBuild.troops.activeBuild
+  const buildTroopsQueue = selectedPlanet.unitBuild.troops.queue
+  const showQueue = buildTroopsQueue.length > 0
 
   return (
     <>
-      <Stack direction={'column'} gap={2}>
+      {/* TODO: show queue */}
+      {showQueue && (
+        <Paper variant="outlined">
+          <Stack direction={'row'} gap={1} padding={1}>
+            {buildTroopsQueue.map(({ unitName, amount }, index) => {
+              const unit = units.find((unit) => unit.name === unitName)
+
+              // TODO: create a BASE queue component
+
+              const countdown = ((unit?.buildBaseTime || 0) * amount) / 1_000
+
+              return (
+                <Paper variant="outlined">
+                  <Box
+                    sx={{ position: 'relative' }}
+                    // onMouseEnter={() => setShowRemoveButton(true)}
+                    // onMouseLeave={() => setShowRemoveButton(false)}
+                  >
+                    <Tooltip title={translate(unitName)} arrow>
+                      <Stack key={index} justifyContent={'center'} direction={'row'} gap={1}>
+                        <Image
+                          src={getUnitImage(unitName)}
+                          alt={translate(unitName)}
+                          height={'128px'}
+                          width={'128px'}
+                          border
+                        />
+
+                        {/* Countdown */}
+                        <Box
+                          position={'absolute'}
+                          top={16}
+                          sx={{ transform: 'translate(0, -50%)' }}
+                        >
+                          <Paper variant="outlined">
+                            <Tooltip
+                              title={translate(
+                                'GAME_PLAYER_ACTIVE_BUILD_UNITS_END_DATE',
+                                formatTimestamp(countdown || 0)
+                              )}
+                              arrow
+                            >
+                              <Stack
+                                direction={'row'}
+                                gap={0.5}
+                                padding={0.4}
+                                paddingLeft={0.6}
+                                paddingRight={0.8}
+                                alignItems={'center'}
+                              >
+                                <AlarmIcon fontSize="small" />
+                                <Typography fontSize={12}>{formatTimer(countdown)}</Typography>
+                              </Stack>
+                            </Tooltip>
+                          </Paper>
+                        </Box>
+
+                        {/* Amount of units in this planet */}
+                        <Box position={'absolute'} right={0} bottom={0} padding={0.5}>
+                          <Paper variant="outlined">
+                            <Tooltip
+                              title={translate(
+                                'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_QUEUE_TOOLTIP',
+                                formatNumber(amount, true)
+                              )}
+                              arrow
+                            >
+                              <Stack
+                                direction={'row'}
+                                gap={0.5}
+                                padding={0.4}
+                                paddingLeft={0.6}
+                                paddingRight={0.8}
+                                alignItems={'center'}
+                              >
+                                <GroupIcon fontSize="small" />
+                                <Typography fontSize={12}>{formatNumber(amount, true)}</Typography>
+                              </Stack>
+                            </Tooltip>
+                          </Paper>
+                        </Box>
+                      </Stack>
+                    </Tooltip>
+                  </Box>
+                </Paper>
+              )
+            })}
+          </Stack>
+        </Paper>
+      )}
+
+      <Stack direction={'column'} gap={2} marginTop={1}>
         {units.map((unit) => {
           const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
 
@@ -106,7 +202,7 @@ function GameTroopsPage() {
                             >
                               <GroupIcon fontSize="small" />
                               <Typography fontSize={13}>
-                                {formatNumber(troopsInThisPlanet)}
+                                {formatNumber(troopsInThisPlanet, true)}
                               </Typography>
                             </Stack>
                           </Tooltip>

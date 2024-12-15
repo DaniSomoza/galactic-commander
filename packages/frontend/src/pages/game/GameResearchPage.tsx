@@ -96,6 +96,8 @@ function GameResearchPage() {
               )
               const nextLevel = currentLevel + 1
 
+              // TODO: create a Queue base component ????
+
               const startResearchTime = calculateStartResearchTimestamp(
                 player,
                 researchQueue,
