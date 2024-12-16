@@ -163,7 +163,7 @@ const pirateCorsair: IUnit = {
 }
 
 // Jack Spacerow (Hero Troop)
-const pirateHero: IUnit = {
+const pirateJackSpacerowHero: IUnit = {
   name: 'TROOP_PIRATE_JACK_SPACEROW_HERO_NAME',
   description: 'TROOP_PIRATE_JACK_SPACEROW_HERO_DESCRIPTION',
 
@@ -281,7 +281,7 @@ const pirateStarFighter: IUnit = {
     shield: 15,
     health: 150,
     speed: 100,
-    cargo: 0,
+    cargo: 15,
     starFighterCapacity: 0,
     troopsCapacity: 0
   },
@@ -330,7 +330,7 @@ const pirateInterceptor: IUnit = {
     shield: 25,
     health: 170,
     speed: 120,
-    cargo: 0,
+    cargo: 5,
     starFighterCapacity: 0,
     troopsCapacity: 0
   },
@@ -379,7 +379,7 @@ const pirateCruiser: IUnit = {
     shield: 80,
     health: 270,
     speed: 140,
-    cargo: 500,
+    cargo: 350,
     starFighterCapacity: 0,
     troopsCapacity: 5
   },
@@ -509,7 +509,7 @@ const pirateTroops: IUnit[] = [
   pirateCadet,
   pirateOfficer,
   pirateCorsair,
-  pirateHero
+  pirateJackSpacerowHero
   // TODO: Add all units
 ]
 

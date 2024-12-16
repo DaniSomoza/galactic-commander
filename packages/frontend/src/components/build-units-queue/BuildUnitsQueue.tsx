@@ -48,7 +48,7 @@ function BuildUnitsQueue({ unitType }: BuildUnitsQueueProps) {
   return (
     <Paper variant="outlined">
       {showQueue ? (
-        <Stack direction={'row'} gap={1} padding={1} sx={{ overflowX: 'scroll' }}>
+        <Stack direction={'row'} gap={1} padding={1} sx={{ overflowX: 'auto' }}>
           {queue.map(({ unitName, amount }, index) => {
             const unit = units.find((unit) => unit.name === unitName)
 

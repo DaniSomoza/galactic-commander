@@ -36,22 +36,22 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
   const color = isUnitAvailable ? 'success' : 'warning'
 
   return (
-    <Accordion defaultExpanded={!isUnitAvailable}>
+    <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} id={`unit-requirements-${unitName}`}>
-        <Paper variant="outlined" sx={{ padding: 0.6 }}>
-          <Stack direction={'row'} gap={0.5} alignItems={'center'}>
-            {isUnitAvailable ? (
-              <CheckCircleIcon fontSize="small" color={color} />
-            ) : (
-              <WarningRoundedIcon fontSize="small" color={color} />
-            )}
-            <Typography fontSize={12} color={color}>
-              {isUnitAvailable ? 'Unit available' : 'Unit not available'}
-            </Typography>
-          </Stack>
-        </Paper>
+        <Stack direction={'row'} gap={0.5} alignItems={'center'}>
+          {isUnitAvailable ? (
+            <CheckCircleIcon fontSize="small" color={color} />
+          ) : (
+            <WarningRoundedIcon fontSize="small" color={color} />
+          )}
+          <Typography fontSize={12} color={color}>
+            {isUnitAvailable ? 'Unit available' : 'Unit not available'}
+          </Typography>
+        </Stack>
       </AccordionSummary>
+
       <Divider />
+
       <AccordionDetails sx={{ paddingBottom: 1.2 }}>
         <Box flexGrow={1}>
           <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>

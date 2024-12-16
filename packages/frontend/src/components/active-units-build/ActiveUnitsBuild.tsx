@@ -27,17 +27,29 @@ function ActiveUnitsBuild({ activeBuild, activeBuildCountdown }: ActiveUnitsBuil
   const { translate } = useTranslations()
 
   if (!selectedPlanet || !player || isPlayerLoading) {
-    return <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+    return (
+      <Paper variant="outlined">
+        <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+      </Paper>
+    )
   }
 
   if (!activeBuild || !activeBuildCountdown) {
-    return <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+    return (
+      <Paper variant="outlined">
+        <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+      </Paper>
+    )
   }
 
   const unit = units.find((unit) => unit.name === activeBuild.unitName)
 
   if (!unit) {
-    return <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+    return (
+      <Paper variant="outlined">
+        <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+      </Paper>
+    )
   }
 
   return (
