@@ -17,6 +17,7 @@ import PIRATE_TROOPS_SHIELD_RESEARCH from '../../researches/pirates/pirate-troop
 import PIRATE_TROOPS_TRAINING_RESEARCH from '../../researches/pirates/pirate-troops-training-research'
 
 // TODO: implement pirate heroes
+// TODO: implement troops transports
 
 // Pirate Cadet (Troop)
 const pirateCadet: IUnit = {
@@ -189,7 +190,111 @@ const pirateJackSpacerowHero: IUnit = {
   isHero: true,
   isInvisible: false,
   isOrganic: false,
-  isCapturable: true,
+  isCapturable: false,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 8, research: PIRATE_TROOPS_ATTACK_RESEARCH },
+      { level: 5, research: PIRATE_TROOPS_SHIELD_RESEARCH },
+      { level: 9, research: PIRATE_TROOPS_HEALTH_RESEARCH },
+      { level: 4, research: PIRATE_TROOPS_POPULATION_RESEARCH },
+      { level: 6, research: PIRATE_TROOPS_TRAINING_RESEARCH }
+    ]
+  },
+
+  specials: [],
+
+  bonus: {
+    TROOPS_ATTACK_BONUS: 30,
+    TROOPS_HEALTH_BONUS: 15,
+    TROOPS_SHIELD_BONUS: 10
+  }
+}
+
+// Barba Negra Blackbeard (Hero Troop)
+const pirateBlackbeardHero: IUnit = {
+  name: 'TROOP_PIRATE_BLACKBEARD_HERO_NAME',
+  description: 'TROOP_PIRATE_BLACKBEARD_HERO_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'TROOP',
+  subtype: 'INFANTRY',
+
+  resourceCost: 2_800,
+  energyCost: 500,
+  buildBaseTime: 800_000,
+
+  stats: {
+    attack: 230,
+    shield: 80,
+    health: 750,
+    speed: 0,
+    cargo: 0,
+    starFighterCapacity: 0,
+    troopsCapacity: 0
+  },
+
+  isHero: true,
+  isInvisible: false,
+  isOrganic: false,
+  isCapturable: false,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 12, research: PIRATE_TROOPS_ATTACK_RESEARCH },
+      { level: 7, research: PIRATE_TROOPS_SHIELD_RESEARCH },
+      { level: 11, research: PIRATE_TROOPS_HEALTH_RESEARCH },
+      { level: 9, research: PIRATE_TROOPS_POPULATION_RESEARCH },
+      { level: 7, research: PIRATE_TROOPS_TRAINING_RESEARCH }
+    ]
+  },
+
+  specials: [],
+
+  bonus: {
+    TROOPS_ATTACK_BONUS: 35,
+    TROOPS_HEALTH_BONUS: 25,
+    TROOPS_SHIELD_BONUS: 15
+  }
+}
+
+// Henry Every (Rey de los piratas) (Hero Troop)
+const pirateHenryEveryHero: IUnit = {
+  name: 'TROOP_PIRATE_HENRY_EVERY_HERO_NAME',
+  description: 'TROOP_PIRATE_HENRY_EVERY_HERO_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'TROOP',
+  subtype: 'INFANTRY',
+
+  resourceCost: 1125,
+  energyCost: 100,
+  buildBaseTime: 500_000,
+
+  stats: {
+    attack: 130,
+    shield: 50,
+    health: 250,
+    speed: 0,
+    cargo: 0,
+    starFighterCapacity: 0,
+    troopsCapacity: 0
+  },
+
+  isHero: true,
+  isInvisible: false,
+  isOrganic: false,
+  isCapturable: false,
   isKamikaze: false,
   isAirborne: false,
   isSpecial: false,
@@ -224,9 +329,9 @@ const pirateReconDrone: IUnit = {
   type: 'SPACESHIP',
   subtype: 'PROBE',
 
-  resourceCost: 30,
-  energyCost: 10,
-  buildBaseTime: 50_000,
+  resourceCost: 100,
+  energyCost: 25,
+  buildBaseTime: 100_000,
 
   stats: {
     attack: 1,
@@ -272,16 +377,16 @@ const pirateStarFighter: IUnit = {
   type: 'SPACESHIP',
   subtype: 'STAR_FIGHTER',
 
-  resourceCost: 140,
-  energyCost: 110,
-  buildBaseTime: 500_000,
+  energyCost: 105,
+  resourceCost: 300,
+  buildBaseTime: 300_000,
 
   stats: {
-    attack: 170,
+    attack: 165,
     shield: 15,
-    health: 150,
-    speed: 100,
-    cargo: 15,
+    health: 260,
+    speed: 45,
+    cargo: 50,
     starFighterCapacity: 0,
     troopsCapacity: 0
   },
@@ -321,16 +426,16 @@ const pirateInterceptor: IUnit = {
   type: 'SPACESHIP',
   subtype: 'STAR_FIGHTER',
 
-  resourceCost: 140,
-  energyCost: 110,
-  buildBaseTime: 500_000,
+  energyCost: 120,
+  resourceCost: 350,
+  buildBaseTime: 350_000,
 
   stats: {
-    attack: 270,
-    shield: 25,
-    health: 170,
-    speed: 120,
-    cargo: 5,
+    attack: 170,
+    shield: 30,
+    health: 290,
+    speed: 50,
+    cargo: 50,
     starFighterCapacity: 0,
     troopsCapacity: 0
   },
@@ -370,18 +475,18 @@ const pirateCruiser: IUnit = {
   type: 'SPACESHIP',
   subtype: 'CRUISER',
 
-  resourceCost: 700,
   energyCost: 350,
-  buildBaseTime: 400_000,
+  resourceCost: 900,
+  buildBaseTime: 1_000_000,
 
   stats: {
     attack: 350,
-    shield: 80,
-    health: 270,
-    speed: 140,
-    cargo: 350,
+    shield: 85,
+    health: 1_000,
+    speed: 300,
+    cargo: 400,
     starFighterCapacity: 0,
-    troopsCapacity: 5
+    troopsCapacity: 7
   },
 
   isHero: false,
@@ -419,17 +524,17 @@ const pirateFrigate: IUnit = {
   type: 'SPACESHIP',
   subtype: 'FRIGATE',
 
-  resourceCost: 1_500,
-  energyCost: 500,
-  buildBaseTime: 700_000,
+  energyCost: 1_500,
+  resourceCost: 4_000,
+  buildBaseTime: 4_000_000,
 
   stats: {
-    attack: 550,
-    shield: 80,
-    health: 370,
-    speed: 120,
-    cargo: 1_500,
-    starFighterCapacity: 18,
+    attack: 1_500,
+    shield: 320,
+    health: 4_300,
+    speed: 1_300,
+    cargo: 2_500,
+    starFighterCapacity: 25,
     troopsCapacity: 35
   },
 
@@ -456,6 +561,169 @@ const pirateFrigate: IUnit = {
   specials: [],
 
   bonus: {}
+}
+
+// Queen Anne's Revenge Hero Frigate (Spaceship)
+const pirateQueenAnneRevengeHero: IUnit = {
+  name: 'SPACESHIP_PIRATE_QUEEN_ANNES_REVENGE_HERO_NAME',
+  description: 'SPACESHIP_PIRATE_QUEEN_ANNES_REVENGE_HERO_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'SPACESHIP',
+  subtype: 'FRIGATE',
+
+  energyCost: 5_000,
+  resourceCost: 20_000,
+  buildBaseTime: 20_000_000,
+
+  stats: {
+    attack: 16_000,
+    shield: 3_500,
+    health: 50_000,
+    speed: 2_000,
+    cargo: 30_000,
+    starFighterCapacity: 120,
+    troopsCapacity: 150
+  },
+
+  isHero: true,
+  isInvisible: false,
+  isOrganic: false,
+  isCapturable: false,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 11, research: PIRATE_FLEET_ATTACK_RESEARCH },
+      { level: 7, research: PIRATE_FLEET_SHIELD_RESEARCH },
+      { level: 10, research: PIRATE_FLEET_HULL_RESEARCH },
+      { level: 12, research: PIRATE_FLEET_ENERGY_RESEARCH },
+      { level: 6, research: PIRATE_FLEET_BUILDING_RESEARCH },
+      { level: 12, research: PIRATE_FLEET_SPEED_RESEARCH }
+    ]
+  },
+
+  specials: [],
+
+  bonus: {
+    FLEET_ATTACK_BONUS: 35,
+    FLEET_SHIELD_BONUS: 10,
+    FLEET_CARGO_BONUS: 20,
+    FLEET_SPEED_BONUS: 25
+  }
+}
+
+// Royal Fortune Hero Frigate (Spaceship)
+const pirateRoyalFortuneHero: IUnit = {
+  name: 'SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_NAME',
+  description: 'SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'SPACESHIP',
+  subtype: 'FRIGATE',
+
+  energyCost: 8_000,
+  resourceCost: 30_000,
+  buildBaseTime: 30_000_000,
+
+  stats: {
+    attack: 25_000,
+    shield: 6_000,
+    health: 80_000,
+    speed: 2_100,
+    cargo: 50_000,
+    starFighterCapacity: 150,
+    troopsCapacity: 200
+  },
+
+  isHero: true,
+  isInvisible: false,
+  isOrganic: false,
+  isCapturable: false,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 16, research: PIRATE_FLEET_ATTACK_RESEARCH },
+      { level: 14, research: PIRATE_FLEET_SHIELD_RESEARCH },
+      { level: 15, research: PIRATE_FLEET_HULL_RESEARCH },
+      { level: 17, research: PIRATE_FLEET_ENERGY_RESEARCH },
+      { level: 11, research: PIRATE_FLEET_BUILDING_RESEARCH },
+      { level: 16, research: PIRATE_FLEET_SPEED_RESEARCH }
+    ]
+  },
+
+  specials: [],
+
+  bonus: {
+    FLEET_ATTACK_BONUS: 20,
+    FLEET_SHIELD_BONUS: 10,
+    FLEET_CARGO_BONUS: 10,
+    FLEET_SPEED_BONUS: 35
+  }
+}
+
+// The Stellar Specter Hero Frigate (Spaceship)
+const pirateStellarSpecterHero: IUnit = {
+  name: 'SPACESHIP_PIRATE_THE_STELLAR_SPECTER_HERO_NAME',
+  description: 'SPACESHIP_PIRATE_THE_STELLAR_SPECTER_HERO_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'SPACESHIP',
+  subtype: 'FRIGATE',
+
+  energyCost: 10_000,
+  resourceCost: 50_000,
+  buildBaseTime: 50_000_000,
+
+  stats: {
+    attack: 32_000,
+    shield: 8_000,
+    health: 100_000,
+    speed: 2_200,
+    cargo: 80_000,
+    starFighterCapacity: 180,
+    troopsCapacity: 250
+  },
+
+  isHero: true,
+  isInvisible: true,
+  isOrganic: false,
+  isCapturable: false,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 19, research: PIRATE_FLEET_ATTACK_RESEARCH },
+      { level: 17, research: PIRATE_FLEET_SHIELD_RESEARCH },
+      { level: 19, research: PIRATE_FLEET_HULL_RESEARCH },
+      { level: 22, research: PIRATE_FLEET_ENERGY_RESEARCH },
+      { level: 16, research: PIRATE_FLEET_BUILDING_RESEARCH },
+      { level: 20, research: PIRATE_FLEET_SPEED_RESEARCH }
+    ]
+  },
+
+  specials: [
+    // TODO: ADD A SPECIAL: STEALTH FLEETS 30 mins, cooldown: 1 week
+  ],
+
+  bonus: {
+    FLEET_ATTACK_BONUS: 15,
+    FLEET_SHIELD_BONUS: 10,
+    FLEET_SPEED_BONUS: 35
+  }
 }
 
 // Pirate Defense (Defense)
@@ -509,8 +777,9 @@ const pirateTroops: IUnit[] = [
   pirateCadet,
   pirateOfficer,
   pirateCorsair,
-  pirateJackSpacerowHero
-  // TODO: Add all units
+  pirateJackSpacerowHero,
+  pirateBlackbeardHero,
+  pirateHenryEveryHero
 ]
 
 const pirateSpaceships: IUnit[] = [
@@ -518,14 +787,13 @@ const pirateSpaceships: IUnit[] = [
   pirateStarFighter,
   pirateInterceptor,
   pirateCruiser,
-  pirateFrigate
-  // TODO: Add all units
+  pirateFrigate,
+  pirateQueenAnneRevengeHero,
+  pirateRoyalFortuneHero,
+  pirateStellarSpecterHero
 ]
 
-const pirateDefenses: IUnit[] = [
-  pirateLaserCannon
-  // TODO: Add all units
-]
+const pirateDefenses: IUnit[] = [pirateLaserCannon]
 
 const pirateUnits = [...pirateTroops, ...pirateSpaceships, ...pirateDefenses]
 

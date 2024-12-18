@@ -40,11 +40,11 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
       <AccordionSummary expandIcon={<ExpandMoreIcon />} id={`unit-requirements-${unitName}`}>
         <Stack direction={'row'} gap={0.5} alignItems={'center'}>
           {isUnitAvailable ? (
-            <CheckCircleIcon fontSize="small" color={color} />
+            <CheckCircleIcon color={color} />
           ) : (
-            <WarningRoundedIcon fontSize="small" color={color} />
+            <WarningRoundedIcon color={color} />
           )}
-          <Typography fontSize={12} color={color}>
+          <Typography fontSize={13} color={color}>
             {isUnitAvailable ? 'Unit available' : 'Unit not available'}
           </Typography>
         </Stack>
@@ -80,59 +80,47 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
                     <Paper
                       variant="outlined"
                       sx={{
-                        paddingTop: 0.5,
-                        paddingBottom: 0.5,
-                        paddingRight: 0.8,
-                        paddingLeft: 0.8
+                        padding: 1
                       }}
                     >
-                      <Stack
-                        direction={'row'}
-                        gap={1}
-                        alignItems={'center'}
-                        alignContent={'center'}
-                      >
-                        {isResearchCompleted ? (
-                          <CheckCircleIcon fontSize="medium" color={color} />
-                        ) : (
-                          <Box position={'relative'} height={25}>
-                            <Box
-                              position={'absolute'}
-                              top={0}
-                              left={0}
-                              color={theme.palette.grey[400]}
-                            >
-                              <CircularProgress
-                                size="25px"
-                                variant="determinate"
-                                value={100}
-                                thickness={4}
-                                color={'inherit'}
-                              />
-                            </Box>
-
-                            <Box color={theme.palette.info.dark}>
-                              <CircularProgress
-                                size="25px"
-                                variant="determinate"
-                                value={progress || 10}
-                                thickness={4}
-                                color={'inherit'}
-                              />
-                            </Box>
-
-                            <Box
-                              position={'absolute'}
-                              sx={{ transform: 'translate(-50%, -50%)' }}
-                              left={'51%'}
-                              top={'51%'}
-                            >
-                              <Typography fontSize={14} color={color}>
-                                {playerResearchLevel}
-                              </Typography>
-                            </Box>
+                      <Stack direction={'row'} alignItems={'center'} alignContent={'center'}>
+                        <Box position={'relative'} height={28}>
+                          <Box
+                            position={'absolute'}
+                            top={0}
+                            left={0}
+                            color={theme.palette.grey[400]}
+                          >
+                            <CircularProgress
+                              size="28px"
+                              variant="determinate"
+                              value={100}
+                              thickness={4}
+                              color={'inherit'}
+                            />
                           </Box>
-                        )}
+
+                          <Box color={theme.palette.info.dark}>
+                            <CircularProgress
+                              size="28px"
+                              variant="determinate"
+                              value={progress || 10}
+                              thickness={4}
+                              color={isResearchCompleted ? 'success' : 'inherit'}
+                            />
+                          </Box>
+
+                          <Box
+                            position={'absolute'}
+                            sx={{ transform: 'translate(-50%, -50%)' }}
+                            left={'50%'}
+                            top={'50%'}
+                          >
+                            <Typography fontSize={14} color={color} fontWeight={500}>
+                              {level}
+                            </Typography>
+                          </Box>
+                        </Box>
 
                         <Stack
                           direction={'row'}
@@ -140,13 +128,7 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
                           alignItems={'center'}
                           alignContent={'center'}
                         >
-                          <Stack direction={'row'}>
-                            <Typography fontSize={15} color={color}>
-                              {level}
-                            </Typography>
-
-                            <MilitaryTechIcon color={color} fontSize="small" />
-                          </Stack>
+                          <MilitaryTechIcon color={color} />
 
                           <Typography fontSize={12} color={color}>
                             {translate(research.name)}

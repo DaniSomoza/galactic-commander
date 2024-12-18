@@ -21,6 +21,8 @@ const unitImages: Record<string, string> = {
   SPACESHIP_PIRATE_INTERCEPTOR_NAME: '/units/pirates/spaceships/pirate_interceptor_unit.jpeg',
   SPACESHIP_PIRATE_CRUISER_NAME: '/units/pirates/spaceships/pirate_cruiser_unit.jpeg',
   SPACESHIP_PIRATE_FRIGATE_NAME: '/units/pirates/spaceships/pirate_frigate_unit.jpeg',
+  SPACESHIP_PIRATE_QUEEN_ANNES_REVENGE_HERO_NAME:
+    '/units/pirates/spaceships/pirate_queen_annes_revenge_unit.jpeg',
   // defenses
   DEFENSE_PIRATE_LASER_CANNON_NAME: '/units/pirates/defenses/pirate_laser_cannon_unit.jpeg'
 }
