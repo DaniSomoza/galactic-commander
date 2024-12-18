@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 import GroupIcon from '@mui/icons-material/Group'
 import StarsIcon from '@mui/icons-material/Stars'
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import RocketIcon from '@mui/icons-material/Rocket'
 import FortIcon from '@mui/icons-material/Fort'
 
 import { UnitType } from 'game-api-microservice/src/types/Unit'
@@ -29,7 +29,7 @@ const DEFAULT_WIDTH = 200
 
 const unitIcon = {
   TROOP: GroupIcon,
-  SPACESHIP: RocketLaunchIcon,
+  SPACESHIP: RocketIcon,
   DEFENSE: FortIcon
 }
 

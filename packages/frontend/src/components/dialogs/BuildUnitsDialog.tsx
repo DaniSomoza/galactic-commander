@@ -54,7 +54,7 @@ const MAX_INPUT_AMOUNT = 10_000_000
 
 function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDialogProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [amount, setAmount] = useState<number>(0)
+  const [amount, setAmount] = useState<number>(unitToBuild.isHero ? 1 : 0)
 
   const { theme } = useTheme()
 
@@ -261,6 +261,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                   <TextField
                     label={'Amount of units to build'}
                     helperText={showErrorLabel ? error : ''}
+                    disabled={unitToBuild.isHero}
                     fullWidth
                     placeholder="type the amount"
                     error={showErrorLabel}
