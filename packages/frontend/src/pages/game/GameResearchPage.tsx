@@ -28,7 +28,7 @@ import formatNumber from '../../utils/formatNumber'
 import BonusCards from '../../components/bonus-cards/BonusCards'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
-import getResearchImage from '../../utils/getResearchImage'
+import getImage from '../../utils/getImage'
 
 function GameResearchPage() {
   const { translate } = useTranslations()
@@ -96,6 +96,8 @@ function GameResearchPage() {
               )
               const nextLevel = currentLevel + 1
 
+              // TODO: create a Queue base component ????
+
               const startResearchTime = calculateStartResearchTimestamp(
                 player,
                 researchQueue,
@@ -127,7 +129,7 @@ function GameResearchPage() {
                       <Paper variant="outlined">
                         <Stack justifyContent="center" alignItems="center" gap={1}>
                           <Image
-                            src={getResearchImage(raceResearch?.name || '')}
+                            src={getImage(raceResearch?.name || '')}
                             alt={translate(researchName)}
                             height={'128px'}
                             width={'128px'}
@@ -298,12 +300,35 @@ function GameResearchPage() {
                 <Box sx={{ position: 'relative' }}>
                   <Stack justifyContent="center" alignItems="center">
                     <Image
-                      src={getResearchImage(raceResearch?.name || '')}
+                      src={getImage(raceResearch?.name || '')}
                       alt={translate(raceResearch.name)}
                       height={'230px'}
                       width={'230px'}
                       border
                     />
+
+                    <Box
+                      position={'absolute'}
+                      top={20}
+                      padding={1}
+                      maxWidth={'230px'}
+                      sx={{ transform: 'translate(0, -50%)' }}
+                    >
+                      <Paper variant="outlined">
+                        <Typography
+                          variant="body1"
+                          fontSize={12}
+                          fontWeight={500}
+                          padding={0.4}
+                          paddingLeft={0.8}
+                          paddingRight={0.8}
+                          overflow={'hidden'}
+                          textOverflow="ellipsis"
+                        >
+                          {translate(raceResearch.name)}
+                        </Typography>
+                      </Paper>
+                    </Box>
 
                     {/* Research time */}
                     <Box position={'absolute'} left={0} bottom={0} padding={1}>
@@ -372,10 +397,6 @@ function GameResearchPage() {
 
               {/* Text Part */}
               <Stack padding={1.5} flexGrow={1}>
-                <Typography component="h2" variant="h6" fontSize={'1rem'} gutterBottom>
-                  {translate(raceResearch.name)}
-                </Typography>
-
                 <Typography variant="body2" gutterBottom>
                   {translate(raceResearch.description)}
                 </Typography>

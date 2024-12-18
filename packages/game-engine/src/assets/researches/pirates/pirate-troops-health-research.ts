@@ -1,4 +1,4 @@
-import { IResearch } from '../../../models/ResearchModel'
+import { IResearch } from '../../../types/IResearch'
 
 const PIRATE_TROOPS_HEALTH_RESEARCH: IResearch = {
   name: 'PIRATE_TROOPS_HEALTH_RESEARCH_NAME',
