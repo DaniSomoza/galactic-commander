@@ -396,31 +396,38 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                       </Tooltip>
                     </Paper>
 
-                    <Paper
-                      variant="outlined"
-                      sx={{
-                        borderColor: hasEnoughResources ? undefined : theme.palette.error.main
-                      }}
+                    <Tooltip
+                      title={translate(
+                        'UNIT_RESOURCE_COST',
+                        formatNumber(unitToBuild.resourceCost * amount, true)
+                      )}
                     >
-                      <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-                        <DiamondIcon
-                          fontSize="small"
-                          color={hasEnoughResources ? 'inherit' : 'error'}
-                        />
+                      <Paper
+                        variant="outlined"
+                        sx={{
+                          borderColor: hasEnoughResources ? undefined : theme.palette.error.main
+                        }}
+                      >
+                        <Stack direction={'row'} padding={0.5} alignItems={'center'}>
+                          <DiamondIcon
+                            fontSize="small"
+                            color={hasEnoughResources ? 'inherit' : 'error'}
+                          />
 
-                        <Typography
-                          variant="body1"
-                          fontSize={12}
-                          padding={0.4}
-                          overflow={'hidden'}
-                          textOverflow="ellipsis"
-                          textAlign="center"
-                          color={hasEnoughResources ? 'textPrimary' : 'error'}
-                        >
-                          {formatNumber(unitToBuild.resourceCost * amount, true)}
-                        </Typography>
-                      </Stack>
-                    </Paper>
+                          <Typography
+                            variant="body1"
+                            fontSize={12}
+                            padding={0.4}
+                            overflow={'hidden'}
+                            textOverflow="ellipsis"
+                            textAlign="center"
+                            color={hasEnoughResources ? 'textPrimary' : 'error'}
+                          >
+                            {formatNumber(unitToBuild.resourceCost * amount, true)}
+                          </Typography>
+                        </Stack>
+                      </Paper>
+                    </Tooltip>
                   </Stack>
                 </Stack>
               </Box>
@@ -438,7 +445,11 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
 
         {showQueueButton ? (
           <Tooltip title={'Add units to planet queue'} arrow>
-            <Button disabled={isLoading} autoFocus onClick={performUpdateBuildUnitsQueue}>
+            <Button
+              disabled={isLoading || !amount}
+              autoFocus
+              onClick={performUpdateBuildUnitsQueue}
+            >
               Queue units
             </Button>
           </Tooltip>

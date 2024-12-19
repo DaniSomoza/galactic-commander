@@ -56,7 +56,7 @@ function ActiveUnitsBuild({ activeBuild, activeBuildCountdown }: ActiveUnitsBuil
     <Paper variant="outlined">
       <UnitCard unit={unit} amount={activeBuild.amount}>
         {/* unit build countdown */}
-        <Box position={'absolute'} left={0} bottom={0} padding={0.5}>
+        <Box position={'absolute'} left={0} bottom={0} padding={1}>
           <Paper variant="outlined">
             <Tooltip
               title={translate(

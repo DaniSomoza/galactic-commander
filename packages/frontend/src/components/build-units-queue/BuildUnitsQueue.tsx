@@ -138,7 +138,11 @@ function QueueItem({ unit, amount, player, index }: QueueItemProps) {
             {/* remove item from the queue */}
             {showRemoveButton && (
               <Box position={'absolute'} top={0} right={0}>
-                <Tooltip title={translate('BUILD_UNITS_QUEUE_REMOVE_ITEM_TOOLTIP')} arrow>
+                <Tooltip
+                  title={translate('BUILD_UNITS_QUEUE_REMOVE_ITEM_TOOLTIP')}
+                  arrow
+                  placement="top"
+                >
                   <IconButton
                     size="small"
                     onClick={() => removeFromQueue(index)}
@@ -153,7 +157,7 @@ function QueueItem({ unit, amount, player, index }: QueueItemProps) {
             )}
 
             {/* position in the queue */}
-            <Box position={'absolute'} left={0} bottom={0} padding={0.5}>
+            <Box position={'absolute'} left={0} bottom={0} padding={1}>
               <Paper variant="outlined">
                 <Typography
                   variant="body1"

@@ -74,7 +74,7 @@ function UnitCard({
                   alignItems={'center'}
                 >
                   {unit.isHero && <StarsIcon fontSize="small" color="info" />}
-                  <Typography variant="body1" fontSize={13}>
+                  <Typography variant="body1" fontSize={12}>
                     {translate(unit.name)}
                   </Typography>
                 </Stack>
@@ -83,7 +83,7 @@ function UnitCard({
           )}
 
           {/* Amount of units */}
-          <Box position={'absolute'} right={0} bottom={0} padding={0.5}>
+          <Box position={'absolute'} right={0} bottom={0} padding={1}>
             <Paper variant="outlined">
               <Tooltip
                 title={translate('AMOUNT_OF_UNITS_TOOLTIP', formatNumber(amount, true))}
