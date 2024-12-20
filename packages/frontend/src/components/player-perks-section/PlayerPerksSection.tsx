@@ -15,6 +15,7 @@ type PlayerPerksSectionProps = {
   isLoading?: boolean
 }
 
+// TODO: remove this component
 function PlayerPerksSection({ playerPerks, isLoading }: PlayerPerksSectionProps) {
   const playerBonus = Object.keys(bonusTypes).reduce((playerBonus: IBonus, bonusName) => {
     ;(playerBonus[bonusName as keyof IBonus] as number) = computedBonus(

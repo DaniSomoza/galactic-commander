@@ -85,8 +85,10 @@
   "PIRATE_TROOPS_POPULATION_RESEARCH_NAME": "Reclutamiento pirata",
   "PIRATE_TROOPS_POPULATION_RESEARCH_DESCRIPTION": "Aumenta la capacidad de reclutar y mantener un número mayor de tropas piratas, fortaleciendo las operaciones y la presencia en múltiples frentes.",
 
-  "RESEARCH_ENERGY_BONUS": "Incrementa la cantidad de energía disponible para crear naves",
-  "RESEARCH_POPULATION_BONUS": "Incrementa la cantidad de tropas disponible para reclutar",
+  "RESEARCH_ENERGY_BONUS": "+{0} energía disponible",
+  "RESEARCH_POPULATION_BONUS": "+{0} tropas disponibles",
+  "RESEARCH_ENERGY_BONUS_TOOLTIP": "Incrementa la cantidad de energía disponible para crear naves, defensas y tropas",
+  "RESEARCH_POPULATION_BONUS_TOOLTIP": "Incrementa la cantidad de tropas disponibles para reclutar",
 
   "RESEARCH_BONUS_TOOLTIP": "Incrementa la velocidad de investigación en un {0}",
   "RESOURCE_PRODUCTION_BONUS_TOOLTIP": "Aumenta la producción de recursos planetarios en {0}",

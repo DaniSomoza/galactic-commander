@@ -25,6 +25,7 @@ type BonusProps = {
   sources?: PlayerPerkType[]
 }
 
+// TODO: delete this
 function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: BonusProps) {
   const { translate } = useTranslations()
 

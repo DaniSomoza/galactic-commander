@@ -132,7 +132,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
               <Stack direction={'row'} gap={1} paddingRight={1} alignItems={'center'}>
                 <InventoryIcon
                   fontSize="small"
-                  color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
+                  color={unit.type === 'SPACESHIP' && unit.stats.cargo ? 'action' : 'disabled'}
                 />
                 <Typography
                   fontSize={12}
@@ -158,10 +158,7 @@ function UnitStats({ unit, player }: UnitStatsProps) {
                 {unit.stats.starFighterCapacity ? (
                   <AirplanemodeActiveIcon fontSize="small" />
                 ) : (
-                  <AirplanemodeInactiveIcon
-                    fontSize="small"
-                    color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
-                  />
+                  <AirplanemodeInactiveIcon fontSize="small" color={'disabled'} />
                 )}
                 <Typography
                   fontSize={12}
@@ -180,17 +177,15 @@ function UnitStats({ unit, player }: UnitStatsProps) {
           {/* Troops cargo */}
           <ListItem disablePadding>
             <Tooltip
-              title={translate(
-                'TROOPS_CAPACITY_UNIT_TOOLTIP',
-                unit.stats.troopsCapacity,
-                unit.stats.troopsCapacity
-              )}
+              title={translate('TROOPS_CAPACITY_UNIT_TOOLTIP', unit.stats.troopsCapacity)}
               arrow
             >
               <Stack direction={'row'} gap={1} paddingRight={1} alignItems={'center'}>
                 <AirlineSeatReclineNormalIcon
                   fontSize="small"
-                  color={unit.type === 'SPACESHIP' ? 'action' : 'disabled'}
+                  color={
+                    unit.type === 'SPACESHIP' && unit.stats.troopsCapacity ? 'action' : 'disabled'
+                  }
                 />
                 <Typography
                   fontSize={12}

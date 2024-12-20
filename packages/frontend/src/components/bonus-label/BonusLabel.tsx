@@ -9,14 +9,15 @@ import { useTranslations } from '../../store/TranslationContext'
 type BonusLabelProps = {
   bonus: UnitType['bonus']
   bono: string
+  customValue?: string
 }
 
-// TODO: ADD ENERGY AND POPULATION
-
-function BonusLabel({ bono, bonus }: BonusLabelProps) {
+function BonusLabel({ bono, bonus, customValue }: BonusLabelProps) {
   const { translate } = useTranslations()
 
-  const value = bonus[bono as keyof UnitType['bonus']] as number
+  const value = customValue || (bonus[bono as keyof UnitType['bonus']] as number)
+
+  // TODO: mostrar aqui la fuente de los bonos!! con imagenes en el tooltip!!
 
   return (
     <Tooltip title={translate(`${bono}_TOOLTIP`, value)} arrow>

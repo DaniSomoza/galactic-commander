@@ -11,7 +11,7 @@ type BonusCardProps = {
   isLoading?: boolean
 }
 
-// TODO: rename this to ResearchBonus ????
+// TODO: Delete this component
 function BonusCards({
   bonus,
   isFleetEnergyResearch,

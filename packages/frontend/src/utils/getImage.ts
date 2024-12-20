@@ -15,14 +15,23 @@ const unitImages: Record<string, string> = {
   TROOP_PIRATE_OFFICER_NAME: '/units/pirates/troops/pirate_officer_unit.jpeg',
   TROOP_PIRATE_CORSAIR_NAME: '/units/pirates/troops/pirate_corsair_unit.jpeg',
   TROOP_PIRATE_JACK_SPACEROW_HERO_NAME: '/units/pirates/troops/pirate_jack_spacerow_unit.jpeg',
+  TROOP_PIRATE_BLACKBEARD_HERO_NAME: '/units/pirates/troops/pirate_blackbeard_unit.jpeg',
+  TROOP_PIRATE_LUNA_BANE_HERO_NAME: '/units/pirates/troops/pirate_luna_bane_unit.jpeg',
+  TROOP_PIRATE_HENRY_EVERY_HERO_NAME: '/units/pirates/troops/pirate_henry_every_unit.jpeg',
   // spaceships
   SPACESHIP_PIRATE_RECON_DRONE_NAME: '/units/pirates/spaceships/pirate_recon_drone_unit.jpeg',
   SPACESHIP_PIRATE_STAR_FIGHTER_NAME: '/units/pirates/spaceships/pirate_star_fighter_unit.jpeg',
   SPACESHIP_PIRATE_INTERCEPTOR_NAME: '/units/pirates/spaceships/pirate_interceptor_unit.jpeg',
   SPACESHIP_PIRATE_CRUISER_NAME: '/units/pirates/spaceships/pirate_cruiser_unit.jpeg',
-  SPACESHIP_PIRATE_FRIGATE_NAME: '/units/pirates/spaceships/pirate_frigate_unit.jpeg',
+  SPACESHIP_PIRATE_BRIGANTINE_NAME: '/units/pirates/spaceships/pirate_brigantine_unit.jpeg',
+  SPACESHIP_PIRATE_IMPERIAL_CORSAIR_FRIGATE_NAME:
+    '/units/pirates/spaceships/pirate_imperial_corsair_frigate_unit.jpeg',
   SPACESHIP_PIRATE_QUEEN_ANNES_REVENGE_HERO_NAME:
     '/units/pirates/spaceships/pirate_queen_annes_revenge_unit.jpeg',
+  SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_NAME:
+    '/units/pirates/spaceships/pirate_royal_fortune_unit.jpeg',
+  SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_NAME:
+    '/units/pirates/spaceships/pirate_stellar_spectre_unit.jpeg',
   // defenses
   DEFENSE_PIRATE_LASER_CANNON_NAME: '/units/pirates/defenses/pirate_laser_cannon_unit.jpeg'
 }

@@ -25,6 +25,8 @@ import formatTimer from '../../utils/formatTimer'
 import millisToSeconds from '../../utils/millisToSeconds'
 import BonusLabel from '../bonus-label/BonusLabel'
 import { useTheme } from '../../store/ThemeContext'
+import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
+import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 
 function ResearchList() {
   const [isLoading, setIsLoading] = useState(false)
@@ -134,6 +136,28 @@ function ResearchList() {
                       {Object.keys(research.bonus).map((bono) => (
                         <BonusLabel key={bono} bono={bono} bonus={research.bonus} />
                       ))}
+
+                      {research.isFleetEnergyResearch && (
+                        <BonusLabel
+                          bono={'RESEARCH_ENERGY_BONUS'}
+                          customValue={formatNumber(
+                            calculateMaxPlayerEnergy(player, nextLevel),
+                            true
+                          )}
+                          bonus={research.bonus}
+                        />
+                      )}
+
+                      {research.isTroopsPopulationResearch && (
+                        <BonusLabel
+                          bono={'RESEARCH_POPULATION_BONUS'}
+                          customValue={formatNumber(
+                            calculateMaxPlayerPopulation(player, nextLevel),
+                            true
+                          )}
+                          bonus={research.bonus}
+                        />
+                      )}
                     </Stack>
                   </Paper>
                 </Stack>
