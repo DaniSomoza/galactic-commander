@@ -17,6 +17,7 @@ import formatNumber from '../../utils/formatNumber'
 
 type UnitCardProps = {
   showNameLabel?: boolean
+  disableBorder?: boolean
   unit: UnitType
   amount: number
   height?: number
@@ -35,6 +36,7 @@ const unitIcon = {
 
 function UnitCard({
   showNameLabel = true,
+  disableBorder = false,
   unit,
   amount,
   height = DEFAULT_HEIGHT,
@@ -46,7 +48,7 @@ function UnitCard({
   const UnitIconComponent = unitIcon[unit.type]
   return (
     <Box sx={{ position: 'relative' }}>
-      <Paper variant="outlined">
+      <Paper variant={disableBorder ? 'elevation' : 'outlined'}>
         <Stack justifyContent="center" alignItems="center">
           <Image
             src={getImage(unit.name)}

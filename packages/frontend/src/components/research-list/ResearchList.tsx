@@ -149,6 +149,7 @@ function ResearchList() {
                   <Box flexGrow={1} display={'flex'}>
                     <Tooltip
                       title={translate('RESEARCH_RESOURCE_COST', formatNumber(resourceCost, true))}
+                      arrow
                     >
                       <Paper
                         variant="outlined"

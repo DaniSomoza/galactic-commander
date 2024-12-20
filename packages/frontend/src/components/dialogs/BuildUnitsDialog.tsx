@@ -18,6 +18,8 @@ import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
 import AlarmIcon from '@mui/icons-material/Alarm'
 import DiamondIcon from '@mui/icons-material/Diamond'
 import GroupIcon from '@mui/icons-material/Group'
+import RocketIcon from '@mui/icons-material/Rocket'
+import FortIcon from '@mui/icons-material/Fort'
 
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
@@ -50,6 +52,12 @@ type BuildUnitDialogProps = {
   isOpen: boolean
 }
 
+const unitIcon = {
+  TROOP: GroupIcon,
+  SPACESHIP: RocketIcon,
+  DEFENSE: FortIcon
+}
+
 const MAX_INPUT_AMOUNT = 10_000_000
 
 function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDialogProps) {
@@ -71,6 +79,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
     activeBuildSpaceships,
     activeBuildDefenses
   } = useBuildUnits()
+
+  const UnitIconComponent = unitIcon[unitToBuild.type]
 
   const resourceCost = amount * unitToBuild.resourceCost
   const currentPopulation = calculateCurrentPlayerPopulation(player!)
@@ -280,7 +290,10 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                       input: {
                         startAdornment: (
                           <InputAdornment position="start">
-                            <GroupIcon />
+                            <Stack direction={'row'} gap={0.5} alignItems={'center'}>
+                              {unitToBuild.isHero && <StarsIcon color="info" />}
+                              <UnitIconComponent fontSize="small" />
+                            </Stack>
                           </InputAdornment>
                         ),
                         endAdornment: (
@@ -289,6 +302,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                               <Button
                                 aria-label={'max amount of units'}
                                 variant="outlined"
+                                disabled={unitToBuild.isHero}
                                 onClick={() =>
                                   setAmount(
                                     getMaxAmountOfUnits({
@@ -401,6 +415,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                         'UNIT_RESOURCE_COST',
                         formatNumber(unitToBuild.resourceCost * amount, true)
                       )}
+                      arrow
                     >
                       <Paper
                         variant="outlined"

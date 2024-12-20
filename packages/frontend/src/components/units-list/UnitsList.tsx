@@ -63,7 +63,7 @@ function UnitsList({ unitType }: UnitsListProp) {
                 <Stack direction={'row'}>
                   <Box>
                     {/* Image Part */}
-                    <UnitCard unit={unit} amount={unitsInThisPlanet} height={230} width={230} />
+                    <UnitCard disableBorder unit={unit} amount={unitsInThisPlanet} height={230} width={230} />
 
                     {/* Unit bonus Part */}
                     {Object.keys(unit.bonus).length > 0 && (

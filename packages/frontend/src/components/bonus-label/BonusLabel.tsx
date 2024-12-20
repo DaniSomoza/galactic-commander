@@ -19,7 +19,7 @@ function BonusLabel({ bono, bonus }: BonusLabelProps) {
   const value = bonus[bono as keyof UnitType['bonus']] as number
 
   return (
-    <Tooltip title={translate(`${bono}_TOOLTIP`, value)}>
+    <Tooltip title={translate(`${bono}_TOOLTIP`, value)} arrow>
       <Paper
         variant="outlined"
         sx={{ paddingTop: 0.5, paddingBottom: 0.5, paddingLeft: 1, paddingRight: 1 }}

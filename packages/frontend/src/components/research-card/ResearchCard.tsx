@@ -84,9 +84,8 @@ function ResearchCard({
               >
                 <Typography
                   variant="body1"
-                  fontSize={13}
-                  fontWeight={500}
-                  color={nextLevel ? orange[600] : green[600]}
+                  fontSize={14}
+                  color={nextLevel ? orange[600] : 'textPrimary'}
                 >
                   {currentLevel}
                 </Typography>
@@ -95,7 +94,7 @@ function ResearchCard({
                   <>
                     <ArrowRightAltRoundedIcon fontSize="small" />
 
-                    <Typography variant="body1" fontSize={13} fontWeight={500} color={green[600]}>
+                    <Typography variant="body1" fontSize={14} color={green[600]}>
                       {nextLevel}
                     </Typography>
                   </>
