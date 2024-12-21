@@ -350,9 +350,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           textAlign="center"
                           color={isValidPopulation ? 'textPrimary' : 'error'}
                         >
-                          {calculateCurrentPlayerPopulation(player!) + unitToBuild.type === 'TROOP'
-                            ? amount
-                            : 0}{' '}
+                          {calculateCurrentPlayerPopulation(player!) +
+                            (unitToBuild.type === 'TROOP' ? amount : 0)}{' '}
                           / {formatNumber(calculateMaxPlayerPopulation(player!))}
                         </Typography>
                       </Stack>

@@ -61,17 +61,19 @@ function BonusToolTip({ children, bono, value }: BonusToolTipProps) {
         <Box>
           <Box>{translate(`${bono}_TOOLTIP`, value)}</Box>
 
-          <Stack marginTop={1} direction={'row'} gap={1} justifyContent={'center'}>
+          <Stack padding={1} direction={'row'} gap={1} justifyContent={'center'}>
             {sources?.map(({ sourceName, bonus }) => (
               <Box key={sourceName} position={'relative'}>
                 <Paper variant="outlined">
-                  <Image
-                    src={getImage(sourceName)}
-                    alt={`player bonus source ${sourceName} value: ${value}`}
-                    height={'52px'}
-                    width={'52px'}
-                    border
-                  />
+                  <Stack>
+                    <Image
+                      src={getImage(sourceName)}
+                      alt={`player bonus source ${sourceName} value: ${value}`}
+                      height={'52px'}
+                      width={'52px'}
+                      border
+                    />
+                  </Stack>
                 </Paper>
 
                 <Box
