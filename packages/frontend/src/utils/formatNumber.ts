@@ -8,6 +8,7 @@ const formatter = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 2
 })
 
+// TODO: use a object as a parameter
 function formatNumber(amount: number, showFullAmount = false): string {
   if (showFullAmount) {
     return formatterWithoutDecimal.format(amount)

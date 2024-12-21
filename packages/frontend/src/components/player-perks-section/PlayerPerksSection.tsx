@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 import { PlayerPerkType } from 'game-api-microservice/src/types/Player'
 import computedBonus, {
   bonusTypes,
@@ -15,6 +15,7 @@ type PlayerPerksSectionProps = {
   isLoading?: boolean
 }
 
+// TODO: remove this component
 function PlayerPerksSection({ playerPerks, isLoading }: PlayerPerksSectionProps) {
   const playerBonus = Object.keys(bonusTypes).reduce((playerBonus: IBonus, bonusName) => {
     ;(playerBonus[bonusName as keyof IBonus] as number) = computedBonus(

@@ -10,14 +10,12 @@ import {
   numericBonusType,
   activatableBonusType
 } from 'game-engine/src/engine/bonus/computedBonus'
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { useTranslations } from '../../store/TranslationContext'
-import getBonusImage from '../../utils/getBonusImage'
 import { usePlayer } from '../../store/PlayerContext'
 import Image from '../image/Image'
-import getResearchImage from '../../utils/getResearchImage'
-import getRaceImage from '../../utils/getRaceImage'
+import getImage from '../../utils/getImage'
 
 type BonusProps = {
   size?: 'small' | 'large'
@@ -27,10 +25,11 @@ type BonusProps = {
   sources?: PlayerPerkType[]
 }
 
+// TODO: delete this
 function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: BonusProps) {
   const { translate } = useTranslations()
 
-  const bonusImg = getBonusImage(bono)
+  const bonusImg = getImage(bono)
 
   const bonusLabel = getBonusLabel(bono, bonusValue as number)
   const showBonusLabel = isBonusLabelVisible(bono, bonusValue as number)
@@ -42,7 +41,7 @@ function Bonus({ size = 'small', bono, bonusValue, isLoading, sources = [] }: Bo
         <Tooltip
           title={
             <div>
-              {translate(bono, bonusLabel)}
+              {translate(`${bono}_TOOLTIP`, bonusLabel)}
 
               {showSources && (
                 <Stack direction={'row'} gap={1} justifyContent="center" alignItems="center">
@@ -239,13 +238,13 @@ function getBonusSourceImg(
   player?: PlayerType
 ): string {
   if (sourceType === 'Race') {
-    return getRaceImage(player?.race.name || '')
+    return getImage(player?.race.name || '')
   }
 
   if (sourceType === 'Research') {
     const research = player?.race.researches.find((research) => research.name === sourceName)
 
-    return getResearchImage(research?.name || '')
+    return getImage(research?.name || '')
   }
 
   // TODO: implement all source sourceTypes

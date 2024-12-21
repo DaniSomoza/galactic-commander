@@ -1,26 +1,26 @@
-import { Types } from 'mongoose'
-
 import {
   ITask,
   PENDING_TASK_STATUS,
   START_RESEARCH_TASK_TYPE,
   StartResearchTaskType
-} from '../../../models/TaskModel'
+} from '../../../types/ITask'
 import getSecond from '../../../helpers/getSecond'
 
 // TODO: add create BASE task
 function createStartResearchTask(
-  universeId: Types.ObjectId,
-  playerId: Types.ObjectId,
-  researchId: Types.ObjectId,
+  universeId: string,
+  playerId: string,
+  researchId: string,
   executeTaskAt?: number
 ): ITask<StartResearchTaskType> {
   const startResearchTask: ITask<StartResearchTaskType> = {
     type: START_RESEARCH_TASK_TYPE,
-    universe: universeId,
+
+    universeId,
+
     data: {
-      player: playerId,
-      research: researchId
+      playerId,
+      researchId
     },
 
     status: PENDING_TASK_STATUS,

@@ -1,20 +1,22 @@
 import mongoose from 'mongoose'
 
-import getTaskModel, {
+import getTaskModel from '../models/TaskModel'
+import {
   ITask,
-  NewPlayerTaskType,
   NEW_PLAYER_TASK_TYPE,
+  NewPlayerTaskType,
   PENDING_TASK_STATUS,
-  TaskType,
-  StartResearchTaskType
-} from '../models/TaskModel'
+  StartBuildUnitsTaskType,
+  StartResearchTaskType,
+  TaskType
+} from '../types/ITask'
 
 async function getPendingTasks(universeId: mongoose.Types.ObjectId, second: number) {
   const taskModel = getTaskModel<TaskType>()
   return taskModel
     .find({
       status: PENDING_TASK_STATUS,
-      universe: universeId,
+      universeId,
       $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }]
     })
     .exec()
@@ -29,7 +31,7 @@ async function getPendingTasksByType(
   return taskModel
     .find({
       status: PENDING_TASK_STATUS,
-      universe: universeId,
+      universeId,
       type,
       $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }]
     })
@@ -43,9 +45,15 @@ async function createPlayerTask(taskData: ITask<NewPlayerTaskType>) {
 }
 
 async function createStartResearchTask(taskData: ITask<StartResearchTaskType>) {
-  const NewPlayerTaskModel = getTaskModel<StartResearchTaskType>()
-  const newPlayerTask = new NewPlayerTaskModel(taskData)
-  return newPlayerTask.save()
+  const newStartResearchTaskModel = getTaskModel<StartResearchTaskType>()
+  const newStartResearchTask = new newStartResearchTaskModel(taskData)
+  return newStartResearchTask.save()
+}
+
+async function createStartBuildUnitsTask(taskData: ITask<StartBuildUnitsTaskType>) {
+  const newStartBuildUnitsTaskModel = getTaskModel<StartBuildUnitsTaskType>()
+  const newStartBuildUnitsTask = new newStartBuildUnitsTaskModel(taskData)
+  return newStartBuildUnitsTask.save()
 }
 
 async function findNewPlayerTaskByUsername(
@@ -57,7 +65,7 @@ async function findNewPlayerTaskByUsername(
   return NewPlayerTaskModel.findOne({
     type: NEW_PLAYER_TASK_TYPE,
     'data.username': username,
-    universe: universeId,
+    universeId,
     status
   }).exec()
 }
@@ -71,6 +79,7 @@ const taskRepository = {
   findTaskById,
   createPlayerTask,
   createStartResearchTask,
+  createStartBuildUnitsTask,
   getPendingTasks,
   getPendingTasksByType,
   findNewPlayerTaskByUsername

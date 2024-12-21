@@ -3,8 +3,6 @@ require('dotenv').config({ path: '../../.env' })
 
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_PORT, MONGO_GAME_DB } = process.env
 
-// TODO: move migrations to dist/migrations
-
 const config = {
   mongodb: {
     url: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:${MONGO_PORT}`,
@@ -12,7 +10,7 @@ const config = {
   },
 
   // The migrations dir, can be an relative or absolute path. Only edit this when really necessary.
-  migrationsDir: 'migrations',
+  migrationsDir: 'dist/migrations',
 
   // The mongodb collection where the applied changes are stored. Only edit this when really necessary.
   changelogCollectionName: 'changelog',

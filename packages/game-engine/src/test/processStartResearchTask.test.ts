@@ -3,27 +3,30 @@ import mongoose from 'mongoose'
 import PIRATE_FLEET_ATTACK_RESEARCH from '../assets/researches/pirates/pirate-fleet-attack-research'
 import processTasks from '../engine/processTasks'
 import { IResearchDocument } from '../models/ResearchModel'
-import getTaskModel, {
-  ITask,
-  PENDING_TASK_STATUS,
-  StartResearchTaskType,
-  FinishResearchTaskData,
-  START_RESEARCH_TASK_TYPE,
-  FINISH_RESEARCH_TASK_TYPE,
-  ERROR_TASK_STATUS
-} from '../models/TaskModel'
+import getTaskModel from '../models/TaskModel'
 import playerRepository from '../repositories/playerRepository'
 import taskRepository from '../repositories/taskRepository'
 import universeRepository from '../repositories/universeRepository'
 import { PLAYER_TEST_1_PIRATE } from './mocks/playerMocks'
 import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import {
+  ERROR_TASK_STATUS,
+  FINISH_RESEARCH_TASK_TYPE,
+  FinishResearchTaskData,
+  ITask,
+  PENDING_TASK_STATUS,
+  START_RESEARCH_TASK_TYPE,
+  StartResearchTaskType
+} from '../types/ITask'
 
 describe('process start research task', () => {
   it('process a valid start research task', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const research = player?.race.researches.find(
@@ -33,10 +36,10 @@ describe('process start research task', () => {
     // TODO: implement createBaseTask helper function
     const startResearchTask: ITask<StartResearchTaskType> = {
       type: START_RESEARCH_TASK_TYPE,
-      universe: universe!._id,
+      universeId,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id.toString(),
+        researchId: research!._id.toString()
       },
 
       status: PENDING_TASK_STATUS,
@@ -67,7 +70,7 @@ describe('process start research task', () => {
       new Date().getTime()
     )
 
-    const playerResearch = await playerRepository.findPlayerById(player!._id)
+    const playerResearch = await playerRepository.findPlayerById(player!._id.toString())
 
     expect((playerResearch?.researches.activeResearch?.research as IResearchDocument)._id).toEqual(
       research!._id
@@ -82,8 +85,8 @@ describe('process start research task', () => {
 
     const finishResearchTasksData = finishResearchTasks!.data as FinishResearchTaskData
 
-    expect(finishResearchTasksData.player).toEqual(player?._id)
-    expect(finishResearchTasksData.research).toEqual(research?._id)
+    expect(finishResearchTasksData.playerId).toEqual(player?._id.toString())
+    expect(finishResearchTasksData.researchId).toEqual(research?._id.toString())
     expect(finishResearchTasksData.researchDuration).toEqual(23000)
     expect(finishResearchTasksData.researchResourceCost).toEqual(200)
     expect(finishResearchTasks!.executeTaskAt).toEqual(24000)
@@ -92,9 +95,11 @@ describe('process start research task', () => {
 
   it('task error if no valid player is present in the research data', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const research = player?.race.researches.find(
@@ -103,11 +108,11 @@ describe('process start research task', () => {
 
     const startResearchTask: ITask<StartResearchTaskType> = {
       type: START_RESEARCH_TASK_TYPE,
-      universe: universe!._id,
+      universeId,
       data: {
         // invalid playerId
-        player: new mongoose.Types.ObjectId(),
-        research: research!._id
+        playerId: new mongoose.Types.ObjectId().toString(),
+        researchId: research!._id.toString()
       },
 
       status: PENDING_TASK_STATUS,
@@ -141,9 +146,11 @@ describe('process start research task', () => {
 
   it('task error if player is already researching ', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const research = player?.race.researches.find(
@@ -152,10 +159,10 @@ describe('process start research task', () => {
 
     const startResearchTask: ITask<StartResearchTaskType> = {
       type: START_RESEARCH_TASK_TYPE,
-      universe: universe!._id,
+      universeId,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id.toString(),
+        researchId: research!._id.toString()
       },
 
       status: PENDING_TASK_STATUS,
@@ -192,18 +199,20 @@ describe('process start research task', () => {
 
   it('task error if no valid research is present in the research data', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const startResearchTask: ITask<StartResearchTaskType> = {
       type: START_RESEARCH_TASK_TYPE,
-      universe: universe!._id,
+      universeId,
       data: {
-        player: player!._id,
+        playerId: player!._id.toString(),
         // invalid researchId
-        research: new mongoose.Types.ObjectId()
+        researchId: new mongoose.Types.ObjectId().toString()
       },
 
       status: PENDING_TASK_STATUS,
@@ -237,9 +246,11 @@ describe('process start research task', () => {
 
   it('task error if no resources available in the principal planet', async () => {
     const universe = await universeRepository.findUniverseByName(UNIVERSE_TEST_MOCK.name)
+    const universeId = universe!._id.toString()
+
     const player = await playerRepository.findPlayerByUsername(
       PLAYER_TEST_1_PIRATE.user.username,
-      universe!._id
+      universeId
     )
 
     const research = player?.race.researches.find(
@@ -253,10 +264,10 @@ describe('process start research task', () => {
     // TODO: implement createBaseTask helper function
     const startResearchTask: ITask<StartResearchTaskType> = {
       type: START_RESEARCH_TASK_TYPE,
-      universe: universe!._id,
+      universeId,
       data: {
-        player: player!._id,
-        research: research!._id
+        playerId: player!._id.toString(),
+        researchId: research!._id.toString()
       },
 
       status: PENDING_TASK_STATUS,

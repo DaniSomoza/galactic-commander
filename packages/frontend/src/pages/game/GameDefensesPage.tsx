@@ -1,10 +1,12 @@
-import SectionUnderConstruction from '../../components/section-under-construction/SectionUnderConstruction'
+import BuildUnitsQueue from '../../components/build-units-queue/BuildUnitsQueue'
+import UnitsList from '../../components/units-list/UnitsList'
 
 function GameDefensesPage() {
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>Game Defenses Page</h1>
-      <SectionUnderConstruction />
+      <BuildUnitsQueue unitType={'DEFENSE'} />
+
+      <UnitsList unitType={'DEFENSE'} />
     </>
   )
 }

@@ -2,7 +2,7 @@ import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
-import { ITask } from 'game-engine/models/TaskModel'
+import { ITask } from 'game-engine/dist/types/ITask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import ConflictError from 'auth-microservice/dist/errors/ConflictError'
 
@@ -28,16 +28,18 @@ async function createPlayer({
     throw new NotFoundError('invalid race', { raceName })
   }
 
-  const universeData = await universeRepository.findUniverseByName(universeName)
+  const universe = await universeRepository.findUniverseByName(universeName)
 
-  if (!universeData) {
+  if (!universe) {
     throw new NotFoundError('invalid universe', { universeName })
   }
 
-  const player = await playerRepository.findPlayerByUsername(username, universeData._id)
+  const universeId = universe._id.toString()
+
+  const player = await playerRepository.findPlayerByUsername(username, universeId)
   const duplicatedPlayerTask = await taskRepository.findNewPlayerTaskByUsername(
     username,
-    universeData._id
+    universe._id
   )
 
   if (player || duplicatedPlayerTask) {
@@ -46,11 +48,12 @@ async function createPlayer({
 
   const newPlayerTask: ITask<NewPlayerTaskType> = {
     type: NEW_PLAYER_TASK_TYPE,
-    universe: universeData._id,
+    universeId,
+
     data: {
       username,
       email,
-      race: raceData._id
+      raceId: raceData._id.toString()
     },
 
     status: PENDING_TASK_STATUS,
@@ -76,13 +79,15 @@ async function createPlayer({
 }
 
 async function getPlayer(username: string, universeName: string): Promise<getPlayerResponseType> {
-  const universeData = await universeRepository.findUniverseByName(universeName)
+  const universe = await universeRepository.findUniverseByName(universeName)
 
-  if (!universeData) {
+  if (!universe) {
     throw new NotFoundError('invalid universe', { universeName })
   }
 
-  const player = await playerRepository.findPlayerByUsername(username, universeData._id)
+  const universeId = universe._id.toString()
+
+  const player = await playerRepository.findPlayerByUsername(username, universeId)
 
   if (!player) {
     // TODO: create enum or const for the errors NO_PLAYER_FOUND_ERROR

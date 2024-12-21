@@ -18,7 +18,10 @@ import PlanetsLabel from '../../components/planets-label/PlanetsLabel'
 import PopulationLabel from '../../components/population-label/PopulationLabel'
 import EnergyLabel from '../../components/energy-label/EnergyLabel'
 import GamePlanetSection from '../../components/game-planet-section/GamePlanetSection'
-import GameActiveResearchSection from '../../components/game-active-research-section/GameActiveResearchSection'
+import { BuildUnitsProvider, useBuildUnits } from '../../store/buildUnitsContext'
+import ActiveResearch from '../../components/active-research/ActiveResearch'
+import ActiveUnitsBuild from '../../components/active-units-build/ActiveUnitsBuild'
+import DefensesLabel from '../../components/defenses-label/DefensesLabel'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
@@ -26,6 +29,16 @@ function GamePage() {
 
   const { loadPlayer } = usePlayer()
   const { selectedUniverse } = useGameInfo()
+
+  const {
+    activeBuildTroopsCountdown,
+    activeBuildSpaceshipsCountdown,
+    activeBuildDefensesCountdown,
+
+    activeBuildTroops,
+    activeBuildSpaceships,
+    activeBuildDefenses
+  } = useBuildUnits()
 
   useEffect(() => {
     if (!sessionToken) {
@@ -71,6 +84,8 @@ function GamePage() {
               {/* separator */}
               <div style={{ flexGrow: 1 }} />
 
+              <DefensesLabel />
+
               <FleetsLabel />
 
               <PlanetsLabel />
@@ -87,11 +102,39 @@ function GamePage() {
               </Box>
 
               <Box component="section">
-                <GameActiveResearchSection />
+                <ActiveResearch />
               </Box>
 
               <Box component="section">
-                <Skeleton variant="rectangular" height={'200px'} width={'200px'} />
+                {/* TODO: game stats? */}
+                <Skeleton variant="rounded" height={'200px'} width={'200px'} />
+              </Box>
+            </Stack>
+
+            {/* Player current planet actions Bar */}
+            <Stack direction="row" spacing={2}>
+              {/* Troops build */}
+              <Box component="section">
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildTroopsCountdown}
+                  activeBuild={activeBuildTroops}
+                />
+              </Box>
+
+              {/* Spaceships build */}
+              <Box component="section">
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildSpaceshipsCountdown}
+                  activeBuild={activeBuildSpaceships}
+                />
+              </Box>
+
+              {/* Defenses build */}
+              <Box component="section">
+                <ActiveUnitsBuild
+                  activeBuildCountdown={activeBuildDefensesCountdown}
+                  activeBuild={activeBuildDefenses}
+                />
               </Box>
             </Stack>
           </Stack>
@@ -111,9 +154,11 @@ function GamePageWithGameProviders() {
     <GameInfoProvider>
       <PlayerProvider>
         <ResearchProvider>
-          <PlayerResourcesProvider>
-            <GamePage />
-          </PlayerResourcesProvider>
+          <BuildUnitsProvider>
+            <PlayerResourcesProvider>
+              <GamePage />
+            </PlayerResourcesProvider>
+          </BuildUnitsProvider>
         </ResearchProvider>
       </PlayerProvider>
     </GameInfoProvider>

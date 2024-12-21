@@ -1,27 +1,26 @@
-import computedBonus from '../bonus/computedBonus'
-import getSecond from '../../helpers/getSecond'
-import getTaskModel, {
+import {
+  ITask,
   FINISH_RESEARCH_TASK_TYPE,
   FinishResearchTaskType,
-  ITask,
-  ITaskTypeDocument,
   PENDING_TASK_STATUS,
   StartResearchTaskType
-} from '../../models/TaskModel'
+} from '../../types/ITask'
+import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
 import taskRepository from '../../repositories/taskRepository'
 import GameEngineError from '../errors/GameEngineError'
+import getSecond from '../../helpers/getSecond'
+import computedBonus from '../bonus/computedBonus'
+import createStartResearchTask from './utils/createStartResearchTask'
 import calculateResearchDuration from '../research/calculateResearchDuration'
 import calculateResearchResourceCost from '../resources/calculateResearchResourceCost'
-import createStartResearchTask from './utils/createStartResearchTask'
 
-// TODO: only taskData required
 async function processStartResearchTask(
   task: ITaskTypeDocument<StartResearchTaskType>,
   second: number
 ) {
   // get all the required data from DB
-  const player = await playerRepository.findPlayerById(task.data.player)
+  const player = await playerRepository.findPlayerById(task.data.playerId)
 
   if (!player) {
     throw new GameEngineError('invalid player')
@@ -32,7 +31,7 @@ async function processStartResearchTask(
   }
 
   const research = player.race.researches.find((research) =>
-    research._id.equals(task.data.research)
+    research._id.equals(task.data.researchId)
   )
 
   if (!research) {
@@ -58,15 +57,12 @@ async function processStartResearchTask(
 
     if (nextResearch) {
       const startResearchTask = createStartResearchTask(
-        task.universe._id,
-        player._id,
-        nextResearch._id
+        task.universeId,
+        player._id.toString(),
+        nextResearch._id.toString()
       )
 
-      await Promise.all([
-        player.save(),
-        await taskRepository.createStartResearchTask(startResearchTask)
-      ])
+      await Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
     }
 
     throw new GameEngineError('no resources available')
@@ -84,11 +80,11 @@ async function processStartResearchTask(
   // TODO: implement createBaseTask helper function
   const finishResearchTask: ITask<FinishResearchTaskType> = {
     type: FINISH_RESEARCH_TASK_TYPE,
-    universe: player.universe._id,
+    universeId: player.universeId,
 
     data: {
-      player: player._id,
-      research: task.data.research,
+      playerId: player._id.toString(),
+      researchId: task.data.researchId,
       researchDuration,
       researchResourceCost
     },
@@ -115,10 +111,10 @@ async function processStartResearchTask(
   const newTask = new taskModel(finishResearchTask)
 
   const activeResearch = {
-    research: research._id,
+    research: research,
     level: level + 1,
     executeTaskAt,
-    taskId: newTask._id
+    taskId: newTask._id.toString()
   }
 
   player.researches.activeResearch = activeResearch

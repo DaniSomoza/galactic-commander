@@ -11,11 +11,12 @@ import Typography from '@mui/material/Typography'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import PublicIcon from '@mui/icons-material/Public'
 import ScienceRoundedIcon from '@mui/icons-material/ScienceRounded'
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
+import LocalActivityIcon from '@mui/icons-material/LocalActivity'
 import DiamondIcon from '@mui/icons-material/Diamond'
 import GroupIcon from '@mui/icons-material/Group'
 import RocketIcon from '@mui/icons-material/Rocket'
-import SecurityIcon from '@mui/icons-material/Security'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import FortIcon from '@mui/icons-material/Fort'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare'
 import EmailIcon from '@mui/icons-material/Email'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
@@ -90,7 +91,7 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
         <ListItem disablePadding>
           <ListItemButton onClick={() => navigate(GAME_SPECIALS_PATH)}>
             <ListItemIcon>
-              <MilitaryTechIcon />
+              <LocalActivityIcon />
             </ListItemIcon>
             <ListItemText primary={translate('NAV_BAR_SPECIALS')} />
           </ListItemButton>
@@ -119,9 +120,30 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
         <ListItem disablePadding>
           <ListItemButton onClick={() => navigate(GAME_DEFENSES_PATH)}>
             <ListItemIcon>
-              <SecurityIcon />
+              <FortIcon />
             </ListItemIcon>
             <ListItemText primary={translate('NAV_BAR_DEFENSES')} />
+          </ListItemButton>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate(GAME_GALAXIES_PATH)}>
+            <ListItemIcon>
+              <PublicIcon />
+            </ListItemIcon>
+            <ListItemText primary={translate('NAV_BAR_GALAXY')} />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          {/* <ListItemButton onClick={() => navigate(GAME_FLEETS_PATH)}> */}
+          <ListItemButton>
+            <ListItemIcon>
+              <RocketLaunchIcon />
+            </ListItemIcon>
+            <ListItemText primary={translate('NAV_BAR_FLEETS')} />
           </ListItemButton>
         </ListItem>
 
@@ -133,15 +155,6 @@ function GameNavigationBar({ drawerWidth }: GameNavigationBarProps) {
               <CorporateFareIcon />
             </ListItemIcon>
             <ListItemText primary={translate('NAV_BAR_ALLIANCE')} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate(GAME_GALAXIES_PATH)}>
-            <ListItemIcon>
-              <PublicIcon />
-            </ListItemIcon>
-            <ListItemText primary={translate('NAV_BAR_GALAXY')} />
           </ListItemButton>
         </ListItem>
 

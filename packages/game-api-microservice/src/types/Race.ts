@@ -1,6 +1,8 @@
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import { ResearchType } from './Research'
+import { SpecialType } from './Special'
+import { UnitType } from './Unit'
 
 type Aggressive = 'Aggressive'
 type Defensive = 'Defensive'
@@ -33,4 +35,7 @@ export type RaceType = {
   intergalacticTravelThreshold: number
   researches: ResearchType[]
   bonus: IBonus
+
+  units: UnitType[]
+  specials: SpecialType[]
 }

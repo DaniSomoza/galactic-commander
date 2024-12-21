@@ -1,10 +1,9 @@
 import {
-  DEFAULT_RESOURCE_NAME,
   DEFAULT_ALLOWED_PLANETS,
   DEFAULT_INITIAL_RESOURCES,
+  DEFAULT_RESOURCE_NAME,
   IRace
-} from '../../models/RaceModel'
-
+} from '../../types/IRace'
 const ELDERS_FLEET_ENERGY = 150
 const ELDERS_TROOPS_POPULATION = 50
 const ELDERS_INTERGALACTIC_TRAVEL_THRESHOLD = 6
@@ -21,6 +20,10 @@ const elders: IRace = {
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: ELDERS_INTERGALACTIC_TRAVEL_THRESHOLD,
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     RESEARCH_BONUS: ELDERS_RESEARCH_BONUS
