@@ -20,14 +20,7 @@ function formatTimer(seconds: number): string {
 
   const formattedHoursWithoutDays = hoursWithoutDays.toString().padStart(2, '0')
 
-  if (days < 7) {
-    return `${days}d ${formattedHoursWithoutDays}:${formattedMinutes}:${formattedSeconds}`
-  }
-
-  const weeks = Math.floor(seconds / 604_800)
-  const daysWithoutWeeks = Math.floor((seconds % 604_800) / 86_400)
-
-  return `${weeks}w ${daysWithoutWeeks}d ${formattedHoursWithoutDays}:${formattedMinutes}:${formattedSeconds}`
+  return `${days}d ${formattedHoursWithoutDays}:${formattedMinutes}:${formattedSeconds}`
 }
 
 export default formatTimer

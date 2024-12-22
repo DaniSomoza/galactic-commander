@@ -18,6 +18,7 @@ function DefensesLabel() {
   const { player, selectedPlanet } = usePlayer()
 
   const defensesInThisPlanet = getDefensesInThePlanet(player, selectedPlanet)
+
   return (
     <Paper variant="outlined">
       <Tooltip
