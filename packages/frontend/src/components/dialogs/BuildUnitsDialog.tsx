@@ -22,6 +22,7 @@ import RocketIcon from '@mui/icons-material/Rocket'
 import FortIcon from '@mui/icons-material/Fort'
 
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
+import isHeroAlreadyBuild from 'game-engine/src/engine/units/isHeroAlreadyBuild'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
@@ -469,7 +470,13 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
           </Tooltip>
         ) : (
           <Tooltip title={'Add units to planet queue'} arrow>
-            <Button disabled={isLoading || !!error} autoFocus onClick={performStartBuildUnits}>
+            <Button
+              disabled={
+                isLoading || !!error || isHeroAlreadyBuild(unitToBuild, player?.fleets || [])
+              }
+              autoFocus
+              onClick={performStartBuildUnits}
+            >
               Build Units
             </Button>
           </Tooltip>

@@ -7,6 +7,7 @@ import Button from '@mui/material/Button'
 
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
+import isHeroAlreadyBuild from 'game-engine/src/engine/units/isHeroAlreadyBuild'
 import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
 
@@ -63,7 +64,13 @@ function UnitsList({ unitType }: UnitsListProp) {
                 <Stack direction={'row'}>
                   <Box>
                     {/* Image Part */}
-                    <UnitCard disableBorder unit={unit} amount={unitsInThisPlanet} height={230} width={230} />
+                    <UnitCard
+                      disableBorder
+                      unit={unit}
+                      amount={unitsInThisPlanet}
+                      height={230}
+                      width={230}
+                    />
 
                     {/* Unit bonus Part */}
                     {Object.keys(unit.bonus).length > 0 && (
@@ -112,7 +119,9 @@ function UnitsList({ unitType }: UnitsListProp) {
                     <Button
                       variant="contained"
                       size="small"
-                      disabled={!unitRequirements.isUnitAvailable}
+                      disabled={
+                        !unitRequirements.isUnitAvailable || isHeroAlreadyBuild(unit, player.fleets)
+                      }
                       onClick={() => setUnitToBuild(unit)}
                     >
                       {translate('GAME_BUILD_UNITS_PAGE_START_BUILD_UNITS_BUTTON')}

@@ -3,7 +3,7 @@ import { IPlayer } from '../../types/IPlayer'
 function calculateCurrentPlayerEnergy(player: IPlayer): number {
   const energyFromFleets = player.fleets.reduce((energyFromFleets, fleet) => {
     const fleetEnergy = fleet.units.reduce((fleetEnergy, { unit, amount }) => {
-      return unit.type === 'SPACESHIP' ? fleetEnergy + unit.energyCost * amount : fleetEnergy
+      return fleetEnergy + unit.energyCost * amount
     }, 0)
 
     return energyFromFleets + fleetEnergy
