@@ -1,26 +1,27 @@
-import { ITaskTypeDocument, FinishResearchTaskType } from '../../models/TaskModel'
-import playerRepository from '../../repositories/playerRepository'
+import { IPoint } from '../../types/IPoint'
+import { FinishResearchTaskType } from '../../types/ITask'
 import GameEngineError from '../errors/GameEngineError'
-import addPoints from '../points/addPoints'
-import { IRace } from '../../models/RaceModel'
-import upgradeResearchBonus from '../bonus/upgradeResearchBonus'
-import { IBonus } from '../../types/bonus'
-import createStartResearchTask from './utils/createStartResearchTask'
+import PointModel from '../../models/PointModel'
+import { ITaskTypeDocument } from '../../models/TaskModel'
 import taskRepository from '../../repositories/taskRepository'
+import playerRepository from '../../repositories/playerRepository'
+import upgradeBonus from '../bonus/upgradeBonus'
+import createStartResearchTask from './utils/createStartResearchTask'
+import hasBonus from '../../helpers/hasBonus'
 
 async function processFinishResearchTask(
   task: ITaskTypeDocument<FinishResearchTaskType>,
   second: number
 ) {
   // get all the required data from DB
-  const player = await playerRepository.findPlayerById(task.data.player)
+  const player = await playerRepository.findPlayerById(task.data.playerId)
 
   if (!player) {
     throw new GameEngineError('invalid player')
   }
 
-  const research = player.race.researches.find((research) =>
-    research._id.equals(task.data.research)
+  const research = player.race.researches.find(
+    (research) => research._id.toString() === task.data.researchId
   )
 
   if (!research) {
@@ -49,41 +50,32 @@ async function processFinishResearchTask(
   const hasBonusToUpdate = hasBonus(research.bonus)
 
   if (hasBonusToUpdate) {
-    const PlayerBonus = player.perks.find((perk) => perk.source.equals(task.data.research))
+    const PlayerBonus = player.perks.find((perk) => perk.sourceId === task.data.researchId)
 
     if (PlayerBonus) {
-      PlayerBonus.bonus = upgradeResearchBonus(research.bonus, newLevel)
+      PlayerBonus.bonus = upgradeBonus(research.bonus, newLevel)
     } else {
       player.perks.push({
         bonus: research.bonus,
-        source: task.data.research,
+        sourceId: task.data.researchId,
         sourceName: research.name,
         type: 'Research'
       })
     }
   }
 
-  if (research.isFleetEnergyResearch) {
-    player.units.fleets.energy = calculateFleetEnergy(player.race, newLevel)
-  }
-
-  if (research.isTroopsPopulationResearch) {
-    player.units.troops.population = calculateTroopsPopulation(player.race, newLevel)
-  }
-
   // TODO: intergalacticTravel check?
-
-  const points = task.data.researchResourceCost
-  const pointsSource = task.data.research._id
-  const pointsSourceName = research.name
-  player.points = addPoints(
-    player.points,
-    points,
-    pointsSource,
-    pointsSourceName,
-    'Research',
+  const point: IPoint = {
+    playerId: player._id.toString(),
+    taskId: task._id.toString(),
+    points: task.data.researchResourceCost,
+    sourceId: task.data.researchId,
+    sourceName: research.name,
+    type: 'Research',
     second
-  )
+  }
+
+  const points = new PointModel(point)
 
   player.researches.activeResearch = undefined
 
@@ -92,55 +84,20 @@ async function processFinishResearchTask(
   const nextResearch = player.race.researches.find((research) => research.name === nextResearchName)
 
   if (nextResearch) {
-    // TODO: has enough resources???
-
     const startResearchTask = createStartResearchTask(
-      task.universe._id,
-      player._id,
-      nextResearch._id
+      task.universeId,
+      player._id.toString(),
+      nextResearch._id.toString()
     )
 
-    return Promise.all([player.save(), taskRepository.createStartResearchTask(startResearchTask)])
+    return Promise.all([
+      player.save(),
+      points.save(),
+      taskRepository.createStartResearchTask(startResearchTask)
+    ])
   }
 
-  return Promise.all([player.save()])
+  return Promise.all([player.save(), points.save()])
 }
 
 export default processFinishResearchTask
-
-function hasBonus(bonus: IBonus): boolean {
-  const hasBonusDefined = Object.keys(bonus).some((perk) => !!bonus[perk as keyof IBonus])
-  return bonus && hasBonusDefined
-}
-
-const TROOP_POPULATION_FACTOR = 2.55
-
-// TODO: create file in engine/troops ???
-function calculateTroopsPopulation(race: IRace, level: number): number {
-  const isFirstLevel = level === 1
-
-  if (isFirstLevel) {
-    return race.baseTroopsPopulation
-  }
-
-  const previousLevel = level - 1
-  const previousPopulation = calculateTroopsPopulation(race, previousLevel)
-
-  return Math.floor(previousPopulation + (previousPopulation * TROOP_POPULATION_FACTOR) / level)
-}
-
-const FLEET_ENERGY_FACTOR = 4
-
-// TODO: create file in engine/fleets ???
-function calculateFleetEnergy(race: IRace, level: number): number {
-  const isFirstLevel = level === 1
-
-  if (isFirstLevel) {
-    return race.baseFleetEnergy
-  }
-
-  const previousLevel = level - 1
-  const previousEnergy = calculateFleetEnergy(race, previousLevel)
-
-  return Math.floor(previousEnergy + (previousEnergy * FLEET_ENERGY_FACTOR) / level)
-}

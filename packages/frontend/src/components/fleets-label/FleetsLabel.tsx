@@ -20,7 +20,7 @@ function FleetsLabel() {
   const fleetsLabel = `${currentFleets} / ${maxFleets}`
 
   return (
-    <Paper>
+    <Paper variant="outlined">
       <Tooltip
         title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets, maxFleets)}
         arrow

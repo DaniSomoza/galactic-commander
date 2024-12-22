@@ -2,7 +2,10 @@ import mongoose from 'mongoose'
 
 import 'game-engine/dist/models/ResearchModel'
 import 'game-engine/dist/models/PlanetModel'
+import 'game-engine/dist/models/PlayerModel'
 import 'game-engine/dist/models/RaceModel'
+import 'game-engine/dist/models/UnitModel'
+import 'game-engine/dist/models/FleetModel'
 
 const { MONGO_USERNAME, MONGO_PASSWORD, MONGO_PORT, MONGO_GAME_DB } = process.env
 

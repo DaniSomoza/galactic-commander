@@ -1,19 +1,19 @@
-import mongoose from 'mongoose'
 import processUniverse from '../engine/processUniverse'
 import getSecond from '../helpers/getSecond'
-import getTaskModel, {
+import getTaskModel from '../models/TaskModel'
+import universeRepository from '../repositories/universeRepository'
+import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
+import { TASK_HANDLER } from '../engine/tasks/taskHandlers'
+import taskRepository from '../repositories/taskRepository'
+import GameEngineError from '../engine/errors/GameEngineError'
+import {
   ERROR_TASK_STATUS,
   ITask,
   NEW_PLAYER_TASK_TYPE,
   NewPlayerTaskType,
   PENDING_TASK_STATUS,
   PROCESSED_TASK_STATUS
-} from '../models/TaskModel'
-import universeRepository from '../repositories/universeRepository'
-import UNIVERSE_TEST_MOCK from './mocks/universeMocks'
-import { TASK_HANDLER } from '../engine/tasks/taskHandlers'
-import taskRepository from '../repositories/taskRepository'
-import GameEngineError from '../engine/errors/GameEngineError'
+} from '../types/ITask'
 
 const originalHandler = TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler
 
@@ -51,7 +51,7 @@ describe('game-engine', () => {
     const fakeTaskHandler = jest.fn()
     TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
-    const fakeTask = createFakeTask(testUniverse!._id)
+    const fakeTask = createFakeTask(testUniverse!._id.toString())
 
     const taskModel = getTaskModel<NewPlayerTaskType>()
     await taskModel.create(fakeTask)
@@ -90,7 +90,7 @@ describe('game-engine', () => {
 
     TASK_HANDLER[NEW_PLAYER_TASK_TYPE].handler = fakeTaskHandler
 
-    const fakeTask = createFakeTask(testUniverse!._id)
+    const fakeTask = createFakeTask(testUniverse!._id.toString())
 
     const taskModel = getTaskModel<NewPlayerTaskType>()
     await taskModel.create(fakeTask)
@@ -119,14 +119,14 @@ describe('game-engine', () => {
   })
 })
 
-function createFakeTask(universeId: mongoose.Types.ObjectId) {
+function createFakeTask(universeId: string) {
   const newFakeTask: ITask<NewPlayerTaskType> = {
     type: NEW_PLAYER_TASK_TYPE,
-    universe: universeId,
+    universeId,
     data: {
       username: 'fake_test',
       email: 'fake_test@email.com',
-      race: new mongoose.Types.ObjectId()
+      raceId: ''
     },
 
     status: PENDING_TASK_STATUS,

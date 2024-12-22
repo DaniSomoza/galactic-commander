@@ -7,10 +7,12 @@ export type bodyErrorResponse = {
 
 class GameEngineError extends Error {
   message: string
+  extraDetails?: object
 
-  constructor(message: string) {
+  constructor(message: string, extraDetails?: object) {
     super(message)
     this.message = message
+    this.extraDetails = extraDetails
   }
 }
 

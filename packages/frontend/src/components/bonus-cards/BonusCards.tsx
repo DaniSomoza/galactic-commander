@@ -1,6 +1,6 @@
 import Skeleton from '@mui/material/Skeleton'
 
-import { IBonus } from 'game-engine/dist/types/bonus'
+import { IBonus } from 'game-engine/dist/types/IBonus'
 
 import Bonus from '../bonus/Bonus'
 
@@ -11,7 +11,7 @@ type BonusCardProps = {
   isLoading?: boolean
 }
 
-// TODO: rename this to ResearchBonus ????
+// TODO: Delete this component
 function BonusCards({
   bonus,
   isFleetEnergyResearch,

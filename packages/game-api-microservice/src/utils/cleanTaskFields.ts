@@ -7,8 +7,7 @@ function cleanTaskFields(task: ITaskDocument): TaskType<TaskTypesTypes> {
     _id,
     type,
     data,
-    universe,
-
+    universeId,
     isCancellable,
     status,
     executeTaskAt,
@@ -22,8 +21,7 @@ function cleanTaskFields(task: ITaskDocument): TaskType<TaskTypesTypes> {
     taskId: _id.toString(),
     type,
     data: cleanTaskDataFields(data),
-    universe: universe.toString(),
-
+    universeId,
     isCancellable,
     status,
     executeTaskAt,
@@ -39,23 +37,34 @@ export default cleanTaskFields
 function cleanTaskDataFields(taskData: ITaskDocument['data']): TaskType<TaskTypesTypes>['data'] {
   // NewPlayerTaskType
   if ('username' in taskData) {
-    const { username, email, race } = taskData
-    return { username, email, race: race.toString() }
+    const { username, email, raceId } = taskData
+    return { username, email, raceId }
   }
 
   // FinishResearchTaskType
   if ('researchDuration' in taskData) {
-    const { player, research, researchDuration, researchResourceCost } = taskData
+    const { playerId, researchId, researchDuration, researchResourceCost } = taskData
     return {
-      player: player.toString(),
-      research: research.toString(),
+      playerId,
+      researchId,
       researchDuration,
       researchResourceCost
     }
   }
 
   // StartResearchTaskType
-  const { player, research } = taskData
+  if ('researchId' in taskData) {
+    const { playerId, researchId } = taskData
 
-  return { player: player.toString(), research: research.toString() }
+    return { playerId, researchId }
+  }
+
+  // StartBuildUnitsTaskType or FinishBuildUnitsTaskType
+  const { playerId, planetId, build } = taskData
+
+  return {
+    build,
+    playerId,
+    planetId
+  }
 }

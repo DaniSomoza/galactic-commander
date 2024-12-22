@@ -24,7 +24,7 @@ function GameSettingsPage() {
         </Typography>
 
         <Stack direction="row" spacing={1}>
-          <Tooltip title={'switch theme mode'}>
+          <Tooltip title={'switch theme mode'} arrow>
             <ButtonGroup aria-label="switch theme mode">
               <Button
                 onClick={switchTheme}
@@ -50,7 +50,7 @@ function GameSettingsPage() {
           User Settings
         </Typography>
 
-        <Tooltip title={'logout'}>
+        <Tooltip title={'logout'} arrow>
           <Button onClick={logout} variant="outlined" endIcon={<LogoutRoundedIcon />}>
             Logout
           </Button>

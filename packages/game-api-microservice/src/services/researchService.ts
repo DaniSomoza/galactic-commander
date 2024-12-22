@@ -23,9 +23,16 @@ async function startResearch({
   executeTaskAt
 }: ResearchData): Promise<startResearchResponseType> {
   const universe = await universeRepository.findUniverseByName(universeName)
-  const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
-  if (!player || !universe) {
+  if (!universe) {
+    throw new NotFoundError('invalid universe', { universeName })
+  }
+
+  const universeId = universe._id.toString()
+
+  const player = await playerRepository.findPlayerByUsername(username, universeId)
+
+  if (!player) {
     throw new NotFoundError('invalid player', { username, universeName })
   }
 
@@ -40,9 +47,9 @@ async function startResearch({
   }
 
   const startResearchTask = createStartResearchTask(
-    universe._id,
-    player._id,
-    research._id,
+    universeId,
+    player._id.toString(),
+    research._id.toString(),
     executeTaskAt
   )
 
@@ -63,9 +70,16 @@ async function updateResearchQueue({
   universeName
 }: AddResearchToQueueData): Promise<updateResearchQueueResponseType> {
   const universe = await universeRepository.findUniverseByName(universeName)
-  const player = await playerRepository.findPlayerByUsername(username, universe!._id)
 
-  if (!player || !universe) {
+  if (!universe) {
+    throw new NotFoundError('invalid universe', { universeName })
+  }
+
+  const universeId = universe._id.toString()
+
+  const player = await playerRepository.findPlayerByUsername(username, universeId)
+
+  if (!player) {
     throw new NotFoundError('invalid player', { username, universeName })
   }
 

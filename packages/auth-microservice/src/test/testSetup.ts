@@ -1,5 +1,6 @@
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import mongoose from 'mongoose'
+
 import { ALL_USERS_MOCK } from './mocks/userMocks'
 import UserModel from '../models/UserModel'
 import Server from '../configuration/Server'
@@ -28,7 +29,7 @@ export async function mockTestDatabase() {
 }
 
 export async function restoreTestDatabase() {
-  await Promise.all([UserModel.deleteMany({})])
+  await UserModel.deleteMany({})
 }
 
 // initialize server

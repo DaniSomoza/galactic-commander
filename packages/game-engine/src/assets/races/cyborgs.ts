@@ -1,10 +1,10 @@
 import {
   DEFAULT_FLEET_ENERGY,
-  DEFAULT_RESOURCE_NAME,
   DEFAULT_INITIAL_RESOURCES,
+  DEFAULT_RESOURCE_NAME,
   DEFAULT_TROOPS_POPULATION,
   IRace
-} from '../../models/RaceModel'
+} from '../../types/IRace'
 
 const CYBORGS_ALLOWED_PLANETS = 6
 const CYBORGS_INTERGALACTIC_TRAVEL_THRESHOLD = 14
@@ -21,6 +21,10 @@ const cyborgs: IRace = {
   resourceName: DEFAULT_RESOURCE_NAME,
   intergalacticTravelThreshold: CYBORGS_INTERGALACTIC_TRAVEL_THRESHOLD,
   researches: [],
+
+  units: [],
+
+  specials: [],
 
   bonus: {
     MAX_FLEETS_ALLOWED_BONUS: CYBORGS_MAX_FLEETS_ALLOWED_BONUS

@@ -15,3 +15,12 @@ const connectToDatabase = async () => {
 }
 
 export default connectToDatabase
+
+export const disconnectFromDatabase = async () => {
+  try {
+    await mongoose.disconnect()
+    console.log('Successfully disconnected from the MongoDB database.')
+  } catch (error) {
+    console.error('Failed to disconnect from the MongoDB database: ', error)
+  }
+}

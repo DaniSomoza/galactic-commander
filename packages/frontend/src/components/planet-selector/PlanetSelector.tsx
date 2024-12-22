@@ -18,18 +18,13 @@ const SelectorInput = styled(OutlinedInput)(() => ({
 }))
 
 function PlanetSelector() {
-  const { player } = usePlayer()
+  const { selectedPlanet } = usePlayer()
 
   // TODO: SelectChangeEvent<any>
   const handleChange = (event: SelectChangeEvent) => {
     const { value } = event.target
 
     console.log('value: ', value)
-  }
-
-  // TODO: create isLoading player state
-  if (!player) {
-    return
   }
 
   return (
@@ -41,13 +36,17 @@ function PlanetSelector() {
         input={<SelectorInput id="select-planet-input" />}
         renderValue={() => (
           <Stack direction={'row'} spacing={1} alignItems="center">
-            <Image
-              src={player.planets.principal.imgUrl}
-              alt="player planet image"
-              height={'32px'}
-              width={'32px'}
-              border
-            />
+            {selectedPlanet ? (
+              <Image
+                src={selectedPlanet.imgUrl}
+                alt="player planet image"
+                height={'32px'}
+                width={'32px'}
+                border
+              />
+            ) : (
+              <Skeleton variant="rounded" width={32} height={32} />
+            )}
             <Paper variant="outlined" style={{ marginRight: '4px' }}>
               <Typography
                 variant="body1"
@@ -57,10 +56,10 @@ function PlanetSelector() {
                 paddingLeft={0.8}
                 paddingRight={0.8}
               >
-                {player.planets.principal.coordinates ? (
-                  formatCoordinatesLabel(player.planets.principal.coordinates)
+                {selectedPlanet ? (
+                  formatCoordinatesLabel(selectedPlanet.coordinates)
                 ) : (
-                  <Skeleton variant="text" width={24} />
+                  <Skeleton variant="text" width={50} />
                 )}
               </Typography>
             </Paper>

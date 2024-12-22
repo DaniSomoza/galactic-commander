@@ -1,3 +1,6 @@
+import { SpecialType } from './Special'
+import { BuildUnitsQueueType, BuildUnitsType, UnitType } from './Unit'
+
 export type PlanetCoordinatesType = {
   galaxy: number
   sector: number
@@ -7,7 +10,10 @@ export type PlanetCoordinatesType = {
 
 export type PlanetType = {
   name: string
-  owner: string | null
+
+  universeId: string
+
+  ownerId: string | null
   colonizedAt: number
 
   imgUrl: string
@@ -16,8 +22,6 @@ export type PlanetType = {
   resourceQuality: number
   lastResourceProductionTime: number
 
-  universe: string
-
   coordinates: PlanetCoordinatesType
 
   isSpecial: boolean
@@ -25,9 +29,22 @@ export type PlanetType = {
   isUnderConquer: boolean
   isExplored: boolean
 
-  specials: string[]
+  specials: SpecialType[]
 
-  isBuildingFleets: boolean
-  isTrainingTroops: boolean
-  isBuildingDefenses: boolean
+  unitBuild: {
+    troops: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsQueueType[]
+    }
+    spaceships: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsQueueType[]
+    }
+    defenses: {
+      activeBuild?: BuildUnitsType
+      queue: BuildUnitsQueueType[]
+    }
+  }
+
+  units: UnitType[]
 }

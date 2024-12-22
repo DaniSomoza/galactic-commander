@@ -21,7 +21,7 @@ function PlanetsLabel() {
   const planetsLabel = `${player?.planets.colonies.length || 0} / ${maxPlanetsAllowed}`
 
   return (
-    <Paper>
+    <Paper variant="outlined">
       <Tooltip
         title={translate(
           'GAME_PLAYER_STATS_PLANETS_TOOLTIP',

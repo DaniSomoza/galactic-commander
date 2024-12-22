@@ -34,6 +34,8 @@ function GamePlanetSection() {
             border
           />
         )}
+
+        {/* planet name */}
         <Box
           position={'absolute'}
           top={24}

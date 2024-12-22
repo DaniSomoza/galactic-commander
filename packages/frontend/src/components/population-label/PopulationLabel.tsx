@@ -5,7 +5,8 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import GroupIcon from '@mui/icons-material/Group'
 
-import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
+import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
+import calculateMaxPlayerPopulation from 'game-engine/src/engine/units/calculateMaxPlayerPopulation'
 
 import formatNumber from '../../utils/formatNumber'
 import { usePlayer } from '../../store/PlayerContext'
@@ -15,20 +16,21 @@ function PopulationLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
 
-  // TODO: Add current population
-  const currentPopulation = 0
-  const populationBonus = computedBonus(player?.perks || [], 'TROOPS_POPULATION_BONUS')
-  const basePopulation = player ? player.units.troops.population * (populationBonus / 100) : 0
-  const populationLabel = `${currentPopulation} / ${formatNumber(basePopulation)}`
+  // TODO: move this to usePlayer
+  // const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
 
   return (
-    <Paper>
+    <Paper variant="outlined">
       <Tooltip
-        title={translate(
-          'GAME_PLAYER_STATS_POPULATION_TOOLTIP',
-          currentPopulation,
-          formatNumber(player?.units.troops.population || 0, true)
-        )}
+        title={
+          player
+            ? translate(
+                'GAME_PLAYER_STATS_POPULATION_TOOLTIP',
+                calculateCurrentPlayerPopulation(player),
+                formatNumber(calculateMaxPlayerPopulation(player), true)
+              )
+            : undefined
+        }
         arrow
       >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
@@ -42,7 +44,14 @@ function PopulationLabel() {
             textOverflow="ellipsis"
             textAlign="center"
           >
-            {player ? populationLabel : <Skeleton variant="text" width={32} />}
+            {player ? (
+              `${formatNumber(calculateCurrentPlayerPopulation(player), true)} / ${formatNumber(
+                calculateMaxPlayerPopulation(player),
+                true
+              )}`
+            ) : (
+              <Skeleton variant="text" width={32} />
+            )}
           </Typography>
         </Stack>
       </Tooltip>
