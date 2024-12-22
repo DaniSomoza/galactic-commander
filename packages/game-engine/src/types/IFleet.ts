@@ -1,15 +1,19 @@
 import { IPlanet } from './IPlanet'
 import { IUnit } from './IUnit'
 
-interface IFleetUnits {
+export interface IFleetUnits {
   unit: IUnit
   amount: number
 }
 
+export type ExploreFleetType = 'EXPLORE_FLEET_TYPE'
+
+export type FleetTypes = ExploreFleetType
+
 interface ITravelFleet {
   destination: IPlanet
   arriveAt: number
-  fleetType: string // TODO: create a fleetType
+  fleetType: FleetTypes
   isReturning: boolean
   resources: number
 }

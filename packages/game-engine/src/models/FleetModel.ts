@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model, Types, Document } from 'mongoose'
 
-import { IFleet } from '../types/IFleet'
+import { IFleet, FleetTypes } from '../types/IFleet'
 import { IPlanetDocument } from './PlanetModel'
 import { IUnitDocument } from './UnitModel'
 
@@ -16,7 +16,7 @@ const FleetTravelSchema = new Schema(
   {
     destination: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
     arriveAt: { type: Number, required: true },
-    fleetType: { type: Number, required: true }, // TODO: create a fleetType
+    fleetType: { type: String, required: true },
     isReturning: { type: Boolean, required: true, default: false },
     resources: { type: Number, required: true, default: 0 }
   },
@@ -48,13 +48,12 @@ export interface IFleetDocument extends IFleet, Document {
   travel?: {
     destination: IPlanetDocument
     arriveAt: number
-    fleetType: string // TODO: create a fleetType
+    fleetType: FleetTypes
     isReturning: boolean
     resources: number
   }
 }
 
-// TODO: delete this ???? => use player.fleets [] ONLY
 const FleetModel: Model<IFleetDocument> = mongoose.model<IFleetDocument>('Fleet', FleetSchema)
 
 export default FleetModel

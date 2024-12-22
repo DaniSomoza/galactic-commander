@@ -1,3 +1,4 @@
+import { FleetTypes, IFleetUnits } from './IFleet'
 import { UnitTypes } from './IUnit'
 
 export const PENDING_TASK_STATUS = 'PENDING'
@@ -61,11 +62,19 @@ export type FinishBuildUnitsTaskData = {
   }
 }
 
-// const EXPLORE_PLANET_TASK_TYPE = 'ExplorePlanetTask'
-// export type ExplorePlanetTaskType = typeof EXPLORE_PLANET_TASK_TYPE
-// export type ExplorePlanetTaskData = {
-//   // TODO: implement task data
-// }
+export const START_FLEET_TASK_TYPE = 'START_FLEET_UNITS_TASK'
+export type StartFleetTaskType = typeof START_FLEET_TASK_TYPE
+export type StartFleetTaskData = {
+  playerId: string
+  planetId: string
+  fleet: {
+    units: IFleetUnits[]
+    resources: number
+    destinationPlanetId: string
+    fleetType: FleetTypes
+    allUnitsInThePlanet?: boolean
+  }
+}
 
 export type TaskType =
   | NewPlayerTaskType
@@ -73,6 +82,7 @@ export type TaskType =
   | FinishResearchTaskType
   | StartBuildUnitsTaskType
   | FinishBuildUnitsTaskType
+  | StartFleetTaskType
 
 export type TaskData<T extends TaskType> = T extends NewPlayerTaskType
   ? NewPlayerTaskData
@@ -84,7 +94,9 @@ export type TaskData<T extends TaskType> = T extends NewPlayerTaskType
         ? StartBuildUnitsTaskData
         : T extends FinishBuildUnitsTaskType
           ? FinishBuildUnitsTaskData
-          : never
+          : T extends StartFleetTaskType
+            ? StartFleetTaskData
+            : never
 
 type HistoryStatusItem = {
   taskStatus: TaskStatus
