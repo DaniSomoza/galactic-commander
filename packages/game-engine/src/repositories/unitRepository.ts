@@ -11,6 +11,10 @@ async function findUnitById(unitId: mongoose.Types.ObjectId) {
   return UnitModel.findById(unitId).exec()
 }
 
+async function findUnitByName(name: string) {
+  return UnitModel.findOne({ name }).exec()
+}
+
 async function insertUnits(units: IUnit[]) {
   return UnitModel.insertMany(units)
 }
@@ -18,7 +22,8 @@ async function insertUnits(units: IUnit[]) {
 const unitRepository = {
   findUnits,
   insertUnits,
-  findUnitById
+  findUnitById,
+  findUnitByName
 }
 
 export default unitRepository

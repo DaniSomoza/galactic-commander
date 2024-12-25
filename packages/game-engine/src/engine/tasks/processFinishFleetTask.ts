@@ -1,11 +1,16 @@
-import FleetModel from '../../models/FleetModel'
-import { ITaskTypeDocument } from '../../models/TaskModel'
+import getSecond from '../../helpers/getSecond'
+import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import planetRepository from '../../repositories/planetRepository'
 import playerRepository from '../../repositories/playerRepository'
-import { IFleetUnits } from '../../types/IFleet'
-import { IPlanet } from '../../types/IPlanet'
-import { FinishFleetTaskType } from '../../types/ITask'
+import unitRepository from '../../repositories/unitRepository'
+import {
+  FINISH_FLEET_TASK_TYPE,
+  FinishFleetTaskType,
+  ITask,
+  PENDING_TASK_STATUS
+} from '../../types/ITask'
 import GameEngineError from '../errors/GameEngineError'
+import getFleetDuration from '../fleets/getFleetDuration'
 
 async function processFinishFleetTask(
   task: ITaskTypeDocument<FinishFleetTaskType>,
@@ -13,8 +18,8 @@ async function processFinishFleetTask(
 ) {
   // get all the required data from DB
   const player = await playerRepository.findPlayerById(task.data.playerId)
-  const fromPlanet = await planetRepository.findPlanetById(task.data.from)
-  const toPlanet = await planetRepository.findPlanetById(task.data.to)
+  const fromPlanet = await planetRepository.findPlanetById(task.data.fromPlanetId)
+  const toPlanet = await planetRepository.findPlanetById(task.data.toPlanetId)
 
   if (!player) {
     throw new GameEngineError('invalid player')
@@ -33,40 +38,114 @@ async function processFinishFleetTask(
   }
 
   if (task.data.fleetType === 'EXPLORE_FLEET_TYPE') {
-    // TODO: isReturning = TRUE
+    const currentFleet = player.fleets.find(
+      (playerFleet) => playerFleet._id.toString() === task.data.fleetId
+    )
+
+    if (!currentFleet) {
+      throw new GameEngineError('invalid fleet')
+    }
+
+    if (task.data.isReturning) {
+      const playerUnitsInThePlanet = player.fleets.find(
+        (fleet) => fleet.planet._id.equals(fromPlanet._id) && !fleet.travel
+      )
+
+      if (!playerUnitsInThePlanet) {
+        throw new GameEngineError('invalid units in the planet')
+      }
+
+      const units = await unitRepository.findUnits()
+
+      // restore units in the fleet planet
+      for (let i = 0; i < task.data.units.length; i++) {
+        const fleetUnit = task.data.units[i]
+
+        const planetUnit = playerUnitsInThePlanet.units.find(
+          (planetFleet) => planetFleet.unit.name === fleetUnit.unit.name
+        )
+
+        if (planetUnit) {
+          planetUnit.amount += fleetUnit.amount
+        } else {
+          const unit = units.find((unit) => unit.name === fleetUnit.unit.name)
+
+          if (!unit) {
+            throw new GameEngineError('invalid fleet unit')
+          }
+
+          playerUnitsInThePlanet.units.push({
+            unit,
+            amount: fleetUnit.amount
+          })
+        }
+      }
+
+      return Promise.all([
+        currentFleet.deleteOne(),
+        playerUnitsInThePlanet.save(),
+        player.save(),
+        fromPlanet.save()
+      ])
+    }
 
     const executeTaskAt = getSecond(
       second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
     )
 
-    const newReturningFleet = new FleetModel({
-      planet: fromPlanet,
-      playerId: player._id,
-      units: task.data.units,
-      travel: {
-        destination: toPlanet,
-        arriveAt: second + getFleetDuration(fromPlanet, toPlanet, task.data.units),
-        fleetType: task.data.fleetType,
-        isReturning: false,
-        resources: task.data.resources
-      }
-    })
+    currentFleet.planet = toPlanet
+    currentFleet.travel!.destination = fromPlanet
+    currentFleet.travel!.arriveAt = executeTaskAt
+    currentFleet.travel!.isReturning = true
 
-    // player.fleets.push(newFleet)
-
-    // TODO: create FINISH_FLEET_TASK_TYPE
+    player.fleets.push(currentFleet)
 
     fromPlanet.isExplored = true
+
+    // TODO: implement createBaseTask helper function
+    const finishBuildUnitsTask: ITask<FinishFleetTaskType> = {
+      type: FINISH_FLEET_TASK_TYPE,
+      universeId: player.universeId,
+      data: {
+        playerId: player._id.toString(),
+        fromPlanetId: fromPlanet._id.toString(),
+        toPlanetId: toPlanet._id.toString(),
+        units: task.data.units,
+        resources: task.data.resources,
+        fleetType: task.data.fleetType,
+        allUnitsInThePlanet: task.data.allUnitsInThePlanet,
+        allResourcesInThePlanet: task.data.allResourcesInThePlanet,
+        isReturning: false,
+        arriveAt: executeTaskAt,
+        fleetId: currentFleet._id.toString()
+      },
+      status: PENDING_TASK_STATUS,
+      isCancellable: true,
+      executeTaskAt,
+      processedAt: null,
+      processingDuration: null,
+      history: [
+        {
+          taskStatus: PENDING_TASK_STATUS,
+          updatedAt: new Date().getTime()
+        }
+      ],
+      errorDetails: null
+    }
+    const taskModel = getTaskModel<FinishFleetTaskType>()
+    const newTask = new taskModel(finishBuildUnitsTask)
+
+    // TODO: create exploration report
+
     const isAlreadyExplored = fromPlanet.exploredBy.some((exploredPlayer) =>
-      // TODO: is id[] or player[] ????
       exploredPlayer._id.equals(player._id)
     )
+
     if (!isAlreadyExplored) {
       fromPlanet.exploredBy.push(player)
     }
-    // TODO: create a return fleet!
 
-    return Promise.all([player.save(), fromPlanet.save()])
+    return Promise.all([newTask.save(), currentFleet.save(), player.save(), fromPlanet.save()])
   }
 
   throw 'fleet type not implemented'

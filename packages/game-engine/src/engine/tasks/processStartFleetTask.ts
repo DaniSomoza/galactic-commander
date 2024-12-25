@@ -3,7 +3,6 @@ import FleetModel from '../../models/FleetModel'
 import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import planetRepository from '../../repositories/planetRepository'
 import playerRepository from '../../repositories/playerRepository'
-import { IFleetUnits } from '../../types/IFleet'
 import {
   FINISH_FLEET_TASK_TYPE,
   FinishFleetTaskType,
@@ -12,6 +11,10 @@ import {
   StartFleetTaskType
 } from '../../types/ITask'
 import GameEngineError from '../errors/GameEngineError'
+import getAmountOfTroops from '../fleets/getAmountOfTroops'
+import getFleetDuration from '../fleets/getFleetDuration'
+import getFleetResourceCapacity from '../fleets/getFleetResourceCapacity'
+import getFleetTroopsCapacity from '../fleets/getFleetTroopsCapacity'
 
 async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>, second: number) {
   // get all the required data from DB
@@ -149,28 +152,3 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
 }
 
 export default processStartFleetTask
-
-// TODO: create an util
-function getFleetTroopsCapacity(units: IFleetUnits[]): number {
-  return units.reduce((troopsCapacity, { unit, amount }) => {
-    return unit.stats.troopsCapacity * amount + troopsCapacity
-  }, 0)
-}
-
-// TODO: create an util
-function getAmountOfTroops(units: IFleetUnits[]): number {
-  return units.reduce((troops, { unit, amount }) => {
-    if (unit.type === 'TROOP') {
-      return amount + troops
-    }
-
-    return troops
-  }, 0)
-}
-
-// TODO: create an util
-function getFleetResourceCapacity(units: IFleetUnits[]): number {
-  return units.reduce((resourceCapacity, { unit, amount }) => {
-    return unit.stats.cargo * amount + resourceCapacity
-  }, 0)
-}
