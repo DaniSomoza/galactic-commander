@@ -1,3 +1,4 @@
+import { IPlayer } from './IPlayer'
 import { ISpecial } from './ISpecial'
 import { BuildUnitsQueueType, BuildUnitsType, IUnit } from './IUnit'
 
@@ -55,4 +56,6 @@ export interface IPlanet {
   }
 
   units: IUnit[]
+
+  exploredBy: IPlayer[]
 }

@@ -48,24 +48,77 @@ yarn coverage
 
 ## Roadmap
 
-- [ ] **First version of the frontend**: Register (create + validate email), login, create player, select race, and create research task. Track planet resources and active researches. Show player bonus in the UI
-- [ ] **game-api microservice, game-engine & frontend**: Players can build units (ships, troops, defenses & heroes) (research required to unlock units) specials & units from special planets???
-- [ ] **game-api microservice, game-engine & frontend**: Players can deploy fleets (only deploy spaceship units)
-- [ ] **game-api microservice, game-engine & frontend**: Players activate specials
-- [ ] **game-api & frontend**: Add CDN to store assets like images (profile pics, unit img, race img, research img, specials img, planets img...) update user profile pic flow
-- [ ] **frontend && Content**: Add translate support in frontend
-- [ ] **Content**: Add all races, units, specials, heroes, special planets ???
-- [ ] **Content**: Players
+- [ ] **Authentication flows**: Create Users and update user flows.
+  - [ ] Register User
+  - [ ] Validate User (email verification)
+  - [ ] Login User
+  - [ ] Auto Refresh session token
+  - [ ] Change Password
+  - [ ] Forgot Password
+  - [ ] Delete User
+  - [ ] Change User email
+  - [ ] Change User data
+- [ ] **Create Players**: Player Creation flow.
+  - [ ] Select player universe.
+  - [ ] Select race.
+  - [ ] Show player dashboard.
+- [ ] **Build Units**: Players build units:
+  - [ ] Build race Troops
+  - [ ] Build race Spaceships
+  - [ ] Build race Defenses
+  - [ ] Build race Heroes
+  - [ ] Build special Units
+  - [ ] Build special Heroes
+- [ ] **Fleets**: Players can crate fleets:
+  - [ ] Explore planet fleets (create explore reports)
+  - [ ] Establish planetary base fleets
+  - [ ] Deploy units fleets (move units and resources) => see all visible fleets in real time in the planet
+  - [ ] collect resources fleets
+  - [ ] transport resources/troops/star fighters fleets
+  - [ ] attack planet fleets
+  - [ ] conquer planet fleets
+  - [ ] counter-attack planet fleets
+  - [ ] pirate attack fleets
+- [ ] **Battles**: Players can crate fleets:
+  - [ ] Battle reports
+  - [ ] Implement battles
+  - [ ] Capture units feature
+- [ ] **Extra frontend features**: Frontend sections:
+  - [ ] notifications feature
+  - [ ] snackbars feature
+  - [ ] messages in game feature (add a chat?)
+  - [ ] Game alerts in game feature (example: news, maintenance, bugs etc)
+  - [ ] Exploration reports feature
+  - [ ] Battle reports feature
+  - [ ] Points section
+  - [ ] Player Task section
+- [ ] **Active Specials**: Players enable/disable specials
+  - [ ] race Specials (researches?)
+  - [ ] heroe Specials
+  - [ ] planet Specials
+- [ ] **CDN for images and assets**: Add CDN to store assets like images (player profile pics ???)
+- [x] **translations**: Add translate support in the Frontend:
+  - [ ] spanish translations
+  - [ ] english translations
+  - [ ] galician translations
+  - [ ] french translations
+  - [ ] italian translations
+  - [ ] german translations
+- [ ] **Content**: all content via game migrations
+  - [ ] Races
+  - [ ] Units
+  - [ ] Heroes
+  - [ ] Specials
+  - [ ] Planets
+  - [ ] Special Planets
+  - [ ] Special Units
 - [x] **Auth microservice**: Create users, validate email, retrieve user info, and create user sessions (JWT)
-- [ ] **Pending Auth microservice endpoints**: Change password, forgot password, reset password, update user data and delete account
-- [x] **Auth microservice**: Add unit tests with jest
-- [x] **Github actions**: Add Github actions (test, coverage reports with coveralls)
-- [ ] **Pending Github actions**: Add Sonar action
-- [x] **game-api**: Add migration support
-- [x] **game-engine**: Create Universe (define races, planets)
-- [x] **game-api microservice**: Create a player (select race & select universe & principal planet)
-- [x] **game-engine**: Define task types & processing scheduler
-- [x] **game-api microservice**: Players can create tasks
-- [ ] **first release**: Release system & dev & prod environments (GitHub actions).
-- [ ] **preview PR branches**: (Github actions)
+- [ ] **Github actions**: Add Github actions
+  - [ ] Linter Action
+  - [ ] Test Action
+  - [ ] Coverage Action
+  - [ ] Sonar Action
+  - [ ] Deploy test branch Action
+- [x] **Tests**: Add unit tests with jest
+- [ ] **First release**: Release system & dev & prod environments (GitHub actions).
 - [ ] **Badges**: Add badges in the README.md

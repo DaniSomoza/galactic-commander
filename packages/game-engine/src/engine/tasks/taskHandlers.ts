@@ -11,11 +11,13 @@ import {
   FINISH_RESEARCH_TASK_TYPE,
   START_BUILD_UNITS_TASK_TYPE,
   FINISH_BUILD_UNITS_TASK_TYPE,
-  START_FLEET_TASK_TYPE
+  START_FLEET_TASK_TYPE,
+  FINISH_FLEET_TASK_TYPE
 } from '../../types/ITask'
 import processStartBuildUnitsTask from './processStartBuildUnitsTask'
 import processFinishBuildUnitsTask from './processFinishBuildUnitsTask'
 import processStartFleetTask from './processStartFleetTask'
+import processFinishFleetTask from './processFinishFleetTask'
 
 type taskPriority = {
   [Type in TaskType]: number
@@ -32,8 +34,8 @@ const TASK_PRIORITY: taskPriority = {
   [START_RESEARCH_TASK_TYPE]: 3,
   [FINISH_BUILD_UNITS_TASK_TYPE]: 4,
   [START_BUILD_UNITS_TASK_TYPE]: 5,
-  // [FINISH_FLEET_TASK_TYPE]: 8, // <== Process all battles here!!
-  [START_FLEET_TASK_TYPE]: 6
+  [FINISH_FLEET_TASK_TYPE]: 6, // <== TODO: Process all battles here!!
+  [START_FLEET_TASK_TYPE]: 7
 }
 
 // fleet types priority (finish)
@@ -107,6 +109,11 @@ export const TASK_HANDLER: TaskHandlerType = {
     processTasksInParallel: true,
     handler: processFinishBuildUnitsTask,
     priority: TASK_PRIORITY[FINISH_BUILD_UNITS_TASK_TYPE]
+  },
+  [FINISH_FLEET_TASK_TYPE]: {
+    processTasksInParallel: true,
+    handler: processFinishFleetTask,
+    priority: TASK_PRIORITY[FINISH_FLEET_TASK_TYPE]
   },
   [START_FLEET_TASK_TYPE]: {
     processTasksInParallel: false,

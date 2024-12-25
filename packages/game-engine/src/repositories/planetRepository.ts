@@ -2,7 +2,7 @@ import PlanetModel from '../models/PlanetModel'
 import { IPlanet, IPlanetCoordinates } from '../types/IPlanet'
 
 async function findPlanetById(planetId: string) {
-  return PlanetModel.findById(planetId).exec()
+  return PlanetModel.findById(planetId).populate('exploredBy').exec()
 }
 
 async function findAvailablePrincipalPlanets() {

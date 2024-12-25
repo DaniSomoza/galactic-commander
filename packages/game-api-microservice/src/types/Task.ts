@@ -61,6 +61,8 @@ export type FinishBuildUnitsTaskData = {
   }
 }
 
+// TODO: add start fleet and finish fleet
+
 export type TaskTypesTypes =
   | NewPlayerTaskType
   | StartResearchTaskType
