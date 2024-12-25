@@ -66,8 +66,8 @@ export const START_FLEET_TASK_TYPE = 'START_FLEET_UNITS_TASK'
 export type StartFleetTaskType = typeof START_FLEET_TASK_TYPE
 export type StartFleetTaskData = {
   playerId: string
-  from: string // planetId
-  to: string // planetId
+  fromPlanetId: string
+  toPlanetId: string
   units: IFleetUnits[]
   resources: number
   fleetType: FleetTypes
@@ -79,8 +79,8 @@ export const FINISH_FLEET_TASK_TYPE = 'FINISH_FLEET_UNITS_TASK'
 export type FinishFleetTaskType = typeof FINISH_FLEET_TASK_TYPE
 export type FinishFleetTaskData = {
   playerId: string
-  from: string // planetId
-  to: string // planetId
+  fromPlanetId: string
+  toPlanetId: string
   units: IFleetUnits[]
   resources: number
   fleetType: FleetTypes

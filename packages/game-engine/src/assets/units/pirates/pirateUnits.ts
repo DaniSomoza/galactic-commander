@@ -880,8 +880,8 @@ const pirateTroops: IUnit[] = [
 
 const pirateSpaceships: IUnit[] = [
   pirateReconDrone,
-  pirateStarFighter,
   pirateScrapFighter,
+  pirateStarFighter,
   pirateCruiser,
   pirateBrigantine,
   pirateImperialCorsairFrigate,

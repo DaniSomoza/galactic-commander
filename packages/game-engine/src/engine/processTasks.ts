@@ -148,6 +148,7 @@ async function processResourceProduction(
   }[] = []
 
   // TODO: implement targetPlanet feature
+  // for FLEETS from planet and to planet
   for (const task of tasks) {
     // calculate all player planet production
     if (isPlayerTaskData(task.data)) {

@@ -32,21 +32,25 @@ async function processFinishFleetTask(
     throw new GameEngineError('invalid planet')
   }
 
-  // TODO: IMPLEMENT THIS
-
   if (task.data.fleetType === 'EXPLORE_FLEET_TYPE') {
-    // const newFleet = new FleetModel({
-    //   planet: fromPlanet,
-    //   playerId: player._id,
-    //   units: task.data.units,
-    //   travel: {
-    //     destination: toPlanet,
-    //     arriveAt: second + getFleetDuration(fromPlanet, toPlanet, task.data.units),
-    //     fleetType: task.data.fleetType,
-    //     isReturning: false,
-    //     resources: task.data.resources
-    //   }
-    // })
+    // TODO: isReturning = TRUE
+
+    const executeTaskAt = getSecond(
+      second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
+    )
+
+    const newReturningFleet = new FleetModel({
+      planet: fromPlanet,
+      playerId: player._id,
+      units: task.data.units,
+      travel: {
+        destination: toPlanet,
+        arriveAt: second + getFleetDuration(fromPlanet, toPlanet, task.data.units),
+        fleetType: task.data.fleetType,
+        isReturning: false,
+        resources: task.data.resources
+      }
+    })
 
     // player.fleets.push(newFleet)
 
