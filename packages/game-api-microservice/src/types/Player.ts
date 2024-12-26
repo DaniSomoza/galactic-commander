@@ -31,17 +31,22 @@ export type PlayerType = {
     principal: PlanetType
     colonies: PlanetType[]
   }
+
   perks: PlayerPerkType[]
+
   researches: {
     researched: PlayerResearchType[]
+
+    queue: string[]
+
     activeResearch?: {
       research: ResearchType
       level: number
       executeTaskAt: number
       taskId: string
     }
-    queue: string[]
   }
+
   fleets: FleetType[]
 }
 

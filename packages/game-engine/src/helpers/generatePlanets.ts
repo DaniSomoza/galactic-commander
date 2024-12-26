@@ -66,6 +66,8 @@ function generatePlanets(universe: IUniverseDocument): IPlanet[] {
               }
             },
 
+            exploredBy: [],
+
             units: []
           })
         }

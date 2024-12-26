@@ -1,25 +1,29 @@
 import { PlanetType } from './Planet'
 import { UnitType } from './Unit'
 
-interface FleetUnitsType {
+export interface FleetUnitsType {
   unit: UnitType
   amount: number
 }
 
-interface TravelFleetType {
+export type ExploreFleetType = 'EXPLORE_FLEET_TYPE'
+
+export type FleetTypes = ExploreFleetType
+
+export interface TravelFleetType {
   destination: PlanetType
   arriveAt: number
-  fleetType: string // TODO: create a fleetType
+  fleetType: FleetTypes
   isReturning: boolean
   resources: number
 }
 
 export interface FleetType {
-  units: FleetUnitsType[]
-
   playerId: string
 
   planet: PlanetType
+
+  units: FleetUnitsType[]
 
   travel?: TravelFleetType
 }

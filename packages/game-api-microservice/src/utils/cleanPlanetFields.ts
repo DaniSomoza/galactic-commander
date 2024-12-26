@@ -39,7 +39,8 @@ function cleanPlanetFields(planet: IPlanetDocument | IPlanet): PlanetType {
     isExplored,
     specials,
     unitBuild,
-    units
+    units,
+    exploredBy: []
   }
 }
 

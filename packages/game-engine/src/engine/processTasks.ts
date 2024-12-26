@@ -30,6 +30,7 @@ import GameEngineError from './errors/GameEngineError'
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
 
+  // TODO: include tasksGroupedBySeconds to push directly the new tasks
   for (const { tasks, second } of tasksGroupedBySeconds) {
     // 0.- Calculate player resources
     await processResourceProduction(tasks, second)
@@ -73,6 +74,9 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
       START_BUILD_UNITS_TASK_TYPE
     )
     await processTasksSequentially(startBuildUnitsTasks, startBuildUnitsTaskHandler, second)
+
+    // TODO: Add FINISH_FLEET_TASK_TYPE
+    // TODO: Add START_FLEET_TASK_TYPE
 
     // update universe
     universe.lastProcessedTime = second

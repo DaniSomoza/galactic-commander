@@ -40,7 +40,9 @@ export const PRINCIPAL_PLANET_TEST_1: IPlanet = {
     }
   },
 
-  units: []
+  units: [],
+
+  exploredBy: []
 }
 
 export const AVAILABLE_PLANET_TEST_1: IPlanet = {
@@ -82,7 +84,9 @@ export const AVAILABLE_PLANET_TEST_1: IPlanet = {
     }
   },
 
-  units: []
+  units: [],
+
+  exploredBy: []
 }
 
 const ALL_PLANETS_MOCK = [PRINCIPAL_PLANET_TEST_1, AVAILABLE_PLANET_TEST_1]

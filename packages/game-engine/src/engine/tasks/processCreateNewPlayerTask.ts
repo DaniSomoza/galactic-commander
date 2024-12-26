@@ -77,6 +77,7 @@ async function processCreateNewPlayerTask(
   const newPlayer = new PlayerModel(newPlayerData)
 
   principalPlanet.ownerId = newPlayer._id.toString()
+  principalPlanet.exploredBy = [newPlayer]
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second

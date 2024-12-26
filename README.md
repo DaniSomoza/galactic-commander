@@ -62,6 +62,9 @@ yarn coverage
   - [ ] Select player universe.
   - [ ] Select race.
   - [ ] Show player dashboard.
+  - [ ] Universes as a code.
+  - [ ] Races as a code.
+  - [ ] Units as a code.
 - [ ] **Build Units**: Players build units:
   - [ ] Build race Troops
   - [ ] Build race Spaceships
@@ -84,6 +87,7 @@ yarn coverage
   - [ ] Implement battles
   - [ ] Capture units feature
 - [ ] **Extra frontend features**: Frontend sections:
+  - [ ] schedule tasks feature
   - [ ] notifications feature
   - [ ] snackbars feature
   - [ ] messages in game feature (add a chat?)

@@ -1,6 +1,6 @@
 import { ITaskDocument } from 'game-engine/models/TaskModel'
 
-import { TaskType, TaskTypesTypes } from '../types/Task'
+import { StartBuildUnitsTaskData, TaskType, TaskTypesTypes } from '../types/Task'
 
 function cleanTaskFields(task: ITaskDocument): TaskType<TaskTypesTypes> {
   const {
@@ -60,11 +60,5 @@ function cleanTaskDataFields(taskData: ITaskDocument['data']): TaskType<TaskType
   }
 
   // StartBuildUnitsTaskType or FinishBuildUnitsTaskType
-  const { playerId, planetId, build } = taskData
-
-  return {
-    build,
-    playerId,
-    planetId
-  }
+  return taskData as StartBuildUnitsTaskData
 }
