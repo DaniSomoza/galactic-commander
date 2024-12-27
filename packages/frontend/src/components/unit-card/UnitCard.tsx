@@ -46,6 +46,7 @@ function UnitCard({
   const { translate } = useTranslations()
 
   const UnitIconComponent = unitIcon[unit.type]
+
   return (
     <Box sx={{ position: 'relative' }}>
       <Paper variant={disableBorder ? 'elevation' : 'outlined'}>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-// import Typography from '@mui/material/Typography'
-// import Box from '@mui/material/Box'
-// import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
 
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
 
@@ -49,11 +49,18 @@ function GameGalaxiesPage() {
 
   return (
     <>
-      <h1 style={{ textAlign: 'center' }}>Game Galaxies Page</h1>
-
       {/* TODO: Planet Coordinates selector */}
+      <Paper variant="outlined">
+        <Box padding={1}>Planet Coordinates selector</Box>
+      </Paper>
 
-      <Stack direction={'row'} flexWrap={'wrap'} maxWidth={'620px'} gap={1}>
+      <Stack
+        direction={'row'}
+        flexWrap={'wrap'}
+        justifyContent={'center'}
+        maxWidth={'630px'}
+        gap={1}
+      >
         {planets.map((planet) => {
           const planetLabel = formatCoordinatesLabel(planet.coordinates)
 
@@ -61,16 +68,51 @@ function GameGalaxiesPage() {
           console.log('planet: ', planet)
 
           return (
-            <Paper key={planetLabel}>
-              <Image
-                // src={getImage(planet.name)}
-                src={planet.imgUrl}
-                alt={translate(planet.name)}
-                height={'200px'}
-                width={'200px'}
-                border
-              />
-            </Paper>
+            <Box key={planetLabel} sx={{ position: 'relative' }}>
+              <Paper variant={'outlined'}>
+                <Stack justifyContent="center" alignItems="center">
+                  {/* TODO: create planet card */}
+                  <Image
+                    src={planet.imgUrl}
+                    alt={planet.name}
+                    height={'200px'}
+                    width={'200px'}
+                    border
+                  />
+
+                  {/* Planet name */}
+                  <Box
+                    position={'absolute'}
+                    top={20}
+                    maxWidth={200}
+                    sx={{ transform: 'translate(0, -50%)' }}
+                  >
+                    <Paper variant="outlined">
+                      <Stack
+                        direction={'row'}
+                        gap={0.5}
+                        padding={0.4}
+                        paddingLeft={0.6}
+                        paddingRight={0.8}
+                        alignItems={'center'}
+                      >
+                        {/* {unit.isHero && <StarsIcon fontSize="small" color="info" />} */}
+                        {/* TODO: isSpecial */}
+                        <Typography variant="body1" fontSize={12}>
+                          {planet.name}
+                        </Typography>
+                      </Stack>
+                    </Paper>
+                  </Box>
+
+                  {/* Explore Planet button */}
+                  {/* TODO: use a icon button EYE */}
+                  <Box position={'absolute'} sx={{ transform: 'translate(0, -50%)' }}>
+                    <Button variant="outlined">Explore</Button>
+                  </Box>
+                </Stack>
+              </Paper>
+            </Box>
           )
         })}
       </Stack>
