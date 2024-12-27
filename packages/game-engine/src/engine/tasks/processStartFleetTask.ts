@@ -38,6 +38,8 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
     throw new GameEngineError('invalid planet')
   }
 
+  // TODO: check number of active player fleets
+
   const playerUnitsInThePlanet = player.fleets.find(
     (fleet) => fleet.planet._id.equals(fromPlanet._id) && !fleet.travel
   )

@@ -80,6 +80,7 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
                     <Paper
                       variant="outlined"
                       sx={{
+                        flexGrow: 1,
                         padding: 1
                       }}
                     >

@@ -194,6 +194,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
         </Paper>
 
         {/* TODO: ADD TOOLTIP */}
+        {/* TODO: ADD 25% button... */}
 
         <Box minHeight={120} marginTop={1}>
           <Paper sx={{ padding: 1 }}>
@@ -205,7 +206,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                     helperText={showErrorLabel ? error : ''}
                     disabled={unitToBuild.isHero}
                     fullWidth
-                    placeholder="type the amount"
+                    placeholder="type an amount"
                     error={showErrorLabel}
                     value={amount || ''}
                     onChange={(event) => {
