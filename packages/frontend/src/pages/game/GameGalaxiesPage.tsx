@@ -20,16 +20,17 @@ function GameGalaxiesPage() {
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
   const { selectedUniverse } = useGameInfo()
 
-  const [planets, setPlanets] = useState<PlanetType[]>([])
+  // TODO: setState with galaxy, sector and system
 
-  const selectedPlanetLabel = selectedPlanet
-    ? formatCoordinatesLabel(selectedPlanet.coordinates)
-    : ''
+  const [galaxy, setGalaxy] = useState<number>(selectedPlanet?.coordinates.galaxy || 1)
+  const [sector, setSector] = useState<number>(selectedPlanet?.coordinates.sector || 1)
+  const [system, setSystem] = useState<number>(selectedPlanet?.coordinates.system || 1)
+
+  const [planets, setPlanets] = useState<PlanetType[]>([])
 
   useEffect(() => {
     async function callGetPlanets() {
-      if (selectedPlanetLabel && selectedPlanet && selectedUniverse) {
-        const { galaxy, sector, system } = selectedPlanet.coordinates
+      if (selectedUniverse) {
         const {
           data: { planets }
         } = await getGalaxy(galaxy, sector, system, selectedUniverse.name)
@@ -39,9 +40,7 @@ function GameGalaxiesPage() {
     }
 
     callGetPlanets()
-
-    // TODO: call to get galaxy view
-  }, [selectedPlanetLabel])
+  }, [galaxy, sector, system, selectedUniverse])
 
   if (!player || isPlayerLoading || !selectedPlanet) {
     return <Loader isLoading />
