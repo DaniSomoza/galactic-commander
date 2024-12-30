@@ -1,4 +1,3 @@
-import getSecond from '../../helpers/getSecond'
 import { IFleetUnits } from '../../types/IFleet'
 import { IPlanet } from '../../types/IPlanet'
 import { IPlayer } from '../../types/IPlayer'
@@ -14,7 +13,13 @@ function getFleetDuration(
   const distance = getFleetDistance(from, to)
   const fleetSpeed = getFleetSpeed(units, player)
 
-  return getSecond(distance / fleetSpeed)
+  const duration = Math.trunc(distance / fleetSpeed)
+
+  console.log('@@@@ distance: ', distance)
+  console.log('@@@@ fleetSpeed: ', fleetSpeed)
+  console.log('@@@@ duration: ', duration)
+
+  return duration * 1_000
 }
 
 export default getFleetDuration

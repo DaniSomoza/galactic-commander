@@ -117,7 +117,7 @@ function UnitRequirements({ unitRequirements, unitName }: UnitRequirementsProps)
                             left={'50%'}
                             top={'50%'}
                           >
-                            <Typography fontSize={14} color={color} fontWeight={500}>
+                            <Typography fontSize={13} color={color} fontWeight={500}>
                               {level}
                             </Typography>
                           </Box>

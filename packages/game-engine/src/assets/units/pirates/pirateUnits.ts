@@ -386,7 +386,7 @@ const pirateReconDrone: IUnit = {
     attack: 1,
     shield: 0,
     health: 10,
-    speed: 1_000,
+    speed: 10_000,
     cargo: 0,
     starFighterCapacity: 0,
     troopsCapacity: 0

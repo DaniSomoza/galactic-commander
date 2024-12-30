@@ -1,4 +1,3 @@
-import getSecond from '../../helpers/getSecond'
 import FleetModel from '../../models/FleetModel'
 import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import planetRepository from '../../repositories/planetRepository'
@@ -81,8 +80,13 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
   }
 
   if (task.data.fleetType === 'EXPLORE_FLEET_TYPE') {
-    const executeTaskAt = getSecond(
-      second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
+    const executeTaskAt = second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
+
+    console.log('@@@ executeTaskAt: ', executeTaskAt)
+    console.log('@@@ second: ', second)
+    console.log(
+      '@@@ getFleetDuration: ',
+      getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
     )
 
     task.data.units.forEach((fleetUnit) => {

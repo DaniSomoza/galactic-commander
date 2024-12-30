@@ -1,4 +1,3 @@
-import getSecond from '../../helpers/getSecond'
 import getTaskModel, { ITaskTypeDocument } from '../../models/TaskModel'
 import planetRepository from '../../repositories/planetRepository'
 import playerRepository from '../../repositories/playerRepository'
@@ -81,26 +80,20 @@ async function processFinishFleetTask(
         }
       }
 
-      return Promise.all([
-        currentFleet.deleteOne(),
-        playerUnitsInThePlanet.save(),
-        player.save(),
-        fromPlanet.save()
-      ])
+      player.fleets = player.fleets.filter((fleet) => !fleet._id.equals(currentFleet._id))
+
+      return Promise.all([currentFleet.deleteOne(), playerUnitsInThePlanet.save(), player.save()])
     }
 
-    const executeTaskAt = getSecond(
-      second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
-    )
+    const executeTaskAt = second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
 
+    // create returning fleet
     currentFleet.planet = toPlanet
     currentFleet.travel!.destination = fromPlanet
     currentFleet.travel!.arriveAt = executeTaskAt
     currentFleet.travel!.isReturning = true
 
-    player.fleets.push(currentFleet)
-
-    fromPlanet.isExplored = true
+    toPlanet.isExplored = true
 
     // TODO: implement createBaseTask helper function
     const finishBuildUnitsTask: ITask<FinishFleetTaskType> = {
@@ -115,7 +108,7 @@ async function processFinishFleetTask(
         fleetType: task.data.fleetType,
         allUnitsInThePlanet: task.data.allUnitsInThePlanet,
         allResourcesInThePlanet: task.data.allResourcesInThePlanet,
-        isReturning: false,
+        isReturning: true,
         arriveAt: executeTaskAt,
         fleetId: currentFleet._id.toString()
       },
@@ -137,15 +130,15 @@ async function processFinishFleetTask(
 
     // TODO: create exploration report
 
-    const isAlreadyExplored = fromPlanet.exploredBy.some((exploredPlayer) =>
+    const isAlreadyExplored = toPlanet.exploredBy.some((exploredPlayer) =>
       exploredPlayer._id.equals(player._id)
     )
 
     if (!isAlreadyExplored) {
-      fromPlanet.exploredBy.push(player)
+      toPlanet.exploredBy.push(player)
     }
 
-    return Promise.all([newTask.save(), currentFleet.save(), player.save(), fromPlanet.save()])
+    return Promise.all([newTask.save(), currentFleet.save(), player.save(), toPlanet.save()])
   }
 
   throw 'fleet type not implemented'

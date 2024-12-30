@@ -110,7 +110,11 @@ export type TaskData<T extends TaskTypesTypes> = T extends NewPlayerTaskType
         ? StartBuildUnitsTaskData
         : T extends FinishBuildUnitsTaskType
           ? FinishBuildUnitsTaskData
-          : never
+          : T extends StartFleetTaskType
+            ? StartFleetTaskData
+            : T extends FinishFleetTaskType
+              ? FinishFleetTaskData
+              : never
 
 export type HistoryStatusItemType = {
   taskStatus: TaskStatus

@@ -89,6 +89,7 @@ yarn coverage
 - [ ] **Extra frontend features**: Frontend sections:
   - [ ] schedule tasks feature
   - [ ] notifications feature
+  - [ ] favorite planets feature
   - [ ] snackbars feature
   - [ ] messages in game feature (add a chat?)
   - [ ] Game alerts in game feature (example: news, maintenance, bugs etc)

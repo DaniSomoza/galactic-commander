@@ -1,4 +1,5 @@
-import { PlanetType } from './Planet'
+import { PlanetCoordinatesType, PlanetType } from './Planet'
+import { StartFleetTaskType, TaskType } from './Task'
 import { UnitType } from './Unit'
 
 export interface FleetUnitsType {
@@ -27,3 +28,16 @@ export interface FleetType {
 
   travel?: TravelFleetType
 }
+
+export type ExplorePlanetData = {
+  universeName: string
+  fromPlanetCoordinates: PlanetCoordinatesType
+  toPlanetCoordinates: PlanetCoordinatesType
+  fleetUnits: {
+    unitName: string
+    amount: number
+  }[]
+  executeTaskAt?: number
+}
+
+export type explorePlanetFleetResponseType = { task: TaskType<StartFleetTaskType> }

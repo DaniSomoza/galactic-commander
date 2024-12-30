@@ -8,7 +8,7 @@ function getFleetSpeed(units: IFleetUnits[], player: IPlayer): number {
   const baseFleetSpeed = getBaseFleetSpeed(units)
   const fleetSpeedBonus = computedBonus(player.perks, 'FLEET_SPEED_BONUS')
 
-  const fleetSpeed = fleetSpeedBonus * baseFleetSpeed
+  const fleetSpeed = baseFleetSpeed * (fleetSpeedBonus / 100)
 
   return fleetSpeed
 }

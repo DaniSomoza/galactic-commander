@@ -13,7 +13,11 @@ import {
   FINISH_BUILD_UNITS_TASK_TYPE,
   START_BUILD_UNITS_TASK_TYPE,
   FinishBuildUnitsTaskData,
-  StartBuildUnitsTaskData
+  StartBuildUnitsTaskData,
+  FINISH_FLEET_TASK_TYPE,
+  START_FLEET_TASK_TYPE,
+  StartFleetTaskData,
+  FinishFleetTaskData
 } from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
@@ -75,8 +79,26 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
     )
     await processTasksSequentially(startBuildUnitsTasks, startBuildUnitsTaskHandler, second)
 
-    // TODO: Add FINISH_FLEET_TASK_TYPE
-    // TODO: Add START_FLEET_TASK_TYPE
+    // 6.- Finish Fleets Tasks
+    const finishFleetTaskHandler = TASK_HANDLER[FINISH_FLEET_TASK_TYPE].handler
+
+    const finishFleetTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      FINISH_FLEET_TASK_TYPE
+    )
+
+    await processTasksSequentially(finishFleetTasks, finishFleetTaskHandler, second)
+
+    // 7.- Start Fleets Tasks
+    const startFleetTaskHandler = TASK_HANDLER[START_FLEET_TASK_TYPE].handler
+
+    const startFleetTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      START_FLEET_TASK_TYPE
+    )
+    await processTasksSequentially(startFleetTasks, startFleetTaskHandler, second)
 
     // update universe
     universe.lastProcessedTime = second
@@ -201,6 +223,8 @@ function isPlayerTaskData(
   | StartResearchTaskData
   | FinishResearchTaskData
   | StartBuildUnitsTaskData
-  | FinishBuildUnitsTaskData {
+  | FinishBuildUnitsTaskData
+  | StartFleetTaskData
+  | FinishFleetTaskData {
   return 'playerId' in taskData
 }

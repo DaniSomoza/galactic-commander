@@ -6,20 +6,21 @@ function getBaseFleetSpeed(units: IFleetUnits[]): number {
   const starFighterCapacity = getFleetStarFighterCapacity(units)
   const amountOfStarFighters = getAmountOfStarFighters(units)
 
+  const spaceshipUnits = units.filter(({ unit }) => unit.type === 'SPACESHIP')
+
   if (starFighterCapacity > amountOfStarFighters) {
-    return units
-      .filter(({ unit }) => unit.subtype !== 'STAR_FIGHTER')
-      .filter(({ unit }) => unit.type === 'SPACESHIP')
-      .reduce((fleetSpeed, { unit }) => {
-        return fleetSpeed < unit.stats.speed ? fleetSpeed : unit.stats.speed
-      }, 0)
+    const spaceshipUnitsWithoutStarFighters = spaceshipUnits.filter(
+      ({ unit }) => unit.subtype !== 'STAR_FIGHTER'
+    )
+
+    return spaceshipUnitsWithoutStarFighters.reduce((fleetSpeed, { unit }) => {
+      return fleetSpeed < unit.stats.speed ? fleetSpeed : unit.stats.speed
+    }, spaceshipUnitsWithoutStarFighters[0].unit.stats.speed)
   }
 
-  return units
-    .filter(({ unit }) => unit.type === 'SPACESHIP')
-    .reduce((fleetSpeed, { unit }) => {
-      return fleetSpeed < unit.stats.speed ? fleetSpeed : unit.stats.speed
-    }, 0)
+  return spaceshipUnits.reduce((fleetSpeed, { unit }) => {
+    return fleetSpeed < unit.stats.speed ? fleetSpeed : unit.stats.speed
+  }, spaceshipUnits[0].unit.stats.speed)
 }
 
 export default getBaseFleetSpeed

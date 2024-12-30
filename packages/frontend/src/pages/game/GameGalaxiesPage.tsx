@@ -5,10 +5,14 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import VisibilityIcon from '@mui/icons-material/Visibility'
+import TravelExploreIcon from '@mui/icons-material/TravelExplore'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import PublicIcon from '@mui/icons-material/Public'
+import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded'
+import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded'
 
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
+import { PlanetCoordinatesType } from 'game-api-microservice/src/types/Planet'
 
 import { usePlayer } from '../../store/PlayerContext'
 import Loader from '../../components/loader/Loader'
@@ -17,10 +21,13 @@ import { getGalaxy } from '../../endpoints/game/galaxyEndpoints'
 import { useGameInfo } from '../../store/GameInfoContext'
 import Image from '../../components/image/Image'
 import { useTranslations } from '../../store/TranslationContext'
+import { useFleet } from '../../store/FleetContext'
+import Fleet from '../../components/fleet/Fleet'
 
 function GameGalaxiesPage() {
   const { translate } = useTranslations()
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
+  const { explorePlanetFleet, unitsInThePlanet, fleetsInThePlanet } = useFleet()
   const { selectedUniverse } = useGameInfo()
 
   // TODO: setState with galaxy, sector and system
@@ -49,19 +56,130 @@ function GameGalaxiesPage() {
     return <Loader isLoading />
   }
 
+  const probeUnit = unitsInThePlanet.find(({ unit }) => unit.subtype === 'PROBE')?.unit
+
+  function fastExplorePlanetFleet(toPlanetCoordinates: PlanetCoordinatesType) {
+    // TODO: loading state
+    if (probeUnit && selectedPlanet) {
+      const exploreFleet = [{ unitName: probeUnit.name, amount: 1 }]
+      explorePlanetFleet(exploreFleet, selectedPlanet.coordinates, toPlanetCoordinates)
+    }
+  }
+
+  console.log('@@@ fleetsInThePlanet: ', fleetsInThePlanet)
+
   return (
     <Stack gap={1} padding={1}>
+      {/* TODO: ALL fleets, update this to only use new fleets */}
+      <Stack gap={1}>
+        {fleetsInThePlanet.map((planetFleet, index) => {
+          return <Fleet key={index} fleet={planetFleet} />
+        })}
+      </Stack>
+
       {/* TODO: Planet Coordinates selector */}
       <Paper variant="outlined">
-        <Box padding={1}>Planet Coordinates selector</Box>
+        <Box padding={1}>
+          <Stack direction={'row'} gap={3} padding={1}>
+            <Stack direction={'row'}>
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setGalaxy((galaxy) => galaxy - 1)}
+                >
+                  <NavigateBeforeRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+
+              <Stack gap={0.5}>
+                <Paper variant="outlined">{galaxy}</Paper>
+                <Typography variant="body1" fontSize={12} textAlign={'center'}>
+                  Galaxy
+                </Typography>
+              </Stack>
+
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setGalaxy((galaxy) => galaxy + 1)}
+                >
+                  <NavigateNextRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+
+            <Stack direction={'row'}>
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setSector((sector) => sector - 1)}
+                >
+                  <NavigateBeforeRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+
+              <Stack gap={0.5}>
+                <Paper variant="outlined">{sector}</Paper>
+                <Typography variant="body1" fontSize={12} textAlign={'center'}>
+                  Sector
+                </Typography>
+              </Stack>
+
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setSector((sector) => sector + 1)}
+                >
+                  <NavigateNextRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+
+            <Stack direction={'row'}>
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setSystem((system) => system - 1)}
+                >
+                  <NavigateBeforeRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+
+              <Stack gap={0.5}>
+                <Paper variant="outlined">{system}</Paper>
+                <Typography variant="body1" fontSize={12} textAlign={'center'}>
+                  System
+                </Typography>
+              </Stack>
+
+              <Tooltip title={translate('spy/explore planet')}>
+                <IconButton
+                  aria-label="next"
+                  size="small"
+                  disabled={!probeUnit}
+                  onClick={() => setSystem((system) => system + 1)}
+                >
+                  <NavigateNextRoundedIcon fontSize="inherit" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </Stack>
+        </Box>
       </Paper>
 
       <Stack direction={'row'} flexWrap={'wrap'} justifyContent={'center'} gap={1}>
         {planets.map((planet) => {
           const planetLabel = formatCoordinatesLabel(planet.coordinates)
-
-          console.log('planetLabel: ', planetLabel)
-          console.log('planet: ', planet)
 
           return (
             <Box key={planetLabel} sx={{ position: 'relative' }}>
@@ -121,14 +239,35 @@ function GameGalaxiesPage() {
                           </IconButton>
                         </Tooltip>
 
+                        {/* Planet Colony fast button */}
+                        {/* TODO: disable button if no troops and ships are present */}
+                        {/* TODO: disable button if max number of colonies */}
+                        {/* TODO: disable button if it is a unexplored planet and has an owner ?? */}
+                        {/* TODO: disable button if users clicks on it! */}
+                        <Tooltip title="Colony planet">
+                          <IconButton
+                            aria-label="colony planet"
+                            size="small"
+                            // disabled={!probeUnit}
+                            // onClick={() => fastExplorePlanetFleet(planet.coordinates)}
+                          >
+                            <PublicIcon fontSize="inherit" />
+                          </IconButton>
+                        </Tooltip>
+
                         {/* Explore Planet fast button */}
                         {/* TODO: disable button if no probes are present */}
                         {/* TODO: disable button if max number of active player fleets */}
                         {/* TODO: disable button if it is the selected planet ?? */}
                         {/* TODO: disable button if users clicks on it! */}
-                        <Tooltip title="spy/explore planet">
-                          <IconButton aria-label="spy planet" size="small">
-                            <VisibilityIcon fontSize="inherit" />
+                        <Tooltip title={translate('spy/explore planet')}>
+                          <IconButton
+                            aria-label="spy planet"
+                            size="small"
+                            disabled={!probeUnit}
+                            onClick={() => fastExplorePlanetFleet(planet.coordinates)}
+                          >
+                            <TravelExploreIcon fontSize="inherit" />
                           </IconButton>
                         </Tooltip>
                       </Stack>

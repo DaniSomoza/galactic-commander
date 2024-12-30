@@ -7,6 +7,7 @@ import {
   NewPlayerTaskType,
   PENDING_TASK_STATUS,
   StartBuildUnitsTaskType,
+  StartFleetTaskType,
   StartResearchTaskType,
   TaskType
 } from '../types/ITask'
@@ -33,7 +34,7 @@ async function getPendingTasksByType(
       status: PENDING_TASK_STATUS,
       universeId,
       type,
-      $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }]
+      $or: [{ executeTaskAt: { $lt: second } }, { executeTaskAt: null }, { executeTaskAt: second }]
     })
     .exec()
 }
@@ -54,6 +55,12 @@ async function createStartBuildUnitsTask(taskData: ITask<StartBuildUnitsTaskType
   const newStartBuildUnitsTaskModel = getTaskModel<StartBuildUnitsTaskType>()
   const newStartBuildUnitsTask = new newStartBuildUnitsTaskModel(taskData)
   return newStartBuildUnitsTask.save()
+}
+
+async function createStartFleetTask(taskData: ITask<StartFleetTaskType>) {
+  const newFleetTaskModel = getTaskModel<StartFleetTaskType>()
+  const newFleetTask = new newFleetTaskModel(taskData)
+  return newFleetTask.save()
 }
 
 async function findNewPlayerTaskByUsername(
@@ -78,6 +85,7 @@ async function findTaskById<Type extends TaskType>(taskId: mongoose.Types.Object
 const taskRepository = {
   findTaskById,
   createPlayerTask,
+  createStartFleetTask,
   createStartResearchTask,
   createStartBuildUnitsTask,
   getPendingTasks,
