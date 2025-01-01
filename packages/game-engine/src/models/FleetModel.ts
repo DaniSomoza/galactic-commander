@@ -18,7 +18,8 @@ const FleetTravelSchema = new Schema(
     arriveAt: { type: Number, required: true },
     fleetType: { type: String, required: true },
     isReturning: { type: Boolean, required: true, default: false },
-    resources: { type: Number, required: true, default: 0 }
+    resources: { type: Number, required: true, default: 0 },
+    taskId: { type: String, required: false }
   },
   { _id: false }
 )
@@ -51,6 +52,7 @@ export interface IFleetDocument extends IFleet, Document {
     fleetType: FleetTypes
     isReturning: boolean
     resources: number
+    taskId?: string
   }
 }
 

@@ -15,10 +15,6 @@ function getFleetDuration(
 
   const duration = Math.trunc(distance / fleetSpeed)
 
-  console.log('@@@@ distance: ', distance)
-  console.log('@@@@ fleetSpeed: ', fleetSpeed)
-  console.log('@@@@ duration: ', duration)
-
   return duration * 1_000
 }
 

@@ -20,7 +20,8 @@ function cleanFleetFields(fleet: IFleetDocument): FleetType {
           arriveAt: travel.arriveAt,
           fleetType: travel.fleetType,
           isReturning: travel.isReturning,
-          resources: travel.resources
+          resources: travel.resources,
+          taskId: travel.taskId
         }
       : undefined
   }

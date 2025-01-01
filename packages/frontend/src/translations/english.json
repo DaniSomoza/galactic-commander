@@ -221,5 +221,7 @@
   "SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_NAME": "Royal Fortune",
   "SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_DESCRIPTION": "Royal Fortune, commanded by the infamous Captain Blackbeard, is a ship that has become a legend among pirates and a fear for intergalactic commerce. With an imposing design and loaded with powerful weapons, this ship has witnessed and starred in some of the boldest pirate victories. Its ability to appear where least expected makes it a constant threat in the busiest trade corridors.",
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_NAME": "The Stellar Spectre",
-  "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, a ship shrouded in mystery and ancient technology, uses camouflage systems that render it nearly invisible. Legend has it that it operates from cosmic dust clouds, swooping down on merchant fleets without warning. Its ability to strike from concealment and vanish before a response can be organized makes The Stellar Spectre one of the most feared and respected ships in the galaxy."
+  "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, a ship shrouded in mystery and ancient technology, uses camouflage systems that render it nearly invisible. Legend has it that it operates from cosmic dust clouds, swooping down on merchant fleets without warning. Its ability to strike from concealment and vanish before a response can be organized makes The Stellar Spectre one of the most feared and respected ships in the galaxy.",
+
+  "EXPLORE_FLEET_TYPE": "Explore planet"
 }

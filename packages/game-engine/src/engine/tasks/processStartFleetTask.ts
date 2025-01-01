@@ -82,13 +82,6 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
   if (task.data.fleetType === 'EXPLORE_FLEET_TYPE') {
     const executeTaskAt = second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
 
-    console.log('@@@ executeTaskAt: ', executeTaskAt)
-    console.log('@@@ second: ', second)
-    console.log(
-      '@@@ getFleetDuration: ',
-      getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
-    )
-
     task.data.units.forEach((fleetUnit) => {
       const planetUnit = playerUnitsInThePlanet.units.find(
         ({ unit }) => unit.name === fleetUnit.unit.name
@@ -109,8 +102,6 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
         resources: task.data.resources
       }
     })
-
-    player.fleets.push(newFleet)
 
     // TODO: implement createBaseTask helper function
     const finishBuildUnitsTask: ITask<FinishFleetTaskType> = {
@@ -144,6 +135,12 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
     }
     const taskModel = getTaskModel<FinishFleetTaskType>()
     const newTask = new taskModel(finishBuildUnitsTask)
+
+    if (newFleet.travel) {
+      newFleet.travel.taskId = newTask._id.toString()
+    }
+
+    player.fleets.push(newFleet)
 
     return Promise.all([
       newTask.save(),

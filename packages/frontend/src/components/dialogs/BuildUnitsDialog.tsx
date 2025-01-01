@@ -166,7 +166,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
       <DialogContent dividers>
         <Paper>
           <Stack padding={1} direction={'row'} justifyContent={'center'}>
-            <UnitCard height={230} width={230} unit={unitToBuild} amount={unitsInThisPlanet} />
+            <UnitCard height={230} width={230} unit={unitToBuild} amount={unitsInThisPlanet} isAvailable />
           </Stack>
         </Paper>
 

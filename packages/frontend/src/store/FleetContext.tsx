@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo } from 'react'
 
 import { FleetType, FleetUnitsType } from 'game-api-microservice/src/types/Fleets'
 import { PlanetCoordinatesType } from 'game-api-microservice/src/types/Planet'
+import { TaskType } from 'game-api-microservice/src/types/Task'
 import isPlanetCoordinates from 'game-engine/src/engine/planets/isPlanetCoordinates'
 
 import * as fleetsEndpoints from '../endpoints/game/fleetsEndpoints'
@@ -13,7 +14,7 @@ const initialContext = {
   fleets: [],
   unitsInThePlanet: [],
   fleetsInThePlanet: [],
-  explorePlanetFleet: () => {}
+  explorePlanetFleet: () => Promise.resolve({} as TaskType<'START_FLEET_UNITS_TASK'>)
 }
 
 type fleetContextValue = {
@@ -27,7 +28,7 @@ type fleetContextValue = {
     }[],
     fromPlanetCoordinates: PlanetCoordinatesType,
     toPlanetCoordinates: PlanetCoordinatesType
-  ) => void
+  ) => Promise<TaskType<'START_FLEET_UNITS_TASK'>>
 }
 
 const fleetContext = createContext<fleetContextValue>(initialContext)
@@ -52,17 +53,24 @@ function FleetProvider({ children }: FleetProviderProps) {
 
   const fleets = useMemo(() => player?.fleets || [], [player])
 
-  const fleetsInThePlanet = useMemo(
-    () =>
-      !!selectedPlanet && !!player
-        ? player.fleets.filter(
-            (playerFleet) =>
-              isPlanetCoordinates(playerFleet.planet, selectedPlanet?.coordinates) &&
-              !!playerFleet.travel
-          )
-        : [],
-    [player, selectedPlanet]
-  )
+  const fleetsInThePlanet = useMemo(() => {
+    if (!selectedPlanet || !player) {
+      return []
+    }
+
+    const playerFleets = player.fleets.filter(
+      (playerFleet) =>
+        // on going fleets
+        (isPlanetCoordinates(playerFleet.planet, selectedPlanet?.coordinates) &&
+          !!playerFleet.travel) ||
+        // returning fleets
+        (!!playerFleet.travel?.destination &&
+          isPlanetCoordinates(playerFleet.travel.destination, selectedPlanet?.coordinates) &&
+          playerFleet.travel.isReturning)
+    )
+
+    return playerFleets
+  }, [player, selectedPlanet])
 
   const unitsInThePlanet = useMemo(() => {
     if (!selectedPlanet || !player) {
@@ -102,6 +110,7 @@ function FleetProvider({ children }: FleetProviderProps) {
       const { task } = response.data
       await waitTaskToStart(task.taskId)
       await loadPlayer()
+      return task
     },
     [universeName, loadPlayer]
   )

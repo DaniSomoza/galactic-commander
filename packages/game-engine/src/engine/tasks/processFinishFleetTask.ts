@@ -85,7 +85,7 @@ async function processFinishFleetTask(
       return Promise.all([currentFleet.deleteOne(), playerUnitsInThePlanet.save(), player.save()])
     }
 
-    const executeTaskAt = second + getFleetDuration(fromPlanet, toPlanet, task.data.units, player)
+    const executeTaskAt = second + getFleetDuration(toPlanet, fromPlanet, task.data.units, player)
 
     // create returning fleet
     currentFleet.planet = toPlanet
@@ -127,6 +127,10 @@ async function processFinishFleetTask(
     }
     const taskModel = getTaskModel<FinishFleetTaskType>()
     const newTask = new taskModel(finishBuildUnitsTask)
+
+    if (currentFleet.travel) {
+      currentFleet.travel.taskId = newTask._id.toString()
+    }
 
     // TODO: create exploration report
 

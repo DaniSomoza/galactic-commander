@@ -17,6 +17,7 @@ export interface TravelFleetType {
   fleetType: FleetTypes
   isReturning: boolean
   resources: number
+  taskId?: string
 }
 
 export interface FleetType {

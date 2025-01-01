@@ -70,6 +70,7 @@ function UnitsList({ unitType }: UnitsListProp) {
                       amount={unitsInThisPlanet}
                       height={230}
                       width={230}
+                      isAvailable={unitRequirements.isUnitAvailable}
                     />
 
                     {/* Unit bonus Part */}

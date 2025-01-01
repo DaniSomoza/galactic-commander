@@ -221,5 +221,7 @@
   "SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_NAME": "Royal Fortune",
   "SPACESHIP_PIRATE_ROYAL_FORTUNE_HERO_DESCRIPTION": "Royal Fortune, comandada por el infame capitán Barbanegra, es una nave que se ha convertido en una leyenda entre los piratas y un temor para el comercio intergaláctico. Con un diseño imponente y cargada de armas poderosas, esta nave ha sido testigo y protagonista de algunas de las más audaces victorias piratas. Su habilidad para aparecer donde menos se la espera la hace una amenaza constante en los corredores comerciales más transitados.",
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_NAME": "The Stellar Spectre",
-  "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, una nave envuelta en misterio y antigua tecnología, utiliza sistemas de camuflaje que la hacen prácticamente invisible. Según las leyendas, opera desde nubes de polvo cósmico, lanzándose sobre flotas comerciales sin previo aviso. Su capacidad de atacar desde la ocultación y desaparecer antes de que se pueda organizar una respuesta convierte a The Stellar Spectre en una de las naves más temidas y respetadas en la galaxia."
+  "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, una nave envuelta en misterio y antigua tecnología, utiliza sistemas de camuflaje que la hacen prácticamente invisible. Según las leyendas, opera desde nubes de polvo cósmico, lanzándose sobre flotas comerciales sin previo aviso. Su capacidad de atacar desde la ocultación y desaparecer antes de que se pueda organizar una respuesta convierte a The Stellar Spectre en una de las naves más temidas y respetadas en la galaxia.",
+
+  "EXPLORE_FLEET_TYPE": "Explorar planeta"
 }
