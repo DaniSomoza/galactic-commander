@@ -1,12 +1,18 @@
 import { IPlanet } from '../../types/IPlanet'
 
 function getFleetDistance(from: IPlanet, to: IPlanet): number {
-  const planetDistance = Math.abs(from.coordinates.planet - to.coordinates.planet) * 30_000
-  const systemDistance = Math.abs(from.coordinates.system - to.coordinates.system) * 100_000
-  const sectorDistance = Math.abs(from.coordinates.sector - to.coordinates.sector) * 1_000_000
-  const galaxyDistance = Math.abs(from.coordinates.galaxy - to.coordinates.galaxy) * 10_000_000
+  const planetDistance = Math.abs(from.coordinates.planet - to.coordinates.planet)
+  const systemDistance = Math.abs(from.coordinates.system - to.coordinates.system)
+  const sectorDistance = Math.abs(from.coordinates.sector - to.coordinates.sector)
+  const galaxyDistance = Math.abs(from.coordinates.galaxy - to.coordinates.galaxy)
 
-  return planetDistance + systemDistance + sectorDistance + galaxyDistance
+  return (
+    50_000 +
+    planetDistance * 20_000 +
+    systemDistance * 90_000 +
+    sectorDistance * 200_000 +
+    galaxyDistance * 2_500_000
+  )
 }
 
 export default getFleetDistance

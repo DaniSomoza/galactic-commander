@@ -46,8 +46,10 @@ export interface IFleetDocument extends IFleet, Document {
     unit: IUnitDocument
   }[]
 
+  // TODO: set it as mandatory
   travel?: {
     destination: IPlanetDocument
+    // TODO: add startedAt: number
     arriveAt: number
     fleetType: FleetTypes
     isReturning: boolean

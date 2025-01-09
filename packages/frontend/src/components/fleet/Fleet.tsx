@@ -26,6 +26,7 @@ import { usePlayer } from '../../store/PlayerContext'
 import waitTaskToFinish from '../../utils/waitTaskToFinish'
 import UnitCard from '../unit-card/UnitCard'
 import Image from '../image/Image'
+import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 
 type FleetProps = {
   fleet: FleetType
@@ -56,11 +57,7 @@ function Fleet({ fleet, onFinishFleet }: FleetProps) {
 
   return (
     <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
-      >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Stack gap={1} direction={'row'} alignItems={'center'} flexGrow={1}>
           <RocketLaunchIcon />
 
@@ -182,36 +179,61 @@ function FleetPlanetsLabel({ fromPlanet, toPlanet, isReturning }: FleetPlanetsLa
     <Stack direction={'row'} gap={1} flexGrow={1} justifyContent={'center'} alignItems={'center'}>
       {isReturning ? (
         <>
-          <Image src={toPlanet.imgUrl} alt={toPlanet.name} height={'36px'} width={'36px'} border />
+          <Tooltip arrow title={formatCoordinatesLabel(toPlanet.coordinates)}>
+            <div>
+              <Image
+                src={toPlanet.imgUrl}
+                alt={toPlanet.name}
+                height={'36px'}
+                width={'36px'}
+                border
+              />
+            </div>
+          </Tooltip>
 
           <ArrowRightAltRoundedIcon sx={{ transform: 'scaleX(-1)' }} />
 
-          <Image
-            src={fromPlanet.imgUrl}
-            alt={fromPlanet.name}
-            height={'36px'}
-            width={'36px'}
-            border
-          />
+          <Tooltip arrow title={formatCoordinatesLabel(fromPlanet.coordinates)}>
+            <div>
+              <Image
+                src={fromPlanet.imgUrl}
+                alt={fromPlanet.name}
+                height={'36px'}
+                width={'36px'}
+                border
+              />
+            </div>
+          </Tooltip>
         </>
       ) : (
         <>
-          <Image
-            src={fromPlanet.imgUrl}
-            alt={fromPlanet.name}
-            height={'36px'}
-            width={'36px'}
-            border
-          />
+          <Tooltip arrow title={formatCoordinatesLabel(fromPlanet.coordinates)}>
+            <div>
+              <Image
+                src={fromPlanet.imgUrl}
+                alt={fromPlanet.name}
+                height={'36px'}
+                width={'36px'}
+                border
+              />
+            </div>
+          </Tooltip>
 
           <ArrowRightAltRoundedIcon />
 
-          <Image src={toPlanet.imgUrl} alt={toPlanet.name} height={'36px'} width={'36px'} border />
+          <Tooltip arrow title={formatCoordinatesLabel(toPlanet.coordinates)}>
+            <div>
+              <Image
+                src={toPlanet.imgUrl}
+                alt={toPlanet.name}
+                height={'36px'}
+                width={'36px'}
+                border
+              />
+            </div>
+          </Tooltip>
         </>
       )}
-
-      {/* TODO: from coordinates Label */}
-      {/* TODO: to coordinates Label */}
     </Stack>
   )
 }
