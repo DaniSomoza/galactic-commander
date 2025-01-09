@@ -134,12 +134,12 @@ async function processFinishFleetTask(
 
     // TODO: create exploration report
 
-    const isAlreadyExplored = toPlanet.exploredBy.some((exploredPlayer) =>
-      exploredPlayer._id.equals(player._id)
+    const isAlreadyExplored = toPlanet.exploredBy.some(
+      (exploredPlayer) => exploredPlayer === player._id.toString()
     )
 
     if (!isAlreadyExplored) {
-      toPlanet.exploredBy.push(player)
+      toPlanet.exploredBy.push(player._id.toString())
     }
 
     return Promise.all([newTask.save(), currentFleet.save(), player.save(), toPlanet.save()])

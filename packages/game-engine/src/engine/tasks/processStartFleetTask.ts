@@ -48,15 +48,15 @@ async function processStartFleetTask(task: ITaskTypeDocument<StartFleetTaskType>
   }
 
   // units present in the planet and no defenses present
-  const isInvalidUnits = playerUnitsInThePlanet.units.some((planetUnit) => {
-    const fleetUnit = task.data.units.find(
-      (fleetUnit) => fleetUnit.unit.name === planetUnit.unit.name
+  const isInvalidFleetUnits = task.data.units.some(({ unit, amount }) => {
+    const planetUnit = playerUnitsInThePlanet.units.find(
+      (planetUnit) => planetUnit.unit.name === unit.name
     )
 
-    return !fleetUnit || fleetUnit.amount > planetUnit.amount || fleetUnit.unit.type === 'DEFENSE'
+    return !planetUnit || amount > planetUnit.amount || unit.type === 'DEFENSE'
   })
 
-  if (isInvalidUnits) {
+  if (isInvalidFleetUnits) {
     throw new GameEngineError('invalid units in the planet')
   }
 

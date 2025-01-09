@@ -1,10 +1,11 @@
 import { IFleetDocument } from 'game-engine/models/FleetModel'
+import { IPlayerDocument } from 'game-engine/models/PlayerModel'
 
 import { FleetType } from '../types/Fleets'
 import cleanUnitFields from './cleanUnitFields'
 import cleanPlanetFields from './cleanPlanetFields'
 
-function cleanFleetFields(fleet: IFleetDocument): FleetType {
+function cleanFleetFields(fleet: IFleetDocument, player: IPlayerDocument): FleetType {
   const { units, playerId, planet, travel } = fleet
 
   return {
@@ -13,10 +14,10 @@ function cleanFleetFields(fleet: IFleetDocument): FleetType {
       unit: cleanUnitFields(fleetUnits.unit)
     })),
     playerId: playerId.toString(),
-    planet: cleanPlanetFields(planet),
+    planet: cleanPlanetFields(planet, player),
     travel: travel
       ? {
-          destination: cleanPlanetFields(travel.destination),
+          destination: cleanPlanetFields(travel.destination, player),
           arriveAt: travel.arriveAt,
           fleetType: travel.fleetType,
           isReturning: travel.isReturning,

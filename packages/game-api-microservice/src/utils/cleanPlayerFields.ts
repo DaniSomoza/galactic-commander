@@ -14,8 +14,8 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
     universeId,
     race: cleanRaceFields(race),
     planets: {
-      principal: cleanPlanetFields(planets.principal),
-      colonies: planets.colonies.map(cleanPlanetFields)
+      principal: cleanPlanetFields(planets.principal, player),
+      colonies: planets.colonies.map((colony) => cleanPlanetFields(colony, player))
     },
     perks,
     researches: {
@@ -33,7 +33,7 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
           }
         : undefined
     },
-    fleets: fleets.map(cleanFleetFields)
+    fleets: fleets.map((fleet) => cleanFleetFields(fleet, player))
   }
 }
 

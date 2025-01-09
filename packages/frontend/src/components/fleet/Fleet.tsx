@@ -180,34 +180,38 @@ type FleetPlanetsLabelProps = {
 function FleetPlanetsLabel({ fromPlanet, toPlanet, isReturning }: FleetPlanetsLabelProps) {
   return (
     <Stack direction={'row'} gap={1} flexGrow={1} justifyContent={'center'} alignItems={'center'}>
-      {/* TODO: from Label */}
-      <Stack>
-        <Image
-          src={fromPlanet.imgUrl}
-          alt={fromPlanet.name}
-          height={'32px'}
-          width={'32px'}
-          border
-          // disabled={!fromPlanet.isExplored}
-        />
-      </Stack>
+      {isReturning ? (
+        <>
+          <Image src={toPlanet.imgUrl} alt={toPlanet.name} height={'36px'} width={'36px'} border />
 
-      {/* TODO: Arrow icon => */}
-      <ArrowRightAltRoundedIcon sx={{ transform: isReturning ? 'scaleX(-1)' : 'scaleX(1)' }} />
+          <ArrowRightAltRoundedIcon sx={{ transform: 'scaleX(-1)' }} />
 
-      {/* TODO: from Label */}
-      <Stack>
-        <Image
-          src={toPlanet.imgUrl}
-          alt={toPlanet.name}
-          height={'32px'}
-          width={'32px'}
-          border
-          // disabled={!toPlanet.isExplored}
-        />
-      </Stack>
+          <Image
+            src={fromPlanet.imgUrl}
+            alt={fromPlanet.name}
+            height={'36px'}
+            width={'36px'}
+            border
+          />
+        </>
+      ) : (
+        <>
+          <Image
+            src={fromPlanet.imgUrl}
+            alt={fromPlanet.name}
+            height={'36px'}
+            width={'36px'}
+            border
+          />
 
-      {/* TODO: isReturning icon */}
+          <ArrowRightAltRoundedIcon />
+
+          <Image src={toPlanet.imgUrl} alt={toPlanet.name} height={'36px'} width={'36px'} border />
+        </>
+      )}
+
+      {/* TODO: from coordinates Label */}
+      {/* TODO: to coordinates Label */}
     </Stack>
   )
 }

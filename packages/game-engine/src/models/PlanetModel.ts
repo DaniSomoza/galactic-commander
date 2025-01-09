@@ -2,7 +2,6 @@ import mongoose, { Schema, Model, Document } from 'mongoose'
 
 import { IPlanet } from '../types/IPlanet'
 import { BuildUnitsQueueSchema, BuildUnitsSchema, IUnitDocument } from './UnitModel'
-import { IPlayerDocument } from './PlayerModel'
 
 const PlanetSchema: Schema = new Schema(
   {
@@ -77,13 +76,7 @@ const PlanetSchema: Schema = new Schema(
       }
     ],
 
-    exploredBy: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Player',
-        default: []
-      }
-    ]
+    exploredBy: [{ type: String, default: [] }]
   },
   {
     timestamps: true
@@ -95,7 +88,7 @@ export interface IPlanetDocument extends IPlanet, Document {
 
   units: IUnitDocument[]
 
-  exploredBy: IPlayerDocument[]
+  exploredBy: string[]
 }
 
 const PlanetModel: Model<IPlanetDocument> = mongoose.model<IPlanetDocument>('Planet', PlanetSchema)

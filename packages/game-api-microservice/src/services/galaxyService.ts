@@ -42,68 +42,8 @@ async function getGalaxy(username: string, universeName: string, coordinates: Co
 
   const planets = await planetRepository.findPlanetsBySystem(galaxy, sector, system)
 
-  const exploredPlanets = planets.map((planet) => {
-    const isExplored = planet.exploredBy.some((exploredPlayer) =>
-      exploredPlayer._id.equals(player._id)
-    )
-
-    if (isExplored) {
-      // remove build queue info
-      planet.unitBuild = {
-        troops: {
-          activeBuild: undefined,
-          queue: []
-        },
-        spaceships: {
-          activeBuild: undefined,
-          queue: []
-        },
-        defenses: {
-          activeBuild: undefined,
-          queue: []
-        }
-      }
-
-      return cleanPlanetFields(planet)
-    }
-
-    // unexplored planet
-    return {
-      name: '???',
-      universeId,
-      imgUrl: '/planets/unexplored_planet.jpeg',
-      ownerId: null,
-      colonizedAt: 0,
-      resources: 0,
-      resourceQuality: 0,
-      lastResourceProductionTime: 0,
-      coordinates: planet.coordinates,
-      isSpecial: false,
-      isPrincipal: false,
-      isUnderConquer: false,
-      isExplored: false,
-      specials: [],
-      unitBuild: {
-        troops: {
-          activeBuild: undefined,
-          queue: []
-        },
-        spaceships: {
-          activeBuild: undefined,
-          queue: []
-        },
-        defenses: {
-          activeBuild: undefined,
-          queue: []
-        }
-      },
-      units: [],
-      exploredBy: []
-    }
-  })
-
   return {
-    planets: exploredPlanets
+    planets: planets.map((planet) => cleanPlanetFields(planet, player))
   }
 }
 

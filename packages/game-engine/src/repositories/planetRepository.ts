@@ -2,7 +2,7 @@ import PlanetModel from '../models/PlanetModel'
 import { IPlanet, IPlanetCoordinates } from '../types/IPlanet'
 
 async function findPlanetById(planetId: string) {
-  return PlanetModel.findById(planetId).populate('exploredBy').exec()
+  return PlanetModel.findById(planetId).exec()
 }
 
 async function findAvailablePrincipalPlanets() {
@@ -26,9 +26,7 @@ async function findPlanetsBySystem(galaxy: number, sector: number, system: numbe
     'coordinates.galaxy': galaxy,
     'coordinates.sector': sector,
     'coordinates.system': system
-  })
-    .populate('exploredBy')
-    .exec()
+  }).exec()
 }
 
 async function insertPlanets(planets: IPlanet[]) {

@@ -67,6 +67,7 @@ function GameGalaxiesPage() {
   }
 
   const probeUnit = unitsInThePlanet.find(({ unit }) => unit.subtype === 'PROBE')?.unit
+  // TODO: ADD amount of fleets available to check if its disabled or not
 
   async function fastExplorePlanetFleet(toPlanetCoordinates: PlanetCoordinatesType) {
     // TODO: add loading state
