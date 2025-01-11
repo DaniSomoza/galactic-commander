@@ -1,10 +1,10 @@
-import { IFleet } from '../../types/IFleet'
+import { IPlayerUnits } from '../../types/IPlayerUnits'
 import { IUnit } from '../../types/IUnit'
 
-function isHeroAlreadyBuild(unit: IUnit, fleets: IFleet[]): boolean {
+function isHeroAlreadyBuild(unit: IUnit, playerUnits: IPlayerUnits[]): boolean {
   return (
     unit.isHero &&
-    !!fleets.find((fleet) => fleet.units.some((fleetUnit) => fleetUnit.unit.name === unit.name))
+    !!playerUnits.find(({ units }) => units.some(({ unit }) => unit.name === unit.name))
   )
 }
 

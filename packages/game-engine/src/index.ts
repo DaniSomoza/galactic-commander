@@ -5,6 +5,7 @@ import gameEngine from './engine/game-engine'
 import './models/ResearchModel'
 import './models/UnitModel'
 import './models/FleetModel'
+import './models/PlayerUnitsModel'
 
 const ONE_SECOND_INTERVAL = 1_000
 

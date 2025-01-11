@@ -21,9 +21,7 @@ export const PLAYER_TEST_1_PIRATE: IPlayer = {
   researches: {
     researched: [],
     queue: []
-  },
-
-  fleets: []
+  }
 }
 
 const ALL_PLAYERS_MOCK = [PLAYER_TEST_1_PIRATE]

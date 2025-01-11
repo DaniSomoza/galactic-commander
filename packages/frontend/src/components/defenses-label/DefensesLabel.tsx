@@ -58,15 +58,15 @@ function getDefensesInThePlanet(player?: PlayerType, selectedPlanet?: PlanetType
     return 0
   }
 
-  const planetFleets = player.fleets.find(
-    (fleet) => isPlanetCoordinates(fleet.planet, selectedPlanet.coordinates) && !fleet.travel
+  const unitsInThePlanet = player.units.find(({ planet }) =>
+    isPlanetCoordinates(planet, selectedPlanet.coordinates)
   )
 
-  if (!planetFleets) {
+  if (!unitsInThePlanet) {
     return 0
   }
 
-  return planetFleets.units.reduce((defenses, { unit, amount }) => {
+  return unitsInThePlanet.units.reduce((defenses, { unit, amount }) => {
     if (unit.type === 'DEFENSE') {
       return defenses + amount
     }

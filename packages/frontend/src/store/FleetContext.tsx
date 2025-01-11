@@ -60,13 +60,8 @@ function FleetProvider({ children }: FleetProviderProps) {
 
     const playerFleets = player.fleets.filter(
       (playerFleet) =>
-        // on going fleets
-        (isPlanetCoordinates(playerFleet.planet, selectedPlanet?.coordinates) &&
-          !!playerFleet.travel) ||
-        // returning fleets
-        (!!playerFleet.travel?.destination &&
-          isPlanetCoordinates(playerFleet.travel.destination, selectedPlanet?.coordinates) &&
-          playerFleet.travel.isReturning)
+        isPlanetCoordinates(playerFleet.toPlanet, selectedPlanet?.coordinates) ||
+        isPlanetCoordinates(playerFleet.fromPlanet, selectedPlanet?.coordinates)
     )
 
     return playerFleets
@@ -77,15 +72,11 @@ function FleetProvider({ children }: FleetProviderProps) {
       return []
     }
 
-    const planetFleet = player.fleets.find(
-      (fleet) => isPlanetCoordinates(fleet.planet, selectedPlanet.coordinates) && !fleet.travel
+    const planetUnits = player.units.find(({ planet }) =>
+      isPlanetCoordinates(planet, selectedPlanet.coordinates)
     )
 
-    if (!planetFleet) {
-      return []
-    }
-
-    return planetFleet.units
+    return planetUnits?.units || []
   }, [player, selectedPlanet])
 
   const universeName = selectedUniverse?.name || ''

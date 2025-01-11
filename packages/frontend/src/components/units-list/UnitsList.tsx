@@ -8,7 +8,6 @@ import Button from '@mui/material/Button'
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import checkUnitRequirements from 'game-engine/src/engine/units/checkUnitRequirements'
 import isHeroAlreadyBuild from 'game-engine/src/engine/units/isHeroAlreadyBuild'
-import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
 
 import { usePlayer } from '../../store/PlayerContext'
@@ -19,6 +18,7 @@ import BuildUnitsDialog from '../../components/dialogs/BuildUnitsDialog'
 import UnitRequirements from '../../components/unit-requirements/UnitRequirements'
 import UnitBonus from '../../components/unit-bonus/UnitBonus'
 import UnitCard from '../../components/unit-card/UnitCard'
+import { useFleet } from '../../store/FleetContext'
 
 type UnitsListProp = {
   unitType: UnitTypes
@@ -36,6 +36,7 @@ function UnitsList({ unitType }: UnitsListProp) {
   const [unitToBuild, setUnitToBuild] = useState<UnitType>()
 
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
+  const { unitsInThePlanet } = useFleet()
 
   const units = player && selectedPlanet ? [...selectedPlanet.units, ...player.race.units] : []
 
@@ -52,12 +53,7 @@ function UnitsList({ unitType }: UnitsListProp) {
           .filter((unit) => unit.type === unitType)
           .map((unit) => {
             const unitRequirements = checkUnitRequirements(unit, player)
-
-            const unitsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
-              player,
-              selectedPlanet,
-              unit
-            )
+            const amount = unitsInThePlanet.find(({ unit }) => unit.name === unit.name)?.amount || 0
 
             return (
               <Paper key={unit.name} variant="outlined">
@@ -67,7 +63,7 @@ function UnitsList({ unitType }: UnitsListProp) {
                     <UnitCard
                       disableBorder
                       unit={unit}
-                      amount={unitsInThisPlanet}
+                      amount={amount}
                       height={230}
                       width={230}
                       isAvailable={unitRequirements.isUnitAvailable}
@@ -121,7 +117,7 @@ function UnitsList({ unitType }: UnitsListProp) {
                       variant="contained"
                       size="small"
                       disabled={
-                        !unitRequirements.isUnitAvailable || isHeroAlreadyBuild(unit, player.fleets)
+                        !unitRequirements.isUnitAvailable || isHeroAlreadyBuild(unit, player.units)
                       }
                       onClick={() => setUnitToBuild(unit)}
                     >

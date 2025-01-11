@@ -38,12 +38,12 @@ function Fleet({ fleet, onFinishFleet }: FleetProps) {
 
   const { loadPlayer } = usePlayer()
 
-  const fleetCountdown = useCountdown(fleet.travel!.arriveAt)
+  const fleetCountdown = useCountdown(fleet.arriveAt)
 
   useEffect(() => {
     async function updatePlayer() {
-      if (fleetCountdown === 0) {
-        await waitTaskToFinish(fleet.travel!.taskId!)
+      if (fleetCountdown === 0 && fleet.taskId) {
+        await waitTaskToFinish(fleet.taskId)
         await loadPlayer()
         onFinishFleet?.()
       }
@@ -71,16 +71,16 @@ function Fleet({ fleet, onFinishFleet }: FleetProps) {
             </Tooltip>
           )}
 
-          <FleetTypeLabel fleetType={fleet.travel?.fleetType} />
+          <FleetTypeLabel fleetType={fleet.fleetType} />
 
           <AmountOfUnitsLabel fleetUnits={fleet.units} />
 
           {/* TODO: fleet resources label ??? */}
 
           <FleetPlanetsLabel
-            fromPlanet={fleet.planet}
-            toPlanet={fleet.travel!.destination}
-            isReturning={fleet.travel!.isReturning}
+            fromPlanet={fleet.fromPlanet}
+            toPlanet={fleet.toPlanet}
+            isReturning={fleet.isReturning}
           />
 
           <Paper variant="outlined">

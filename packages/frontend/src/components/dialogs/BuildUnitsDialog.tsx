@@ -24,7 +24,6 @@ import FortIcon from '@mui/icons-material/Fort'
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import isHeroAlreadyBuild from 'game-engine/src/engine/units/isHeroAlreadyBuild'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
-import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculateCurrentPlayerEnergy'
 import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
@@ -45,6 +44,7 @@ import { useTheme } from '../../store/ThemeContext'
 import UnitRequirements from '../unit-requirements/UnitRequirements'
 import UnitBonus from '../unit-bonus/UnitBonus'
 import UnitCard from '../unit-card/UnitCard'
+import { useFleet } from '../../store/FleetContext'
 
 type BuildUnitDialogProps = {
   unitToBuild: UnitType
@@ -80,13 +80,19 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
     activeBuildDefenses
   } = useBuildUnits()
 
+  const { unitsInThePlanet } = useFleet()
+
   const UnitIconComponent = unitIcon[unitToBuild.type]
 
   const resourceCost = amount * unitToBuild.resourceCost
-  const currentPopulation = calculateCurrentPlayerPopulation(player!)
+  const currentPopulation = player
+    ? calculateCurrentPlayerPopulation(player, player.units, player.fleets)
+    : 0
   const predictedPopulation = currentPopulation + amount
   const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
-  const currentEnergy = calculateCurrentPlayerEnergy(player!)
+  const currentEnergy = player
+    ? calculateCurrentPlayerEnergy(player, player.units, player.fleets)
+    : 0
   const predictedEnergy = currentEnergy + unitToBuild.energyCost * amount
   const maxPlayerEnergy = calculateMaxPlayerEnergy(player!)
 
@@ -130,7 +136,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   const buildUnitBonus = computedBonus(player!.perks, buildUnitsPerk[unitToBuild.type])
   const buildUnitDuration = millisToSeconds(unitToBuild.buildBaseTime * (100 / buildUnitBonus))
 
-  const unitsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(player!, selectedPlanet!, unitToBuild)
+  const amountOfUnitsInThePlanet =
+    unitsInThePlanet.find(({ unit }) => unit.name === unit.name)?.amount || 0
 
   const error = getErrorLabel({
     isValidAmount,
@@ -166,7 +173,13 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
       <DialogContent dividers>
         <Paper>
           <Stack padding={1} direction={'row'} justifyContent={'center'}>
-            <UnitCard height={230} width={230} unit={unitToBuild} amount={unitsInThisPlanet} isAvailable />
+            <UnitCard
+              height={230}
+              width={230}
+              unit={unitToBuild}
+              amount={amountOfUnitsInThePlanet}
+              isAvailable
+            />
           </Stack>
         </Paper>
 
@@ -283,8 +296,11 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           textAlign="center"
                           color={isValidPopulation ? 'textPrimary' : 'error'}
                         >
-                          {calculateCurrentPlayerPopulation(player!) +
-                            (unitToBuild.type === 'TROOP' ? amount : 0)}{' '}
+                          {calculateCurrentPlayerPopulation(
+                            player!,
+                            player!.units,
+                            player!.fleets
+                          ) + (unitToBuild.type === 'TROOP' ? amount : 0)}{' '}
                           / {formatNumber(calculateMaxPlayerPopulation(player!))}
                         </Typography>
                       </Stack>
@@ -309,7 +325,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           textAlign="center"
                           color={isValidEnergy ? 'textPrimary' : 'error'}
                         >
-                          {calculateCurrentPlayerEnergy(player!) + amount * unitToBuild.energyCost}{' '}
+                          {calculateCurrentPlayerEnergy(player!, player!.units, player!.fleets) +
+                            amount * unitToBuild.energyCost}{' '}
                           /{formatNumber(calculateMaxPlayerEnergy(player!))}
                         </Typography>
                       </Stack>
@@ -403,9 +420,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
         ) : (
           <Tooltip title={'Add units to planet queue'} arrow>
             <Button
-              disabled={
-                isLoading || !!error || isHeroAlreadyBuild(unitToBuild, player?.fleets || [])
-              }
+              disabled={isLoading || !!error || isHeroAlreadyBuild(unitToBuild, player!.units)}
               autoFocus
               onClick={performStartBuildUnits}
             >

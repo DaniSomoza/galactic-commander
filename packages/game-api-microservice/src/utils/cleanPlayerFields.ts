@@ -5,9 +5,16 @@ import cleanPlanetFields from './cleanPlanetFields'
 import cleanRaceFields from './cleanRaceFields'
 import cleanFleetFields from './cleanFleetFields'
 import cleanResearchFields from './cleanResearchFields'
+import { IFleetDocument } from 'game-engine/models/FleetModel'
+import { IPlayerUnits } from 'game-engine/types/IPlayerUnits'
+import cleanUnitFields from './cleanUnitFields'
 
-function cleanPlayerFields(player: IPlayerDocument): PlayerType {
-  const { user, universeId, race, planets, perks, researches, fleets } = player
+function cleanPlayerFields(
+  player: IPlayerDocument,
+  playerFleets: IFleetDocument[],
+  playerUnits: IPlayerUnits[]
+): PlayerType {
+  const { user, universeId, race, planets, perks, researches } = player
 
   return {
     user,
@@ -33,7 +40,16 @@ function cleanPlayerFields(player: IPlayerDocument): PlayerType {
           }
         : undefined
     },
-    fleets: fleets.map((fleet) => cleanFleetFields(fleet, player))
+    fleets: playerFleets.map((fleet) => cleanFleetFields(fleet, player)),
+
+    units: playerUnits.map((playerUnits) => ({
+      player: cleanPlayerFields(player, [], []),
+      units: playerUnits.units.map(({ unit, amount }) => ({
+        unit: cleanUnitFields(unit),
+        amount
+      })),
+      planet: cleanPlanetFields(playerUnits.planet, player)
+    }))
   }
 }
 

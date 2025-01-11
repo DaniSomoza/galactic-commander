@@ -5,6 +5,7 @@ import { RaceType } from './Race'
 import { ResearchType } from './Research'
 import { NewPlayerTaskType, TaskType } from './Task'
 import { FleetType } from './Fleets'
+import { PlayerUnitsType } from './PlayerUnits'
 
 export type PlayerPerkType = {
   bonus: IBonus
@@ -48,6 +49,8 @@ export type PlayerType = {
   }
 
   fleets: FleetType[]
+
+  units: PlayerUnitsType[]
 }
 
 export type PlayerData = {

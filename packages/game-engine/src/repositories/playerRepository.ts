@@ -50,27 +50,6 @@ async function findPlayerByUsername(username: string, universeId: string) {
         model: 'Research'
       }
     })
-    .populate({
-      path: 'fleets',
-      populate: [
-        {
-          path: 'planet',
-          model: 'Planet'
-        },
-        {
-          path: 'units.unit',
-          model: 'Unit',
-          populate: {
-            path: 'requirements.researches.research',
-            model: 'Research'
-          }
-        },
-        {
-          path: 'travel.destination',
-          model: 'Planet'
-        }
-      ]
-    })
     .exec()
 }
 
@@ -123,27 +102,6 @@ async function findPlayerById(playerId: string) {
         path: 'research',
         model: 'Research'
       }
-    })
-    .populate({
-      path: 'fleets',
-      populate: [
-        {
-          path: 'planet',
-          model: 'Planet'
-        },
-        {
-          path: 'units.unit',
-          model: 'Unit',
-          populate: {
-            path: 'requirements.researches.research',
-            model: 'Research'
-          }
-        },
-        {
-          path: 'travel.destination',
-          model: 'Planet'
-        }
-      ]
     })
     .exec()
 }

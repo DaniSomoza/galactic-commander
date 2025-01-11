@@ -5,7 +5,6 @@ import { IPlayer } from '../types/IPlayer'
 import { IRaceDocument } from './RaceModel'
 import { IResearchDocument } from './ResearchModel'
 import { IPlanetDocument } from './PlanetModel'
-import { FleetSchema, IFleetDocument } from './FleetModel'
 
 const ActiveResearchSchema = new Schema(
   {
@@ -56,9 +55,7 @@ const PlayerSchema: Schema = new Schema({
       default: undefined
     },
     queue: [{ type: String }]
-  },
-
-  fleets: [FleetSchema]
+  }
 })
 
 interface IPlayerResearchDocument {
@@ -87,8 +84,6 @@ export interface IPlayerDocument extends IPlayer, Document {
     principal: IPlanetDocument
     colonies: IPlanetDocument[]
   }
-
-  fleets: IFleetDocument[]
 }
 
 const PlayerModel: Model<IPlayerDocument> = mongoose.model<IPlayerDocument>('Player', PlayerSchema)

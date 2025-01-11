@@ -1,8 +1,8 @@
-import { IPlayer } from '../../types/IPlayer'
+import { IPlayerUnits } from '../../types/IPlayerUnits'
 import { IUnit } from '../../types/IUnit'
 
-function getTotalAmountOfUnits(player: IPlayer, unit: IUnit): number {
-  return player.fleets.reduce((totalAmountOfUnits, playerFleet) => {
+function getTotalAmountOfUnits(playerUnits: IPlayerUnits[], unit: IUnit): number {
+  return playerUnits.reduce((totalAmountOfUnits, playerFleet) => {
     const fleetUnit = playerFleet.units.find((fleetUnit) => fleetUnit.unit.name === unit.name)
 
     return fleetUnit ? totalAmountOfUnits + fleetUnit.amount : totalAmountOfUnits

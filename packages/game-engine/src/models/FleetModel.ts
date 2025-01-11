@@ -1,8 +1,9 @@
 import mongoose, { Schema, Model, Types, Document } from 'mongoose'
 
-import { IFleet, FleetTypes } from '../types/IFleet'
+import { IFleet } from '../types/IFleet'
 import { IPlanetDocument } from './PlanetModel'
 import { IUnitDocument } from './UnitModel'
+import { IPlayerDocument } from './PlayerModel'
 
 const FleetUnitsSchema = new Schema(
   {
@@ -12,50 +13,37 @@ const FleetUnitsSchema = new Schema(
   { _id: false }
 )
 
-const FleetTravelSchema = new Schema(
-  {
-    destination: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
-    arriveAt: { type: Number, required: true },
-    fleetType: { type: String, required: true },
-    isReturning: { type: Boolean, required: true, default: false },
-    resources: { type: Number, required: true, default: 0 },
-    taskId: { type: String, required: false }
-  },
-  { _id: false }
-)
-
 export const FleetSchema = new Schema({
-  planet: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
-
-  playerId: { type: String, required: true },
-
+  player: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
   units: [FleetUnitsSchema],
 
-  travel: { type: FleetTravelSchema, required: false, default: undefined }
+  isReturning: { type: Boolean, required: true, default: false },
+  isFinished: { type: Boolean, required: true, default: false },
+
+  fromPlanet: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
+  toPlanet: { type: Schema.Types.ObjectId, ref: 'Planet', required: true },
+
+  arriveAt: { type: Number, required: true },
+  startedAt: { type: Number, required: true },
+  duration: { type: Number, required: true },
+
+  fleetType: { type: String, required: true },
+  resources: { type: Number, required: true, default: 0 },
+  taskId: { type: String, required: false }
 })
 
 export interface IFleetDocument extends IFleet, Document {
   _id: Types.ObjectId
 
-  planet: IPlanetDocument
-
-  playerId: string
+  player: IPlayerDocument
 
   units: {
     amount: number
     unit: IUnitDocument
   }[]
 
-  // TODO: set it as mandatory
-  travel?: {
-    destination: IPlanetDocument
-    // TODO: add startedAt: number
-    arriveAt: number
-    fleetType: FleetTypes
-    isReturning: boolean
-    resources: number
-    taskId?: string
-  }
+  fromPlanet: IPlanetDocument
+  toPlanet: IPlanetDocument
 }
 
 const FleetModel: Model<IFleetDocument> = mongoose.model<IFleetDocument>('Fleet', FleetSchema)

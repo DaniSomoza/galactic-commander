@@ -2,6 +2,8 @@ import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import raceRepository from 'game-engine/dist/repositories/raceRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
+import playerUnitsRepository from 'game-engine/dist/repositories/playerUnitsRepository'
+import fleetRepository from 'game-engine/dist/repositories/fleetRepository'
 import { ITask } from 'game-engine/dist/types/ITask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import ConflictError from 'auth-microservice/dist/errors/ConflictError'
@@ -96,7 +98,10 @@ async function getPlayer(username: string, universeName: string): Promise<getPla
 
   // TODO: add future pending tasks to tack them in the frontend
 
-  return { player: cleanPlayerFields(player) }
+  const fleets = await fleetRepository.findFleetsByPlayerId(player._id.toString())
+  const playerUnits = await playerUnitsRepository.findPlayerUnits(player._id.toString())
+
+  return { player: cleanPlayerFields(player, fleets, playerUnits) }
 }
 
 const playerService = {

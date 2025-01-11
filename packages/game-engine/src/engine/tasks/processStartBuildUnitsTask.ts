@@ -19,12 +19,15 @@ import { IPlanet } from '../../types/IPlanet'
 import getPlayerUnit from '../units/getPlayerUnit'
 import getFirstUnitInTheBuildQueue from '../units/getFirstUnitInTheBuildQueue'
 import taskRepository from '../../repositories/taskRepository'
+import playerUnitsRepository from '../../repositories/playerUnitsRepository'
 import createStartBuildUnitsTask from './utils/createStartBuildUnitsTask'
+import fleetRepository from '../../repositories/fleetRepository'
 
 async function processStartBuildUnitsTask(
   task: ITaskTypeDocument<StartBuildUnitsTaskType>,
   second: number
 ) {
+  // TODO: promise all 3 request
   // get all the required data from DB
   const player = await playerRepository.findPlayerById(task.data.playerId)
 
@@ -58,6 +61,9 @@ async function processStartBuildUnitsTask(
     throw new GameEngineError('player already building defenses in this planet')
   }
 
+  const playerUnits = await playerUnitsRepository.findPlayerUnits(player._id.toString())
+  const playerFleets = await fleetRepository.findFleetsByPlayerId(player._id.toString())
+
   const buildUnitsType: Record<UnitTypes, keyof IPlanet['unitBuild']> = {
     TROOP: 'troops',
     SPACESHIP: 'spaceships',
@@ -65,8 +71,14 @@ async function processStartBuildUnitsTask(
   }
 
   const { isUnitAvailable, requirements } = checkUnitRequirements(unit, player)
-  const isValidAmount = isValidUnitAmount(unit, task.data.build.amount, player)
-  const isHeroUnitAlreadyBuild = isHeroAlreadyBuild(unit, player.fleets)
+  const isValidAmount = isValidUnitAmount(
+    unit,
+    task.data.build.amount,
+    player,
+    playerUnits,
+    playerFleets
+  )
+  const isHeroUnitAlreadyBuild = isHeroAlreadyBuild(unit, playerUnits)
 
   const resourceCost = unit.resourceCost * task.data.build.amount
   const unitEnergyCost = unit.energyCost || 0

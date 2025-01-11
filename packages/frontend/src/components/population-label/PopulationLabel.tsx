@@ -26,7 +26,7 @@ function PopulationLabel() {
           player
             ? translate(
                 'GAME_PLAYER_STATS_POPULATION_TOOLTIP',
-                calculateCurrentPlayerPopulation(player),
+                calculateCurrentPlayerPopulation(player, player.units, player.fleets),
                 formatNumber(calculateMaxPlayerPopulation(player), true)
               )
             : undefined
@@ -45,7 +45,7 @@ function PopulationLabel() {
             textAlign="center"
           >
             {player ? (
-              `${formatNumber(calculateCurrentPlayerPopulation(player), true)} / ${formatNumber(
+              `${formatNumber(calculateCurrentPlayerPopulation(player, player.units, player.fleets), true)} / ${formatNumber(
                 calculateMaxPlayerPopulation(player),
                 true
               )}`

@@ -139,8 +139,8 @@ describe('process new player creation Task', () => {
     expect(createdPlayer!.researches.researched).toEqual([])
     expect(createdPlayer!.researches.activeResearch).toBeUndefined()
 
-    expect(calculateCurrentPlayerPopulation(createdPlayer!)).toEqual(0)
-    expect(calculateCurrentPlayerEnergy(createdPlayer!)).toEqual(0)
+    expect(calculateCurrentPlayerPopulation(createdPlayer!, [], [])).toEqual(0)
+    expect(calculateCurrentPlayerEnergy(createdPlayer!, [], [])).toEqual(0)
 
     const populationResearch = createdPlayer!.researches.researched.find(
       ({ research }) => research.isTroopsPopulationResearch
@@ -399,9 +399,7 @@ describe('process new player creation Task', () => {
       researches: {
         researched: [],
         queue: []
-      },
-
-      fleets: []
+      }
     }
 
     await PlayerModel.create(newPlayerData)

@@ -69,9 +69,7 @@ async function processCreateNewPlayerTask(
     researches: {
       researched: [],
       queue: []
-    },
-
-    fleets: []
+    }
   }
 
   const newPlayer = new PlayerModel(newPlayerData)

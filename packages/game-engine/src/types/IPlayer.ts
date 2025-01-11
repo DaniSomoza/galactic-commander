@@ -2,7 +2,6 @@ import { IBonus } from './IBonus'
 import { IPlanet } from './IPlanet'
 import { IResearch } from './IResearch'
 import { IRace } from './IRace'
-import { IFleet } from './IFleet'
 
 interface IPlayerUser {
   username: string
@@ -46,6 +45,4 @@ export interface IPlayer {
   planets: IPlayerPlanets
   perks: IPlayerPerk[]
   researches: IPlayerResearches
-  fleets: IFleet[]
-  // TODO: ADD pendingTasksHere ???
 }
