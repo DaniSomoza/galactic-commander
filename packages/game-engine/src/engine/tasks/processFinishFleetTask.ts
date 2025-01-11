@@ -214,5 +214,5 @@ async function processFinishExploreFleetTask({
     toPlanet.exploredBy.push(player._id.toString())
   }
 
-  return Promise.all([newTask.save(), fleet.save(), newReturningFleet.save()])
+  return Promise.all([newTask.save(), toPlanet.save(), fleet.save(), newReturningFleet.save()])
 }
