@@ -3,7 +3,6 @@ import mongoose, { Schema, Model, Types, Document } from 'mongoose'
 import { IFleet } from '../types/IFleet'
 import { IPlanetDocument } from './PlanetModel'
 import { IUnitDocument } from './UnitModel'
-import { IPlayerDocument } from './PlayerModel'
 
 const FleetUnitsSchema = new Schema(
   {
@@ -14,7 +13,8 @@ const FleetUnitsSchema = new Schema(
 )
 
 export const FleetSchema = new Schema({
-  player: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
+  playerId: { type: String, required: true },
+
   units: [FleetUnitsSchema],
 
   isReturning: { type: Boolean, required: true, default: false },
@@ -34,8 +34,6 @@ export const FleetSchema = new Schema({
 
 export interface IFleetDocument extends IFleet, Document {
   _id: Types.ObjectId
-
-  player: IPlayerDocument
 
   units: {
     amount: number

@@ -154,13 +154,13 @@ async function processFinishExploreFleetTask({
 
   // create returning fleet
   const newReturningFleet = new FleetModel({
-    player,
+    playerId: player._id.toString(),
     units: taskData.units,
     isReturning: true,
     isFinished: false,
     fromPlanet: toPlanet,
     toPlanet: fromPlanet,
-    startAt: second,
+    startedAt: second,
     arriveAt: executeTaskAt,
     duration: fleet.duration,
     fleetType: taskData.fleetType,

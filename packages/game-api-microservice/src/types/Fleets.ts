@@ -1,5 +1,4 @@
 import { PlanetCoordinatesType, PlanetType } from './Planet'
-import { PlayerType } from './Player'
 import { StartFleetTaskType, TaskType } from './Task'
 import { UnitType } from './Unit'
 
@@ -13,7 +12,7 @@ export type ExploreFleetType = 'EXPLORE_FLEET_TYPE'
 export type FleetTypes = ExploreFleetType
 
 export interface FleetType {
-  player: PlayerType
+  playerId: string
 
   units: FleetUnitsType[]
 
@@ -24,7 +23,7 @@ export interface FleetType {
   toPlanet: PlanetType
 
   arriveAt: number
-  startAt: number
+  startedAt: number
   duration: number
   fleetType: FleetTypes
   resources: number

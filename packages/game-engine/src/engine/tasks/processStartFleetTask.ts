@@ -138,13 +138,13 @@ async function processStartExploreFleetTask({
   })
 
   const newPlayerFleet = new FleetModel({
-    player,
+    playerId: player._id.toString(),
     units: taskData.units,
     isReturning: false,
     isFinished: false,
     fromPlanet,
     toPlanet,
-    startAt: second,
+    startedAt: second,
     arriveAt: executeTaskAt,
     duration: fleetDuration,
     fleetType: taskData.fleetType,

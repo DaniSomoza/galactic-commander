@@ -2,10 +2,9 @@ import FleetModel from '../models/FleetModel'
 
 async function findFleetsByPlayerId(playerId: string) {
   return FleetModel.find({
-    player: playerId,
+    playerId,
     isFinished: false
   })
-    .populate('player')
     .populate({
       path: 'units.unit',
       populate: {
@@ -22,7 +21,6 @@ async function findFleetsByFromPlanetId(planetId: string) {
     fromPlanet: planetId,
     isFinished: false
   })
-    .populate('player')
     .populate({
       path: 'units.unit',
       populate: {
@@ -39,7 +37,6 @@ async function findFleetsByToPlanetId(planetId: string) {
     toPlanet: planetId,
     isFinished: false
   })
-    .populate('player')
     .populate({
       path: 'units.unit',
       populate: {
