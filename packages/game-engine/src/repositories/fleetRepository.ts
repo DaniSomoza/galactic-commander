@@ -50,7 +50,6 @@ async function findFleetsByToPlanetId(planetId: string) {
 
 async function findFleetById(fleetId: string) {
   return FleetModel.findById(fleetId)
-    .populate('player')
     .populate({
       path: 'units.unit',
       populate: {
