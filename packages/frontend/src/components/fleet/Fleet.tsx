@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
@@ -35,6 +35,13 @@ type FleetProps = {
 
 function Fleet({ fleet, onFinishFleet }: FleetProps) {
   const { translate } = useTranslations()
+  const [taskId, setTaskId] = useState(fleet.taskId)
+
+  useEffect(() => {
+    if (!taskId) {
+      setTaskId(taskId)
+    }
+  }, [taskId])
 
   const { loadPlayer } = usePlayer()
 
@@ -42,15 +49,15 @@ function Fleet({ fleet, onFinishFleet }: FleetProps) {
 
   useEffect(() => {
     async function updatePlayer() {
-      if (fleetCountdown === 0 && fleet.taskId) {
-        await waitTaskToFinish(fleet.taskId)
+      if (fleetCountdown === 0 && taskId) {
+        await waitTaskToFinish(taskId)
         await loadPlayer()
         onFinishFleet?.()
       }
     }
 
     updatePlayer()
-  }, [fleetCountdown, loadPlayer, fleet, onFinishFleet])
+  }, [fleetCountdown, loadPlayer, taskId, onFinishFleet])
 
   // TODO: implement invisible fleets
   const isInvisible = false
@@ -193,6 +200,7 @@ function FleetPlanetsLabel({ fromPlanet, toPlanet, isReturning }: FleetPlanetsLa
 
           <ArrowRightAltRoundedIcon sx={{ transform: 'scaleX(-1)' }} />
 
+          {/* TODO: Create a more detailed planet label with the planet image name and de coordinates */}
           <Tooltip arrow title={formatCoordinatesLabel(fromPlanet.coordinates)}>
             <div>
               <Image

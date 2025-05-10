@@ -9,20 +9,21 @@ import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
+import { useFleet } from '../../store/FleetContext'
 
 function FleetsLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
+  const { fleets } = useFleet()
 
-  // TODO: Add current fleets
-  const currentFleets = 0
-  const maxFleets = player ? computedBonus(player.perks, 'MAX_FLEETS_ALLOWED_BONUS') : 0
-  const fleetsLabel = `${currentFleets} / ${maxFleets}`
+  // TODO: move this to useFleet
+  const maxFleets = player ? computedBonus(player.perks, 'MAX_FLEETS_ALLOWED_BONUS') + 1 : 1
+  const fleetsLabel = `${fleets.length} / ${maxFleets}`
 
   return (
     <Paper variant="outlined">
       <Tooltip
-        title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets, maxFleets)}
+        title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', fleets.length, maxFleets)}
         arrow
       >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>

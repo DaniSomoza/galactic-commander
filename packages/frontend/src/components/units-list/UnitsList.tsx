@@ -53,7 +53,10 @@ function UnitsList({ unitType }: UnitsListProp) {
           .filter((unit) => unit.type === unitType)
           .map((unit) => {
             const unitRequirements = checkUnitRequirements(unit, player)
-            const amount = unitsInThePlanet.find(({ unit }) => unit.name === unit.name)?.amount || 0
+            const unitInThePlanet = unitsInThePlanet.find(
+              (unitInThePlanet) => unitInThePlanet.unit.name === unit.name
+            )
+            const amount = unitInThePlanet?.amount || 0
 
             return (
               <Paper key={unit.name} variant="outlined">
