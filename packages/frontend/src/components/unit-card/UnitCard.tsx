@@ -18,6 +18,7 @@ import formatNumber from '../../utils/formatNumber'
 type UnitCardProps = {
   showNameLabel?: boolean
   disableBorder?: boolean
+  isAvailable: boolean
   unit: UnitType
   amount: number
   height?: number
@@ -37,6 +38,7 @@ const unitIcon = {
 function UnitCard({
   showNameLabel = true,
   disableBorder = false,
+  isAvailable,
   unit,
   amount,
   height = DEFAULT_HEIGHT,
@@ -46,6 +48,7 @@ function UnitCard({
   const { translate } = useTranslations()
 
   const UnitIconComponent = unitIcon[unit.type]
+
   return (
     <Box sx={{ position: 'relative' }}>
       <Paper variant={disableBorder ? 'elevation' : 'outlined'}>
@@ -55,17 +58,13 @@ function UnitCard({
             alt={translate(unit.name)}
             height={`${height}px`}
             width={`${width}px`}
-            border
+            border={!disableBorder}
+            disabled={!isAvailable}
           />
 
           {/* Unit name */}
           {showNameLabel && (
-            <Box
-              position={'absolute'}
-              top={20}
-              maxWidth={width}
-              sx={{ transform: 'translate(0, -50%)' }}
-            >
+            <Box position={'absolute'} top={0} padding={1} maxWidth={width}>
               <Paper variant="outlined">
                 <Stack
                   direction={'row'}
@@ -76,7 +75,7 @@ function UnitCard({
                   alignItems={'center'}
                 >
                   {unit.isHero && <StarsIcon fontSize="small" color="info" />}
-                  <Typography variant="body1" fontSize={12}>
+                  <Typography variant="body1" fontSize={12} textAlign={'center'}>
                     {translate(unit.name)}
                   </Typography>
                 </Stack>

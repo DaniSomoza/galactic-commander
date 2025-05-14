@@ -386,7 +386,7 @@ const pirateReconDrone: IUnit = {
     attack: 1,
     shield: 0,
     health: 10,
-    speed: 1_000,
+    speed: 10_000,
     cargo: 0,
     starFighterCapacity: 0,
     troopsCapacity: 0
@@ -408,6 +408,53 @@ const pirateReconDrone: IUnit = {
       { level: 2, research: PIRATE_FLEET_BUILDING_RESEARCH },
       { level: 2, research: PIRATE_FLEET_HULL_RESEARCH },
       { level: 3, research: PIRATE_FLEET_SPEED_RESEARCH }
+    ]
+  },
+
+  specials: [],
+
+  bonus: {}
+}
+
+// Pirate Scrap Fighter (Spaceship)
+const pirateScrapFighter: IUnit = {
+  name: 'SPACESHIP_PIRATE_SCRAP_FIGHTER_NAME',
+  description: 'SPACESHIP_PIRATE_SCRAP_FIGHTER_DESCRIPTION',
+
+  raceName: 'PIRATES_RACE_NAME',
+
+  type: 'SPACESHIP',
+  subtype: 'STAR_FIGHTER',
+
+  energyCost: 85,
+  resourceCost: 120,
+  buildBaseTime: 80_000,
+
+  stats: {
+    attack: 80,
+    shield: 10,
+    health: 200,
+    speed: 50,
+    cargo: 40,
+    starFighterCapacity: 0,
+    troopsCapacity: 0
+  },
+
+  isHero: false,
+  isInvisible: false,
+  isOrganic: false,
+  isCapturable: true,
+  isKamikaze: false,
+  isAirborne: false,
+  isSpecial: false,
+  hasShieldPiercing: false,
+
+  requirements: {
+    researches: [
+      { level: 1, research: PIRATE_FLEET_ATTACK_RESEARCH },
+      { level: 2, research: PIRATE_FLEET_HULL_RESEARCH },
+      { level: 2, research: PIRATE_FLEET_ENERGY_RESEARCH },
+      { level: 2, research: PIRATE_FLEET_SPEED_RESEARCH }
     ]
   },
 
@@ -457,55 +504,6 @@ const pirateStarFighter: IUnit = {
       { level: 3, research: PIRATE_FLEET_ENERGY_RESEARCH },
       { level: 4, research: PIRATE_FLEET_BUILDING_RESEARCH },
       { level: 3, research: PIRATE_FLEET_SPEED_RESEARCH }
-    ]
-  },
-
-  specials: [],
-
-  bonus: {}
-}
-
-// Pirate Interceptor (Spaceship)
-const pirateInterceptor: IUnit = {
-  name: 'SPACESHIP_PIRATE_INTERCEPTOR_NAME',
-  description: 'SPACESHIP_PIRATE_INTERCEPTOR_DESCRIPTION',
-
-  raceName: 'PIRATES_RACE_NAME',
-
-  type: 'SPACESHIP',
-  subtype: 'STAR_FIGHTER',
-
-  energyCost: 120,
-  resourceCost: 350,
-  buildBaseTime: 350_000,
-
-  stats: {
-    attack: 170,
-    shield: 30,
-    health: 290,
-    speed: 50,
-    cargo: 50,
-    starFighterCapacity: 0,
-    troopsCapacity: 0
-  },
-
-  isHero: false,
-  isInvisible: false,
-  isOrganic: false,
-  isCapturable: true,
-  isKamikaze: false,
-  isAirborne: false,
-  isSpecial: false,
-  hasShieldPiercing: false,
-
-  requirements: {
-    researches: [
-      { level: 4, research: PIRATE_FLEET_ATTACK_RESEARCH },
-      { level: 2, research: PIRATE_FLEET_SHIELD_RESEARCH },
-      { level: 4, research: PIRATE_FLEET_HULL_RESEARCH },
-      { level: 5, research: PIRATE_FLEET_ENERGY_RESEARCH },
-      { level: 5, research: PIRATE_FLEET_BUILDING_RESEARCH },
-      { level: 6, research: PIRATE_FLEET_SPEED_RESEARCH }
     ]
   },
 
@@ -882,8 +880,8 @@ const pirateTroops: IUnit[] = [
 
 const pirateSpaceships: IUnit[] = [
   pirateReconDrone,
+  pirateScrapFighter,
   pirateStarFighter,
-  pirateInterceptor,
   pirateCruiser,
   pirateBrigantine,
   pirateImperialCorsairFrigate,

@@ -5,28 +5,27 @@ import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import FlightTakeoffRoundedIcon from '@mui/icons-material/FlightTakeoffRounded'
 
-import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
-
 import { usePlayer } from '../../store/PlayerContext'
 import { useTranslations } from '../../store/TranslationContext'
+import { useFleet } from '../../store/FleetContext'
 
 function FleetsLabel() {
   const { translate } = useTranslations()
   const { player } = usePlayer()
+  const { maxPlayerFleets, currentPlayerFleets } = useFleet()
 
-  // TODO: Add current fleets
-  const currentFleets = 0
-  const maxFleets = player ? computedBonus(player.perks, 'MAX_FLEETS_ALLOWED_BONUS') : 0
-  const fleetsLabel = `${currentFleets} / ${maxFleets}`
+  const fleetsLabel = `${currentPlayerFleets} / ${maxPlayerFleets}`
+
+  const color = currentPlayerFleets < maxPlayerFleets ? 'inherit' : 'error'
 
   return (
     <Paper variant="outlined">
       <Tooltip
-        title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentFleets, maxFleets)}
+        title={translate('GAME_PLAYER_STATS_FLEETS_TOOLTIP', currentPlayerFleets, maxPlayerFleets)}
         arrow
       >
         <Stack direction={'row'} padding={0.5} alignItems={'center'}>
-          <FlightTakeoffRoundedIcon fontSize="small" />
+          <FlightTakeoffRoundedIcon fontSize="small" color={color} />
 
           <Typography
             variant="body1"
@@ -35,6 +34,7 @@ function FleetsLabel() {
             overflow={'hidden'}
             textOverflow="ellipsis"
             textAlign="center"
+            color={color}
           >
             {player ? fleetsLabel : <Skeleton variant="text" width={32} />}
           </Typography>

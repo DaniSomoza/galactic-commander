@@ -13,7 +13,11 @@ import {
   FINISH_BUILD_UNITS_TASK_TYPE,
   START_BUILD_UNITS_TASK_TYPE,
   FinishBuildUnitsTaskData,
-  StartBuildUnitsTaskData
+  StartBuildUnitsTaskData,
+  FINISH_FLEET_TASK_TYPE,
+  START_FLEET_TASK_TYPE,
+  StartFleetTaskData,
+  FinishFleetTaskData
 } from '../types/ITask'
 import taskRepository from '../repositories/taskRepository'
 import playerRepository from '../repositories/playerRepository'
@@ -30,6 +34,7 @@ import GameEngineError from './errors/GameEngineError'
 async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument) {
   const tasksGroupedBySeconds = groupTasksBySeconds(tasks, universe)
 
+  // TODO: include tasksGroupedBySeconds to push directly the new tasks
   for (const { tasks, second } of tasksGroupedBySeconds) {
     // 0.- Calculate player resources
     await processResourceProduction(tasks, second)
@@ -73,6 +78,27 @@ async function processTasks(tasks: ITaskDocument[], universe: IUniverseDocument)
       START_BUILD_UNITS_TASK_TYPE
     )
     await processTasksSequentially(startBuildUnitsTasks, startBuildUnitsTaskHandler, second)
+
+    // 6.- Finish Fleets Tasks
+    const finishFleetTaskHandler = TASK_HANDLER[FINISH_FLEET_TASK_TYPE].handler
+
+    const finishFleetTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      FINISH_FLEET_TASK_TYPE
+    )
+
+    await processTasksSequentially(finishFleetTasks, finishFleetTaskHandler, second)
+
+    // 7.- Start Fleets Tasks
+    const startFleetTaskHandler = TASK_HANDLER[START_FLEET_TASK_TYPE].handler
+
+    const startFleetTasks = await taskRepository.getPendingTasksByType(
+      universe._id,
+      second,
+      START_FLEET_TASK_TYPE
+    )
+    await processTasksSequentially(startFleetTasks, startFleetTaskHandler, second)
 
     // update universe
     universe.lastProcessedTime = second
@@ -148,6 +174,7 @@ async function processResourceProduction(
   }[] = []
 
   // TODO: implement targetPlanet feature
+  // for FLEETS from planet and to planet
   for (const task of tasks) {
     // calculate all player planet production
     if (isPlayerTaskData(task.data)) {
@@ -196,6 +223,8 @@ function isPlayerTaskData(
   | StartResearchTaskData
   | FinishResearchTaskData
   | StartBuildUnitsTaskData
-  | FinishBuildUnitsTaskData {
+  | FinishBuildUnitsTaskData
+  | StartFleetTaskData
+  | FinishFleetTaskData {
   return 'playerId' in taskData
 }

@@ -14,7 +14,7 @@ FROM nginx:alpine
 
 COPY --from=builder /usr/app/packages/frontend/dist /usr/share/nginx/html
 
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY /packages/frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

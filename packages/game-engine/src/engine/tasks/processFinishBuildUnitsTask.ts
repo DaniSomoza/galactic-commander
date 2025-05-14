@@ -5,15 +5,16 @@ import PointModel from '../../models/PointModel'
 import { ITaskTypeDocument } from '../../models/TaskModel'
 import playerRepository from '../../repositories/playerRepository'
 import upgradeBonus from '../bonus/upgradeBonus'
-import FleetModel from '../../models/FleetModel'
 import hasBonus from '../../helpers/hasBonus'
 import getTotalAmountOfUnits from '../units/getTotalAmountOfUnits'
 import { UnitTypes } from '../../types/IUnit'
 import { IPlanet } from '../../types/IPlanet'
 import createStartBuildUnitsTask from './utils/createStartBuildUnitsTask'
 import taskRepository from '../../repositories/taskRepository'
+import playerUnitsRepository from '../../repositories/playerUnitsRepository'
 import getPlayerUnit from '../units/getPlayerUnit'
 import getFirstUnitInTheBuildQueue from '../units/getFirstUnitInTheBuildQueue'
+import PlayerUnitsModel from '../../models/PlayerUnitsModel'
 
 async function processFinishBuildUnitsTask(
   task: ITaskTypeDocument<FinishBuildUnitsTaskType>,
@@ -40,35 +41,26 @@ async function processFinishBuildUnitsTask(
     throw new GameEngineError('invalid unit')
   }
 
-  // planet fleet (no travel defined)
-  const existingPlanetFleet = player.fleets.find(
-    (fleet) => fleet.planet._id.equals(planet._id) && !fleet.travel
+  const playerUnitsInThePlanet = await playerUnitsRepository.findPlayerUnitsInThePlanet(
+    player._id.toString(),
+    planet._id.toString()
   )
 
-  const planetFleet =
-    existingPlanetFleet ||
-    new FleetModel({
+  const unitsInThePlanet =
+    playerUnitsInThePlanet ||
+    new PlayerUnitsModel({
       planet,
-      playerId: player._id,
-      units: [
-        {
-          unit,
-          amount: task.data.build.amount
-        }
-      ]
+      player,
+      units: []
     })
 
-  // update player fleets with the new fleet
-  if (!existingPlanetFleet) {
-    player.fleets.push(planetFleet)
-  }
+  const planetUnit = unitsInThePlanet.units.find(({ unit }) => unit._id.equals(unit._id))
 
-  const fleetUnit = planetFleet.units.find((fleetUnit) => fleetUnit.unit._id.equals(unit._id))
-
-  if (fleetUnit) {
-    fleetUnit.amount += task.data.build.amount
+  // add unit or update amount
+  if (planetUnit) {
+    planetUnit.amount += task.data.build.amount
   } else {
-    planetFleet.units.push({
+    unitsInThePlanet.units.push({
       unit,
       amount: task.data.build.amount
     })
@@ -78,14 +70,15 @@ async function processFinishBuildUnitsTask(
   const hasBonusToUpdate = hasBonus(unit.bonus)
 
   if (hasBonusToUpdate) {
+    const playerUnits = await playerUnitsRepository.findPlayerUnits(player._id.toString())
     const PlayerBonus = player.perks.find((perk) => perk.sourceId === unit._id.toString())
 
     if (PlayerBonus) {
-      const totalAmountOfUnits = getTotalAmountOfUnits(player, unit)
-      PlayerBonus.bonus = upgradeBonus(unit.bonus, totalAmountOfUnits)
+      const totalAmountOfUnits = getTotalAmountOfUnits(playerUnits, unit)
+      PlayerBonus.bonus = upgradeBonus(unit.bonus, totalAmountOfUnits + task.data.build.amount)
     } else {
       player.perks.push({
-        bonus: unit.bonus,
+        bonus: upgradeBonus(unit.bonus, task.data.build.amount),
         sourceId: unit._id.toString(),
         sourceName: unit.name,
         type: 'Unit'
@@ -127,14 +120,14 @@ async function processFinishBuildUnitsTask(
 
     return Promise.all([
       player.save(),
-      planetFleet.save(),
+      unitsInThePlanet.save(),
       points.save(),
       planet.save(),
       taskRepository.createStartBuildUnitsTask(buildUnitsTask)
     ])
   }
 
-  return Promise.all([player.save(), planetFleet.save(), points.save(), planet.save()])
+  return Promise.all([player.save(), unitsInThePlanet.save(), points.save(), planet.save()])
 }
 
 export default processFinishBuildUnitsTask

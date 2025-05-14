@@ -46,5 +46,9 @@ export type PlanetType = {
     }
   }
 
+  exploredBy: []
+
   units: UnitType[]
 }
+
+export type getGalaxyResponseType = { planets: PlanetType[] }

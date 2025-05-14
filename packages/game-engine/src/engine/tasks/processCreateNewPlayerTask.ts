@@ -69,14 +69,13 @@ async function processCreateNewPlayerTask(
     researches: {
       researched: [],
       queue: []
-    },
-
-    fleets: []
+    }
   }
 
   const newPlayer = new PlayerModel(newPlayerData)
 
   principalPlanet.ownerId = newPlayer._id.toString()
+  principalPlanet.exploredBy = [newPlayer._id.toString()]
   principalPlanet.isPrincipal = true
   principalPlanet.isExplored = true
   principalPlanet.colonizedAt = second

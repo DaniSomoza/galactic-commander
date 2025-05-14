@@ -22,6 +22,7 @@ import { BuildUnitsProvider, useBuildUnits } from '../../store/buildUnitsContext
 import ActiveResearch from '../../components/active-research/ActiveResearch'
 import ActiveUnitsBuild from '../../components/active-units-build/ActiveUnitsBuild'
 import DefensesLabel from '../../components/defenses-label/DefensesLabel'
+import { FleetProvider } from '../../store/FleetContext'
 
 function GamePage() {
   const { logout, sessionToken } = useAuthorization()
@@ -156,7 +157,9 @@ function GamePageWithGameProviders() {
         <ResearchProvider>
           <BuildUnitsProvider>
             <PlayerResourcesProvider>
-              <GamePage />
+              <FleetProvider>
+                <GamePage />
+              </FleetProvider>
             </PlayerResourcesProvider>
           </BuildUnitsProvider>
         </ResearchProvider>

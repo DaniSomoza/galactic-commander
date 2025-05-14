@@ -24,7 +24,6 @@ import FortIcon from '@mui/icons-material/Fort'
 import { UnitType, UnitTypes } from 'game-api-microservice/src/types/Unit'
 import isHeroAlreadyBuild from 'game-engine/src/engine/units/isHeroAlreadyBuild'
 import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
-import getAmountOfPlayerUnitsInThePlanet from 'game-engine/src/engine/units/getAmountOfPlayerUnitsInThePlanet'
 import calculateMaxPlayerEnergy from 'game-engine/src/engine/units/calculateMaxPlayerEnergy'
 import calculateCurrentPlayerEnergy from 'game-engine/src/engine/units/calculateCurrentPlayerEnergy'
 import calculateCurrentPlayerPopulation from 'game-engine/src/engine/units/calculateCurrentPlayerPopulation'
@@ -38,14 +37,14 @@ import { useTranslations } from '../../store/TranslationContext'
 import formatTimer from '../../utils/formatTimer'
 import formatNumber from '../../utils/formatNumber'
 import millisToSeconds from '../../utils/millisToSeconds'
-import Image from '../image/Image'
 import UnitStats from '../unit-stats/UnitStats'
 import { usePlayerResources } from '../../store/PlayerResourcesContext'
 import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 import { useTheme } from '../../store/ThemeContext'
 import UnitRequirements from '../unit-requirements/UnitRequirements'
 import UnitBonus from '../unit-bonus/UnitBonus'
-import getImage from '../../utils/getImage'
+import UnitCard from '../unit-card/UnitCard'
+import { useFleet } from '../../store/FleetContext'
 
 type BuildUnitDialogProps = {
   unitToBuild: UnitType
@@ -81,13 +80,19 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
     activeBuildDefenses
   } = useBuildUnits()
 
+  const { unitsInThePlanet } = useFleet()
+
   const UnitIconComponent = unitIcon[unitToBuild.type]
 
   const resourceCost = amount * unitToBuild.resourceCost
-  const currentPopulation = calculateCurrentPlayerPopulation(player!)
+  const currentPopulation = player
+    ? calculateCurrentPlayerPopulation(player, player.units, player.fleets)
+    : 0
   const predictedPopulation = currentPopulation + amount
   const maxPlayerPopulation = calculateMaxPlayerPopulation(player!)
-  const currentEnergy = calculateCurrentPlayerEnergy(player!)
+  const currentEnergy = player
+    ? calculateCurrentPlayerEnergy(player, player.units, player.fleets)
+    : 0
   const predictedEnergy = currentEnergy + unitToBuild.energyCost * amount
   const maxPlayerEnergy = calculateMaxPlayerEnergy(player!)
 
@@ -131,11 +136,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
   const buildUnitBonus = computedBonus(player!.perks, buildUnitsPerk[unitToBuild.type])
   const buildUnitDuration = millisToSeconds(unitToBuild.buildBaseTime * (100 / buildUnitBonus))
 
-  const troopsInThisPlanet = getAmountOfPlayerUnitsInThePlanet(
-    player!,
-    selectedPlanet!,
-    unitToBuild
-  )
+  const amountOfUnitsInThePlanet =
+    unitsInThePlanet.find(({ unit }) => unit.name === unit.name)?.amount || 0
 
   const error = getErrorLabel({
     isValidAmount,
@@ -169,73 +171,15 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
       </IconButton>
 
       <DialogContent dividers>
-        <Paper sx={{ padding: 1 }}>
-          <Stack direction={'row'} justifyContent={'center'}>
-            <Box sx={{ position: 'relative' }}>
-              <Paper variant="outlined">
-                <Stack justifyContent="center" alignItems="center">
-                  <Image
-                    src={getImage(unitToBuild.name)}
-                    alt={translate(unitToBuild.name)}
-                    height={'230px'}
-                    width={'230px'}
-                    border
-                  />
-
-                  {/* Unit name */}
-                  <Box
-                    position={'absolute'}
-                    top={20}
-                    padding={1}
-                    maxWidth={'230px'}
-                    sx={{ transform: 'translate(0, -50%)' }}
-                  >
-                    <Paper variant="outlined">
-                      <Paper variant="outlined">
-                        <Stack
-                          direction={'row'}
-                          gap={0.5}
-                          padding={0.4}
-                          paddingLeft={0.6}
-                          paddingRight={0.8}
-                          alignItems={'center'}
-                        >
-                          {unitToBuild.isHero && <StarsIcon fontSize="small" color="info" />}
-                          <Typography variant="body1" fontSize={13}>
-                            {translate(unitToBuild.name)}
-                          </Typography>
-                        </Stack>
-                      </Paper>
-                    </Paper>
-                  </Box>
-
-                  {/* Amount of units in this planet */}
-                  <Box position={'absolute'} right={0} bottom={0} padding={1}>
-                    <Paper variant="outlined">
-                      <Tooltip
-                        title={translate(
-                          'GAME_BUILD_UNITS_PAGE_AMOUNT_OF_UNITS_IN_PLANET_TOOLTIP',
-                          formatNumber(troopsInThisPlanet, true)
-                        )}
-                        arrow
-                      >
-                        <Stack
-                          direction={'row'}
-                          gap={0.5}
-                          padding={0.4}
-                          paddingLeft={0.6}
-                          paddingRight={0.8}
-                          alignItems={'center'}
-                        >
-                          <GroupIcon fontSize="small" />
-                          <Typography fontSize={12}> {formatNumber(troopsInThisPlanet)}</Typography>
-                        </Stack>
-                      </Tooltip>
-                    </Paper>
-                  </Box>
-                </Stack>
-              </Paper>
-            </Box>
+        <Paper>
+          <Stack padding={1} direction={'row'} justifyContent={'center'}>
+            <UnitCard
+              height={230}
+              width={230}
+              unit={unitToBuild}
+              amount={amountOfUnitsInThePlanet}
+              isAvailable
+            />
           </Stack>
         </Paper>
 
@@ -263,6 +207,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
         </Paper>
 
         {/* TODO: ADD TOOLTIP */}
+        {/* TODO: ADD 25% button... */}
 
         <Box minHeight={120} marginTop={1}>
           <Paper sx={{ padding: 1 }}>
@@ -274,7 +219,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                     helperText={showErrorLabel ? error : ''}
                     disabled={unitToBuild.isHero}
                     fullWidth
-                    placeholder="type the amount"
+                    placeholder="type an amount"
                     error={showErrorLabel}
                     value={amount || ''}
                     onChange={(event) => {
@@ -351,8 +296,11 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           textAlign="center"
                           color={isValidPopulation ? 'textPrimary' : 'error'}
                         >
-                          {calculateCurrentPlayerPopulation(player!) +
-                            (unitToBuild.type === 'TROOP' ? amount : 0)}{' '}
+                          {calculateCurrentPlayerPopulation(
+                            player!,
+                            player!.units,
+                            player!.fleets
+                          ) + (unitToBuild.type === 'TROOP' ? amount : 0)}{' '}
                           / {formatNumber(calculateMaxPlayerPopulation(player!))}
                         </Typography>
                       </Stack>
@@ -377,7 +325,8 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
                           textAlign="center"
                           color={isValidEnergy ? 'textPrimary' : 'error'}
                         >
-                          {calculateCurrentPlayerEnergy(player!) + amount * unitToBuild.energyCost}{' '}
+                          {calculateCurrentPlayerEnergy(player!, player!.units, player!.fleets) +
+                            amount * unitToBuild.energyCost}{' '}
                           /{formatNumber(calculateMaxPlayerEnergy(player!))}
                         </Typography>
                       </Stack>
@@ -471,9 +420,7 @@ function BuildUnitsDialog({ unitToBuild, isOpen, setUnitToBuild }: BuildUnitDial
         ) : (
           <Tooltip title={'Add units to planet queue'} arrow>
             <Button
-              disabled={
-                isLoading || !!error || isHeroAlreadyBuild(unitToBuild, player?.fleets || [])
-              }
+              disabled={isLoading || !!error || isHeroAlreadyBuild(unitToBuild, player!.units)}
               autoFocus
               onClick={performStartBuildUnits}
             >

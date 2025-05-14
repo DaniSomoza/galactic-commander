@@ -23,7 +23,7 @@ function EnergyLabel() {
           player
             ? translate(
                 'GAME_PLAYER_STATS_ENERGY_TOOLTIP',
-                calculateCurrentPlayerEnergy(player),
+                calculateCurrentPlayerEnergy(player, player.units, player.fleets),
                 formatNumber(calculateMaxPlayerEnergy(player), true)
               )
             : ''
@@ -42,7 +42,7 @@ function EnergyLabel() {
             textAlign="center"
           >
             {player ? (
-              `${formatNumber(calculateCurrentPlayerEnergy(player), true)} / ${formatNumber(
+              `${formatNumber(calculateCurrentPlayerEnergy(player, player.units, player.fleets), true)} / ${formatNumber(
                 calculateMaxPlayerEnergy(player),
                 true
               )}`

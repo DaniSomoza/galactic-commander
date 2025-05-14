@@ -18,41 +18,21 @@ type UnitStatsTypes = {
   troopsCapacity: number
 }
 
-// TODO: troops subtypes
+// troops
 type UnitTroopInfantrySubtype = 'INFANTRY'
 type UnitTroopMedicSubtype = 'MEDIC'
 
-// TODO: spaceship subtypes
+// spaceship
 type UnitSpaceshipProbeSubtype = 'PROBE'
 type UnitSpaceshipStarFighterSubtype = 'STAR_FIGHTER'
-// TODO: Implement the INTERCEPTOR_STAR_FIGHTER subtype to be effective against other StarFighters and less effective against other unit types.
 type UnitSpaceshipCruiserSubtype = 'CRUISER'
 type UnitSpaceshipFrigateSubtype = 'FRIGATE'
+type UnitSpaceshipDestroyerSubtype = 'DESTROYER'
+type UnitSpaceshipCarrierSubtype = 'CARRIER'
 type UnitSpaceshipBattleStationSubtype = 'BATTLE_STATION'
 
-// TODO: defenses subtypes
+// defenses
 type UnitDefenseSubtype = 'DEFENSE'
-
-// export type SpaceScoutDrone = 'spaceScoutDrone'
-// export type SpaceFighter = 'spaceFighter'
-// export type SpaceCarrier = 'spaceCarrier'
-// export type SpaceCruiser = 'spaceCruiser'
-// export type SpaceDestroyer = 'spaceDestroyer'
-// export type SpaceBattleStation = 'spaceBattleStation'
-// export type SpacePlanetaryBomber = 'spacePlanetaryBomber'
-// export type SpaceCargo = 'spaceCargo'
-
-// // TODO: move this to Units ?
-// export type ShipsTypes =
-//   | SpaceScoutDrone
-//   | SpaceFighter
-//   | SpaceCarrier
-//   | SpaceCruiser
-//   | SpaceDestroyer
-//   | SpaceFrigate
-//   | SpaceBattleStation
-//   | SpacePlanetaryBomber
-//   | SpaceCargo
 
 type UnitSubtypes =
   | UnitTroopInfantrySubtype
@@ -61,6 +41,8 @@ type UnitSubtypes =
   | UnitSpaceshipStarFighterSubtype
   | UnitSpaceshipCruiserSubtype
   | UnitSpaceshipFrigateSubtype
+  | UnitSpaceshipDestroyerSubtype
+  | UnitSpaceshipCarrierSubtype
   | UnitSpaceshipBattleStationSubtype
   | UnitDefenseSubtype
 

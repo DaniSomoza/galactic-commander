@@ -21,16 +21,23 @@ async function findPlanetByCoordinates(coordinates: IPlanetCoordinates) {
   }).exec()
 }
 
+async function findPlanetsBySystem(galaxy: number, sector: number, system: number) {
+  return PlanetModel.find({
+    'coordinates.galaxy': galaxy,
+    'coordinates.sector': sector,
+    'coordinates.system': system
+  }).exec()
+}
+
 async function insertPlanets(planets: IPlanet[]) {
   return PlanetModel.insertMany(planets)
 }
-
-// TODO: findPlanetsBySystem? => return all planets of a system
 
 const planetRepository = {
   findPlanetById,
   findPlanetByCoordinates,
   findAvailablePrincipalPlanets,
+  findPlanetsBySystem,
   insertPlanets
 }
 

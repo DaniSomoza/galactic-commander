@@ -1,25 +1,44 @@
-import { PlanetType } from './Planet'
+import { PlanetCoordinatesType, PlanetType } from './Planet'
+import { StartFleetTaskType, TaskType } from './Task'
 import { UnitType } from './Unit'
 
-interface FleetUnitsType {
+export interface FleetUnitsType {
   unit: UnitType
   amount: number
 }
 
-interface TravelFleetType {
-  destination: PlanetType
-  arriveAt: number
-  fleetType: string // TODO: create a fleetType
-  isReturning: boolean
-  resources: number
-}
+export type ExploreFleetType = 'EXPLORE_FLEET_TYPE'
+
+export type FleetTypes = ExploreFleetType
 
 export interface FleetType {
-  units: FleetUnitsType[]
-
   playerId: string
 
-  planet: PlanetType
+  units: FleetUnitsType[]
 
-  travel?: TravelFleetType
+  isReturning: boolean
+  isFinished: boolean
+
+  fromPlanet: PlanetType
+  toPlanet: PlanetType
+
+  arriveAt: number
+  startedAt: number
+  duration: number
+  fleetType: FleetTypes
+  resources: number
+  taskId?: string
 }
+
+export type ExplorePlanetData = {
+  universeName: string
+  fromPlanetCoordinates: PlanetCoordinatesType
+  toPlanetCoordinates: PlanetCoordinatesType
+  fleetUnits: {
+    unitName: string
+    amount: number
+  }[]
+  executeTaskAt?: number
+}
+
+export type explorePlanetFleetResponseType = { task: TaskType<StartFleetTaskType> }

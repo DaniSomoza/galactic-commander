@@ -1,6 +1,8 @@
 import playerRepository from 'game-engine/dist/repositories/playerRepository'
 import taskRepository from 'game-engine/dist/repositories/taskRepository'
 import universeRepository from 'game-engine/dist/repositories/universeRepository'
+import fleetRepository from 'game-engine/dist/repositories/fleetRepository'
+import playerUnitsRepository from 'game-engine/dist/repositories/playerUnitsRepository'
 import createStartResearchTask from 'game-engine/dist/engine/tasks/utils/createStartResearchTask'
 import NotFoundError from 'auth-microservice/dist/errors/NotFoundError'
 import BadRequestError from 'auth-microservice/dist/errors/BadRequestError'
@@ -108,7 +110,10 @@ async function updateResearchQueue({
 
   await player.save()
 
-  return { player: cleanPlayerFields(player) }
+  const fleets = await fleetRepository.findFleetsByPlayerId(player._id.toString())
+  const playerUnits = await playerUnitsRepository.findPlayerUnits(player._id.toString())
+
+  return { player: cleanPlayerFields(player, fleets, playerUnits) }
 }
 
 const researchService = {

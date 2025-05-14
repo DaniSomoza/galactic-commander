@@ -5,6 +5,7 @@ import { RaceType } from './Race'
 import { ResearchType } from './Research'
 import { NewPlayerTaskType, TaskType } from './Task'
 import { FleetType } from './Fleets'
+import { PlayerUnitsType } from './PlayerUnits'
 
 export type PlayerPerkType = {
   bonus: IBonus
@@ -31,18 +32,25 @@ export type PlayerType = {
     principal: PlanetType
     colonies: PlanetType[]
   }
+
   perks: PlayerPerkType[]
+
   researches: {
     researched: PlayerResearchType[]
+
+    queue: string[]
+
     activeResearch?: {
       research: ResearchType
       level: number
       executeTaskAt: number
       taskId: string
     }
-    queue: string[]
   }
+
   fleets: FleetType[]
+
+  units: PlayerUnitsType[]
 }
 
 export type PlayerData = {

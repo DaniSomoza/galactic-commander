@@ -1,3 +1,4 @@
+import { FleetType, FleetUnitsType } from './Fleets'
 import { UnitTypes } from './Unit'
 
 export const PENDING_TASK_STATUS = 'PENDING'
@@ -61,12 +62,43 @@ export type FinishBuildUnitsTaskData = {
   }
 }
 
+export const START_FLEET_TASK_TYPE = 'START_FLEET_UNITS_TASK'
+export type StartFleetTaskType = typeof START_FLEET_TASK_TYPE
+export type StartFleetTaskData = {
+  playerId: string
+  fromPlanetId: string
+  toPlanetId: string
+  units: FleetUnitsType[]
+  resources: number
+  fleetType: FleetType
+  allUnitsInThePlanet?: boolean
+  allResourcesInThePlanet?: boolean
+}
+
+export const FINISH_FLEET_TASK_TYPE = 'FINISH_FLEET_UNITS_TASK'
+export type FinishFleetTaskType = typeof FINISH_FLEET_TASK_TYPE
+export type FinishFleetTaskData = {
+  playerId: string
+  fromPlanetId: string
+  toPlanetId: string
+  units: FleetUnitsType[]
+  resources: number
+  fleetType: FleetType
+  allUnitsInThePlanet?: boolean
+  allResourcesInThePlanet?: boolean
+  isReturning: boolean
+  arriveAt: number
+  fleetId: string
+}
+
 export type TaskTypesTypes =
   | NewPlayerTaskType
   | StartResearchTaskType
   | FinishResearchTaskType
   | StartBuildUnitsTaskType
   | FinishBuildUnitsTaskType
+  | StartFleetTaskType
+  | FinishFleetTaskType
 
 export type TaskData<T extends TaskTypesTypes> = T extends NewPlayerTaskType
   ? NewPlayerTaskData
@@ -78,7 +110,11 @@ export type TaskData<T extends TaskTypesTypes> = T extends NewPlayerTaskType
         ? StartBuildUnitsTaskData
         : T extends FinishBuildUnitsTaskType
           ? FinishBuildUnitsTaskData
-          : never
+          : T extends StartFleetTaskType
+            ? StartFleetTaskData
+            : T extends FinishFleetTaskType
+              ? FinishFleetTaskData
+              : never
 
 export type HistoryStatusItemType = {
   taskStatus: TaskStatus

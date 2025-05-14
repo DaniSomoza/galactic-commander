@@ -55,4 +55,6 @@ export interface IPlanet {
   }
 
   units: IUnit[]
+
+  exploredBy: string[]
 }

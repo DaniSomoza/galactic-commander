@@ -108,7 +108,7 @@ function QueueItem({ unit, amount, player, index }: QueueItemProps) {
         onMouseEnter={() => setShowRemoveButton(true)}
         onMouseLeave={() => setShowRemoveButton(false)}
       >
-        <UnitCard showNameLabel={false} unit={unit} amount={amount} height={128} width={128}>
+        <UnitCard showNameLabel={false} unit={unit} amount={amount} height={128} width={128} isAvailable>
           <>
             {/* Countdown */}
             <Box position={'absolute'} top={20} sx={{ transform: 'translate(0, -50%)' }}>

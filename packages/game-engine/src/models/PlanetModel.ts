@@ -74,7 +74,9 @@ const PlanetSchema: Schema = new Schema(
         ref: 'Unit',
         required: true
       }
-    ]
+    ],
+
+    exploredBy: [{ type: String, default: [] }]
   },
   {
     timestamps: true
@@ -85,6 +87,8 @@ export interface IPlanetDocument extends IPlanet, Document {
   _id: mongoose.Types.ObjectId
 
   units: IUnitDocument[]
+
+  exploredBy: string[]
 }
 
 const PlanetModel: Model<IPlanetDocument> = mongoose.model<IPlanetDocument>('Planet', PlanetSchema)
