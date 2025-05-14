@@ -223,5 +223,12 @@
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_NAME": "The Stellar Spectre",
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, a ship shrouded in mystery and ancient technology, uses camouflage systems that render it nearly invisible. Legend has it that it operates from cosmic dust clouds, swooping down on merchant fleets without warning. Its ability to strike from concealment and vanish before a response can be organized makes The Stellar Spectre one of the most feared and respected ships in the galaxy.",
 
-  "EXPLORE_FLEET_TYPE": "Explore planet"
+  "EXPLORE_FLEET_TYPE": "Explore planet",
+  "FAST_EXPLORE_PLANET_LABEL": "Explore planet ({0} probes available)",
+  "PREVIOUS_GALAXY_SELECTOR": "Show galaxy {0}",
+  "NEXT_GALAXY_SELECTOR": "Show galaxy {0}",
+  "PREVIOUS_SECTOR_SELECTOR": "Show sector {0}",
+  "NEXT_SECTOR_SELECTOR": "Show sector {0}",
+  "PREVIOUS_SYSTEM_SELECTOR": "Show system {0}",
+  "NEXT_SYSTEM_SELECTOR": "Show system {0}"
 }

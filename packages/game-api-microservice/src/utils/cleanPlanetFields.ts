@@ -49,6 +49,8 @@ function cleanPlanetFields(planet: IPlanetDocument | IPlanet, player: IPlayerDoc
     return UNEXPLORED_PLANET
   }
 
+  // TODO: only if the owner of the planet is the player show resources, unitBuild, lastResourceProductionTime, specials, units...
+
   const isPlayerPlanet = player._id.toString() === ownerId
 
   return {

@@ -223,5 +223,12 @@
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_NAME": "The Stellar Spectre",
   "SPACESHIP_PIRATE_THE_STELLAR_SPECTRE_HERO_DESCRIPTION": "The Stellar Spectre, una nave envuelta en misterio y antigua tecnología, utiliza sistemas de camuflaje que la hacen prácticamente invisible. Según las leyendas, opera desde nubes de polvo cósmico, lanzándose sobre flotas comerciales sin previo aviso. Su capacidad de atacar desde la ocultación y desaparecer antes de que se pueda organizar una respuesta convierte a The Stellar Spectre en una de las naves más temidas y respetadas en la galaxia.",
 
-  "EXPLORE_FLEET_TYPE": "Explorar planeta"
+  "EXPLORE_FLEET_TYPE": "Explorar planeta",
+  "FAST_EXPLORE_PLANET_LABEL": "Explorar planeta ({0} sondas disponibles)",
+  "PREVIOUS_GALAXY_SELECTOR": "Mostrar galaxia {0}",
+  "NEXT_GALAXY_SELECTOR": "Mostrar galaxia {0}",
+  "PREVIOUS_SECTOR_SELECTOR": "Mostrar sector {0}",
+  "NEXT_SECTOR_SELECTOR": "Mostrar sector {0}",
+  "PREVIOUS_SYSTEM_SELECTOR": "Mostrar sistema {0}",
+  "NEXT_SYSTEM_SELECTOR": "Mostrar sistema {0}"
 }

@@ -4,6 +4,7 @@ import { FleetType, FleetUnitsType } from 'game-api-microservice/src/types/Fleet
 import { PlanetCoordinatesType } from 'game-api-microservice/src/types/Planet'
 import { TaskType } from 'game-api-microservice/src/types/Task'
 import isPlanetCoordinates from 'game-engine/src/engine/planets/isPlanetCoordinates'
+import computedBonus from 'game-engine/src/engine/bonus/computedBonus'
 
 import * as fleetsEndpoints from '../endpoints/game/fleetsEndpoints'
 import { usePlayer } from './PlayerContext'
@@ -12,6 +13,8 @@ import waitTaskToStart from '../utils/waitTaskToStart'
 
 const initialContext = {
   fleets: [],
+  maxPlayerFleets: 0,
+  currentPlayerFleets: 0,
   unitsInThePlanet: [],
   fleetsInThePlanet: [],
   explorePlanetFleet: () => Promise.resolve({} as TaskType<'START_FLEET_UNITS_TASK'>)
@@ -19,6 +22,8 @@ const initialContext = {
 
 type fleetContextValue = {
   fleets: FleetType[]
+  maxPlayerFleets: number
+  currentPlayerFleets: number
   unitsInThePlanet: FleetUnitsType[]
   fleetsInThePlanet: FleetType[]
   explorePlanetFleet: (
@@ -106,8 +111,14 @@ function FleetProvider({ children }: FleetProviderProps) {
     [universeName, loadPlayer]
   )
 
+  const maxPlayerFleets = player ? computedBonus(player.perks, 'MAX_FLEETS_ALLOWED_BONUS') + 1 : 1
+  const currentPlayerFleets = fleets.length
+
   const value = {
     fleets,
+    maxPlayerFleets,
+    currentPlayerFleets,
+
     unitsInThePlanet,
     fleetsInThePlanet,
 

@@ -79,7 +79,7 @@ function PlanetCard({ disableBorder = false, planet, children }: PlanetCardProps
                     fontSize={12}
                     fontWeight={500}
                     color={planet.resourceQuality > 50 ? green[600] : orange[600]}
-                    padding={0.4}
+                    padding={0.5}
                   >
                     {planet.resourceQuality}%
                   </Typography>

@@ -33,7 +33,7 @@ type FleetProps = {
   onFinishFleet?: () => void
 }
 
-function Fleet({ fleet, onFinishFleet }: FleetProps) {
+function ActiveFleet({ fleet, onFinishFleet }: FleetProps) {
   const { translate } = useTranslations()
   const [taskId, setTaskId] = useState(fleet.taskId)
 
@@ -123,7 +123,7 @@ function Fleet({ fleet, onFinishFleet }: FleetProps) {
   )
 }
 
-export default Fleet
+export default ActiveFleet
 
 function FleetTypeLabel({ fleetType = '' }: { fleetType?: string }) {
   const { translate } = useTranslations()

@@ -38,8 +38,7 @@ function GamePlanetSection() {
         {/* planet name */}
         <Box
           position={'absolute'}
-          top={24}
-          padding={1}
+          top={20}
           maxWidth={'164px'}
           sx={{ transform: 'translate(0, -50%)' }}
         >

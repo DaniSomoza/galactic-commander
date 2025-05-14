@@ -7,34 +7,34 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import TravelExploreIcon from '@mui/icons-material/TravelExplore'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
-import PublicIcon from '@mui/icons-material/Public'
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded'
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded'
 
 import { PlanetType } from 'game-api-microservice/src/types/Planet'
 import { PlanetCoordinatesType } from 'game-api-microservice/src/types/Planet'
+import { GALAXIES, SECTORS_PER_GALAXIES, SYSTEM_PER_SECTORS } from 'game-engine/src/types/IPlanet'
 
 import { usePlayer } from '../../store/PlayerContext'
-import Loader from '../../components/loader/Loader'
-import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
-import { getGalaxy } from '../../endpoints/game/galaxyEndpoints'
 import { useGameInfo } from '../../store/GameInfoContext'
 import { useTranslations } from '../../store/TranslationContext'
 import { useFleet } from '../../store/FleetContext'
-import Fleet from '../../components/fleet/Fleet'
+import { getGalaxy } from '../../endpoints/game/galaxyEndpoints'
+import ActiveFleet from '../../components/active-fleet/ActiveFleet'
 import PlanetCard from '../../components/planet-card/PlanetCard'
+import Loader from '../../components/loader/Loader'
+import formatCoordinatesLabel from '../../utils/formatPlanetCoordinates'
 
 function GameGalaxiesPage() {
   const { translate } = useTranslations()
   const { player, isPlayerLoading, selectedPlanet } = usePlayer()
-  const { explorePlanetFleet, unitsInThePlanet, fleetsInThePlanet } = useFleet()
+  const { fleetsInThePlanet, currentPlayerFleets, maxPlayerFleets } = useFleet()
   const { selectedUniverse } = useGameInfo()
 
   const universeName = selectedUniverse?.name
 
-  const [galaxy, setGalaxy] = useState(selectedPlanet?.coordinates.galaxy)
-  const [sector, setSector] = useState(selectedPlanet?.coordinates.sector)
-  const [system, setSystem] = useState(selectedPlanet?.coordinates.system)
+  const [galaxy, setGalaxy] = useState(selectedPlanet?.coordinates.galaxy || 0)
+  const [sector, setSector] = useState(selectedPlanet?.coordinates.sector || 0)
+  const [system, setSystem] = useState(selectedPlanet?.coordinates.system || 0)
 
   const [planets, setPlanets] = useState<PlanetType[]>([])
 
@@ -60,44 +60,28 @@ function GameGalaxiesPage() {
     refreshPlanets()
   }, [refreshPlanets])
 
+  const hasEnoughFleets = currentPlayerFleets < maxPlayerFleets
+
   // TODO: onFinish a fleet refresh planets
 
   if (!player || isPlayerLoading || !selectedPlanet) {
     return <Loader isLoading />
   }
 
-  const probeUnit = unitsInThePlanet.find(({ unit }) => unit.subtype === 'PROBE')?.unit
-  // TODO: ADD amount of fleets available to check if its disabled or not
-
-  async function fastExplorePlanetFleet(toPlanetCoordinates: PlanetCoordinatesType) {
-    // TODO: add loading state
-    if (probeUnit && selectedPlanet) {
-      const exploreFleet = [{ unitName: probeUnit.name, amount: 1 }]
-      await explorePlanetFleet(exploreFleet, selectedPlanet.coordinates, toPlanetCoordinates)
-    }
-  }
-
   return (
-    <Stack gap={1} padding={1}>
-      {/* TODO: ALL fleets, update this to only use new fleets */}
-      <Stack gap={1}>
-        {fleetsInThePlanet.map((planetFleet, index) => {
-          return <Fleet key={index} fleet={planetFleet} onFinishFleet={refreshPlanets} />
-        })}
-      </Stack>
-
+    <Stack gap={1}>
       {/* TODO: Planet Coordinates selector */}
       <Paper variant="outlined">
         <Box padding={1}>
-          <Stack direction={'row'} gap={3} padding={1}>
+          <Stack direction={'row'} gap={3} padding={1} justifyContent={'center'}>
             {/* Galaxy selector */}
             <Stack gap={1} justifyContent={'center'}>
               <Stack direction={'row'} gap={0.5} justifyContent={'center'} alignItems={'center'}>
-                <Tooltip title={translate('PREVIOUS_GALAXY_SELECTOR')}>
+                <Tooltip title={translate('PREVIOUS_GALAXY_SELECTOR', galaxy - 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setGalaxy((galaxy) => galaxy! - 1)}
+                    disabled={galaxy === 1}
+                    onClick={() => setGalaxy((galaxy) => galaxy - 1)}
                   >
                     <NavigateBeforeRoundedIcon />
                   </IconButton>
@@ -113,11 +97,11 @@ function GameGalaxiesPage() {
                     {galaxy}
                   </Typography>
                 </Paper>
-                <Tooltip title={translate('NEXT_GALAXY_SELECTOR')}>
+                <Tooltip title={translate('NEXT_GALAXY_SELECTOR', galaxy + 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setGalaxy((galaxy) => galaxy! + 1)}
+                    disabled={galaxy === GALAXIES}
+                    onClick={() => setGalaxy((galaxy) => galaxy + 1)}
                   >
                     <NavigateNextRoundedIcon />
                   </IconButton>
@@ -132,11 +116,11 @@ function GameGalaxiesPage() {
             {/* Sector selector */}
             <Stack gap={1} justifyContent={'center'}>
               <Stack direction={'row'} gap={0.5} justifyContent={'center'} alignItems={'center'}>
-                <Tooltip title={translate('PREVIOUS_SECTOR_SELECTOR')}>
+                <Tooltip title={translate('PREVIOUS_SECTOR_SELECTOR', sector - 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setSector((sector) => sector! - 1)}
+                    disabled={sector === 1}
+                    onClick={() => setSector((sector) => sector - 1)}
                   >
                     <NavigateBeforeRoundedIcon />
                   </IconButton>
@@ -152,11 +136,11 @@ function GameGalaxiesPage() {
                     {sector}
                   </Typography>
                 </Paper>
-                <Tooltip title={translate('NEXT_SECTOR_SELECTOR')}>
+                <Tooltip title={translate('NEXT_SECTOR_SELECTOR', sector + 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setSector((sector) => sector! + 1)}
+                    disabled={sector === SECTORS_PER_GALAXIES}
+                    onClick={() => setSector((sector) => sector + 1)}
                   >
                     <NavigateNextRoundedIcon />
                   </IconButton>
@@ -171,11 +155,11 @@ function GameGalaxiesPage() {
             {/* System selector */}
             <Stack gap={1} justifyContent={'center'}>
               <Stack direction={'row'} gap={0.5} justifyContent={'center'} alignItems={'center'}>
-                <Tooltip title={translate('PREVIOUS_SYSTEM_SELECTOR')}>
+                <Tooltip title={translate('PREVIOUS_SYSTEM_SELECTOR', system - 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setSystem((system) => system! - 1)}
+                    disabled={system === 1}
+                    onClick={() => setSystem((system) => system - 1)}
                   >
                     <NavigateBeforeRoundedIcon />
                   </IconButton>
@@ -191,11 +175,11 @@ function GameGalaxiesPage() {
                     {system}
                   </Typography>
                 </Paper>
-                <Tooltip title={translate('NEXT_SYSTEM_SELECTOR')}>
+                <Tooltip title={translate('NEXT_SYSTEM_SELECTOR', system + 1)}>
                   <IconButton
                     size="small"
-                    disabled={!probeUnit}
-                    onClick={() => setSystem((system) => system! + 1)}
+                    disabled={system === SYSTEM_PER_SECTORS}
+                    onClick={() => setSystem((system) => system + 1)}
                   >
                     <NavigateNextRoundedIcon />
                   </IconButton>
@@ -206,8 +190,6 @@ function GameGalaxiesPage() {
                 System
               </Typography>
             </Stack>
-
-            {/* TODO: SHOW SPY PROBES AVAILABLE IN THE PLANET!! */}
           </Stack>
         </Box>
       </Paper>
@@ -218,60 +200,57 @@ function GameGalaxiesPage() {
 
           return (
             <Box key={planetLabel}>
-              <Paper variant={'outlined'}>
+              <Paper>
                 <Stack justifyContent="center" alignItems="center">
-                  <PlanetCard planet={planet} disableBorder>
+                  <PlanetCard planet={planet}>
+                    {/* Planet Coordinates label */}
+                    <Box
+                      position={'absolute'}
+                      bottom={0}
+                      left={'50%'}
+                      padding={1}
+                      sx={{ transform: 'translateX(-50%)' }}
+                    >
+                      <Paper variant="outlined">
+                        <Tooltip title={translate('GAME_PLAYER_PLANET_COORDINATES_TOOLTIP')} arrow>
+                          <Typography
+                            variant="body1"
+                            fontSize={12}
+                            fontWeight={500}
+                            padding={0.5}
+                            paddingLeft={0.8}
+                            paddingRight={0.8}
+                          >
+                            {formatCoordinatesLabel(planet.coordinates)}
+                          </Typography>
+                        </Tooltip>
+                      </Paper>
+                    </Box>
+
                     {/* Fleet action buttons */}
                     <Box position={'absolute'} right={0} bottom={0} padding={1}>
                       <Paper variant="outlined">
                         <Stack
-                          direction={'row'}
-                          padding={0.2}
+                          direction={'column'}
                           justifyContent={'flex-start'}
                           alignItems={'center'}
                         >
-                          {/* fleet button */}
-                          {/* TODO: disable button if no units are present */}
-                          {/* TODO: disable button if max number of active player fleets */}
-                          {/* TODO: disable button if it is the selected planet ?? */}
-                          {/* TODO: redirect to create new fleet page */}
-                          <Tooltip title="send fleet">
-                            <IconButton aria-label="spy planet" size="small">
+                          {/* TODO: create fleet button: show create fleet dialog or redirect to create fleet page? */}
+                          <Tooltip title={translate('send fleet')}>
+                            <IconButton
+                              aria-label="send fleet to this planet"
+                              size="small"
+                              disabled={!planet.isExplored || !hasEnoughFleets}
+                              onClick={() => {
+                                // fastExplorePlanetFleet(planet.coordinates)
+                              }}
+                            >
                               <RocketLaunchIcon fontSize="inherit" />
                             </IconButton>
                           </Tooltip>
 
-                          {/* Planet Colony fast button */}
-                          {/* TODO: disable button if no troops and ships are present */}
-                          {/* TODO: disable button if max number of colonies */}
-                          {/* TODO: disable button if it is a unexplored planet and has an owner ?? */}
-                          {/* TODO: disable button if users clicks on it! */}
-                          <Tooltip title="Colony planet">
-                            <IconButton
-                              aria-label="colony planet"
-                              size="small"
-                              // disabled={!probeUnit}
-                              // onClick={() => fastExplorePlanetFleet(planet.coordinates)}
-                            >
-                              <PublicIcon fontSize="inherit" />
-                            </IconButton>
-                          </Tooltip>
-
                           {/* Explore Planet fast button */}
-                          {/* TODO: disable button if no probes are present */}
-                          {/* TODO: disable button if max number of active player fleets */}
-                          {/* TODO: disable button if it is the selected planet ?? */}
-                          {/* TODO: disable button if users clicks on it! */}
-                          <Tooltip title={translate('spy/explore planet')}>
-                            <IconButton
-                              aria-label="spy planet"
-                              size="small"
-                              disabled={!probeUnit}
-                              onClick={() => fastExplorePlanetFleet(planet.coordinates)}
-                            >
-                              <TravelExploreIcon fontSize="inherit" />
-                            </IconButton>
-                          </Tooltip>
+                          <FastExplorePlanetButton planet={planet} />
                         </Stack>
                       </Paper>
                     </Box>
@@ -282,8 +261,71 @@ function GameGalaxiesPage() {
           )
         })}
       </Stack>
+
+      <Stack gap={1}>
+        {fleetsInThePlanet.map((planetFleet) => {
+          return (
+            <ActiveFleet
+              key={planetFleet.taskId}
+              fleet={planetFleet}
+              onFinishFleet={refreshPlanets}
+            />
+          )
+        })}
+      </Stack>
     </Stack>
   )
 }
 
 export default GameGalaxiesPage
+
+type FastExplorePlanetButtonProps = {
+  planet: PlanetType
+}
+function FastExplorePlanetButton({ planet }: FastExplorePlanetButtonProps) {
+  const { translate } = useTranslations()
+  const { selectedPlanet } = usePlayer()
+  const { explorePlanetFleet, unitsInThePlanet, currentPlayerFleets, maxPlayerFleets } = useFleet()
+
+  const [disableActions, setDisableActions] = useState(false)
+
+  const amountOfProbesInThePlanet = unitsInThePlanet.reduce(
+    (amountOfProbesInThePlanet, { unit, amount }) => {
+      if (unit.subtype === 'PROBE') {
+        return amountOfProbesInThePlanet + amount
+      }
+      return amountOfProbesInThePlanet
+    },
+    0
+  )
+
+  const probeUnit = unitsInThePlanet.find(({ unit }) => unit.subtype === 'PROBE')?.unit
+
+  async function fastExplorePlanetFleet(toPlanetCoordinates: PlanetCoordinatesType) {
+    if (probeUnit && selectedPlanet) {
+      setDisableActions(true)
+      const exploreFleet = [{ unitName: probeUnit.name, amount: 1 }]
+      await explorePlanetFleet(exploreFleet, selectedPlanet.coordinates, toPlanetCoordinates)
+      setDisableActions(false)
+      // TODO: show snackbar on success
+    }
+  }
+
+  const hasEnoughFleets = currentPlayerFleets < maxPlayerFleets
+
+  return (
+    // TODO: create a not enough probes available in this planet!
+    <Tooltip title={translate('FAST_EXPLORE_PLANET_LABEL', amountOfProbesInThePlanet)}>
+      <IconButton
+        aria-label="spy planet"
+        size="small"
+        disabled={!probeUnit || !hasEnoughFleets || disableActions}
+        onClick={() => {
+          fastExplorePlanetFleet(planet.coordinates)
+        }}
+      >
+        <TravelExploreIcon fontSize="inherit" />
+      </IconButton>
+    </Tooltip>
+  )
+}
